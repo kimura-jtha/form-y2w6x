@@ -1,0 +1,384 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "notFound": "Not Found",
+    "required": "Required",
+    "submit": "Submit",
+    "clear": "Clear",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "loadMore": "Load More",
+    "logout": "Logout"
+  },
+  "auth": {
+    "login": {
+      "title": "Admin Login",
+      "subtitle": "Sign in to access the admin panel",
+      "fields": {
+        "email": {
+          "label": "Email",
+          "placeholder": "Enter your email"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Enter your password"
+        }
+      },
+      "submit": "Sign In",
+      "errors": {
+        "required": "Email and password are required",
+        "failed": "Login failed. Please check your credentials."
+      }
+    }
+  },
+  "pages": {
+    "home": {
+      "title": "Home"
+    },
+    "notFound": {
+      "title": "Page Not Found",
+      "description": "The page you are looking for does not exist."
+    }
+  },
+  "prizeClaim": {
+    "title": "Prize Claim Form",
+    "sections": {
+      "name": "Name",
+      "nameKana": "Name (Katakana)",
+      "playersId": "Players+ ID / Passport Number",
+      "contact": "Contact Information",
+      "tournament": "Tournament Information",
+      "bank": "Bank Information",
+      "privacyPolicy": "Privacy Policy"
+    },
+    "fields": {
+      "lastNameKanji": {
+        "label": "Last Name (Kanji)",
+        "placeholder": "Yamada",
+        "description": "For non-Japanese, please enter in Katakana"
+      },
+      "firstNameKanji": {
+        "label": "First Name (Kanji)",
+        "placeholder": "Tarou"
+      },
+      "lastNameKana": {
+        "label": "Last Name (Katakana)",
+        "placeholder": "ヤマダ",
+        "description": "Please enter in full-width Katakana"
+      },
+      "firstNameKana": {
+        "label": "First Name (Katakana)",
+        "placeholder": "タロウ"
+      },
+      "playersId": {
+        "label": "Players+ ID / Passport Number",
+        "placeholder": "Enter Players+ ID or Passport Number",
+        "description": "Japanese players use Players+ ID, non-Japanese use Passport Number"
+      },
+      "postalCode": {
+        "label": "Postal Code",
+        "placeholder": "1000005",
+        "description": "7 digits without hyphen"
+      },
+      "address": {
+        "label": "Address",
+        "placeholder": "Prefecture, City, Street"
+      },
+      "phoneNumber": {
+        "label": "Phone Number",
+        "placeholder": "03-1234-5678",
+        "description": "Example: 03-1234-5678 / 090-1234-5678"
+      },
+      "email": {
+        "label": "Email Address",
+        "placeholder": "example@example.com"
+      },
+      "tournamentDate": {
+        "label": "Tournament Date",
+        "placeholder": "Select date"
+      },
+      "tournamentName": {
+        "label": "Tournament Name",
+        "placeholder": "Select tournament"
+      },
+      "rank": {
+        "label": "Rank",
+        "placeholder": "Select rank"
+      },
+      "prizeAmount": {
+        "label": "Prize Amount",
+        "description": "Auto-calculated based on selected tournament and rank"
+      },
+      "bankName": {
+        "label": "Bank Name",
+        "placeholder": "Search or select bank"
+      },
+      "branchName": {
+        "label": "Branch Name",
+        "placeholder": "Search or select branch"
+      },
+      "accountType": {
+        "label": "Account Type",
+        "placeholder": "Select account type",
+        "options": {
+          "savings": "Savings",
+          "checking": "Checking"
+        }
+      },
+      "accountNumber": {
+        "label": "Account Number",
+        "placeholder": "1234567",
+        "description": "7 digits (padded with zeros if shorter)"
+      },
+      "accountHolderName": {
+        "label": "Account Holder Name (Katakana)",
+        "placeholder": "ﾔﾏﾀﾞ ﾀﾛｳ",
+        "description": "Enter account holder name in half-width Katakana"
+      },
+      "privacyAgreement": {
+        "label": "I agree to the Privacy Policy",
+        "description": "Please review and agree to the privacy policy above"
+      }
+    },
+    "buttons": {
+      "searchAddress": "Search Address",
+      "searchBank": "Search Bank",
+      "searchBranch": "Search Branch",
+      "submit": "Submit",
+      "clear": "Clear"
+    },
+    "validation": {
+      "required": "This field is required",
+      "invalidEmail": "Please enter a valid email address",
+      "invalidPostalCode": "Please enter a 7-digit postal code",
+      "invalidPhoneNumber": "Please enter a valid phone number (e.g., 03-1234-5678)",
+      "invalidAccountNumber": "Please enter a 7-digit account number",
+      "mustAgreeToPrivacyPolicy": "You must agree to the privacy policy",
+      "katakanaOnly": "Please enter in full-width Katakana"
+    },
+    "confirmDialog": {
+      "title": "Confirm Submission",
+      "message": "Are you sure you want to submit this form?",
+      "confirm": "Submit",
+      "cancel": "Cancel"
+    },
+    "privacyPolicy": {
+      "title": "Privacy Policy",
+      "content": "This Privacy Policy describes how we collect, use, and protect your personal information when you submit a prize claim form.\n\n1. Information We Collect\nWe collect the following personal information:\n- Full name (Kanji and Katakana)\n- Players+ ID or Passport Number\n- Contact information (address, phone number, email)\n- Tournament participation details\n- Bank account information for prize payments\n\n2. Purpose of Collection\nYour personal information is collected for the following purposes:\n- Processing prize money payments\n- Verifying tournament participation and rankings\n- Communicating with you regarding prize claims\n- Complying with legal and tax requirements\n\n3. Data Security\nWe implement appropriate security measures to protect your personal information from unauthorized access, disclosure, alteration, or destruction.\n\n4. Data Retention\nYour personal information will be retained for the period required by law and for the purposes stated above.\n\n5. Third-Party Disclosure\nWe do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except:\n- When required by law\n- To authorized service providers who assist in processing payments\n\n6. Your Rights\nYou have the right to:\n- Access your personal information\n- Request correction of inaccurate information\n- Request deletion of your information (subject to legal requirements)\n\n7. Contact\nFor questions about this Privacy Policy or your personal information, please contact us through the provided channels.\n\n8. Changes to This Policy\nWe may update this Privacy Policy from time to time. Changes will be posted on this page.\n\nLast Updated: 2025"
+    },
+    "ranks": {
+      "1": "1st Place",
+      "2": "2nd Place",
+      "3": "3rd Place",
+      "4": "4th Place",
+      "5": "5th Place",
+      "6": "6th Place",
+      "7": "7th Place",
+      "8": "8th Place"
+    },
+    "errors": {
+      "backendUnavailable": "The server is currently unavailable. Please try again later."
+    }
+  },
+  "admin": {
+    "navigation": {
+      "forms": "Forms Management",
+      "tournaments": "Tournaments",
+      "services": "Services"
+    },
+    "changePassword": {
+      "button": "Change Password",
+      "title": "Change Password",
+      "fields": {
+        "oldPassword": {
+          "label": "Current Password",
+          "placeholder": "Enter your current password"
+        },
+        "newPassword": {
+          "label": "New Password",
+          "placeholder": "Enter your new password"
+        },
+        "confirmPassword": {
+          "label": "Confirm New Password",
+          "placeholder": "Re-enter your new password"
+        }
+      },
+      "submit": "Change Password",
+      "success": "Password changed successfully! Redirecting...",
+      "errors": {
+        "required": "All fields are required",
+        "mismatch": "New passwords do not match",
+        "tooShort": "Password must be at least 8 characters long",
+        "samePassword": "New password must be different from current password",
+        "failed": "Failed to change password. Please check your current password and try again."
+      }
+    },
+    "forms": {
+      "title": "Form Management",
+      "refresh": "Refresh",
+      "exportCSV": "Export CSV",
+      "export": {
+        "noTournamentSelected": "Please select a tournament to export",
+        "noData": "No data to export for selected tournament",
+        "error": "Failed to export data. Please try again."
+      },
+      "filters": {
+        "title": "Filters",
+        "tournamentName": "Tournament Name",
+        "tournamentNamePlaceholder": "Search by tournament name",
+        "status": "Status",
+        "statusPlaceholder": "All statuses",
+        "termsAgreed": "Terms Agreed",
+        "termsAgreedPlaceholder": "All",
+        "dateFrom": "Date From",
+        "dateTo": "Date To",
+        "dateFromPlaceholder": "Select start date",
+        "dateToPlaceholder": "Select end date",
+        "apply": "Apply",
+        "clear": "Clear"
+      },
+      "table": {
+        "id": "ID",
+        "playerName": "Player Name",
+        "email": "Email",
+        "tournament": "Tournament",
+        "rank": "Rank",
+        "amount": "Amount",
+        "status": "Status",
+        "termsAgreed": "Terms Agreed",
+        "createdAt": "Created At",
+        "actions": "Actions",
+        "noForms": "No forms found",
+        "formsFound": "form(s) found"
+      },
+      "status": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "detail": {
+        "title": "Form Details",
+        "formId": "Form ID",
+        "submittedAt": "Submitted At",
+        "personalInfo": "Personal Information",
+        "contactInfo": "Contact Information",
+        "tournamentInfo": "Tournament Information",
+        "bankInfo": "Bank Information",
+        "agreements": "Agreements"
+      }
+    },
+    "tournaments": {
+      "title": "Tournament Management",
+      "refresh": "Refresh",
+      "create": "Create Tournament",
+      "viewDetails": "View Details",
+      "participants": "participants",
+      "prizes": "prizes",
+      "rank": "Rank",
+      "amount": "Amount",
+      "claimed": "Claimed",
+      "morePrizes": "more prizes",
+      "created": "Created",
+      "import": {
+        "button": "Import CSV",
+        "title": "Import Tournaments from CSV",
+        "instructions": "Download the template CSV file, fill in your tournament data, and upload it here. Each prize should be on a separate row. Required columns: eventName, eventNameJa, tournamentName, tournamentNameJa, date, status, prize, and amount.",
+        "downloadTemplate": "Download Template",
+        "selectFile": "Select CSV File",
+        "validationSuccess": "Validation Passed",
+        "validationFailed": "Validation Failed",
+        "validRecords": "{{count}} valid record(s)",
+        "errors": "Errors found",
+        "row": "Row",
+        "preview": "Preview",
+        "eventName": "Event Name",
+        "tournamentName": "Tournament Name",
+        "date": "Date",
+        "status": "Status",
+        "prizesCount": "Prizes",
+        "import": "Import {{count}} Tournament(s)"
+      },
+      "modal": {
+        "title": "Create New Tournament",
+        "editTitle": "Edit Tournament",
+        "eventName": "Event Name (English)",
+        "eventNameJa": "Event Name (Japanese)",
+        "tournamentName": "Tournament Name (English)",
+        "tournamentNameJa": "Tournament Name (Japanese)",
+        "name": "Tournament Name",
+        "namePlaceholder": "Enter tournament name",
+        "date": "Tournament Date",
+        "datePlaceholder": "Select date",
+        "location": "Location",
+        "locationPlaceholder": "Enter location",
+        "prizes": "Prizes",
+        "rank": "Rank",
+        "amount": "Amount",
+        "addPrize": "Add",
+        "cancel": "Cancel",
+        "createButton": "Create Tournament",
+        "updateButton": "Update Tournament"
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive",
+        "upcoming": "Upcoming",
+        "ongoing": "Ongoing",
+        "completed": "Completed"
+      },
+      "detail": {
+        "backToList": "Back to Tournaments",
+        "notFound": "Tournament not found",
+        "tournamentInfo": "Tournament Information",
+        "date": "Date",
+        "status": "Status",
+        "activate": "Activate",
+        "deactivate": "Deactivate",
+        "prizesInfo": "Prizes Information",
+        "submittedForms": "Submitted Forms",
+        "noForms": "No forms submitted for this tournament"
+      }
+    },
+    "services": {
+      "title": "Service Management",
+      "tabs": {
+        "terms": "Terms of Service",
+        "privacy": "Privacy Policy",
+        "contract": "Contract",
+        "receipt": "Receipt Template"
+      },
+      "version": "Version",
+      "lastUpdated": "Last updated",
+      "updatedBy": "By",
+      "success": "Success",
+      "successMessage": {
+        "terms": "Terms of Service updated successfully",
+        "privacy": "Privacy Policy updated successfully",
+        "contract": "Contract updated successfully",
+        "receipt": "Receipt template updated successfully"
+      },
+      "editor": {
+        "title": "HTML Editor",
+        "description": "You can write HTML content below. Supported tags: h1, h2, h3, p, ul, ol, li, strong, em, a, etc.",
+        "termsLabel": "Terms of Service Content",
+        "privacyLabel": "Privacy Policy Content",
+        "contractLabel": "Contract Content",
+        "receiptLabel": "Receipt Template Content",
+        "placeholder": "Enter HTML content...",
+        "preview": "Preview",
+        "edit": "Edit",
+        "saveTerms": "Save Terms of Service",
+        "savePrivacy": "Save Privacy Policy"
+      }
+    }
+  }
+}

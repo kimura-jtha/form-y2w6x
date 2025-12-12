@@ -1,0 +1,378 @@
+{
+  "common": {
+    "loading": "読み込み中...",
+    "error": "エラーが発生しました",
+    "success": "成功",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "edit": "編集",
+    "create": "作成",
+    "search": "検索",
+    "notFound": "見つかりません",
+    "required": "必須",
+    "submit": "送信する",
+    "clear": "クリア",
+    "confirm": "確認",
+    "yes": "はい",
+    "no": "いいえ",
+    "loadMore": "もっと見る",
+    "logout": "ログアウト"
+  },
+  "auth": {
+    "login": {
+      "title": "管理者ログイン",
+      "subtitle": "管理画面にアクセスするにはサインインしてください",
+      "fields": {
+        "email": {
+          "label": "メールアドレス",
+          "placeholder": "メールアドレスを入力"
+        },
+        "password": {
+          "label": "パスワード",
+          "placeholder": "パスワードを入力"
+        }
+      },
+      "submit": "ログイン",
+      "errors": {
+        "required": "メールアドレスとパスワードは必須です",
+        "failed": "ログインに失敗しました。認証情報を確認してください。"
+      }
+    }
+  },
+  "pages": {
+    "home": {
+      "title": "ホーム"
+    },
+    "notFound": {
+      "title": "ページが見つかりません",
+      "description": "お探しのページは存在しません。"
+    }
+  },
+  "prizeClaim": {
+    "title": "賞金請求フォーム",
+    "sections": {
+      "name": "氏名",
+      "nameKana": "氏名（カナ）",
+      "playersId": "プレイヤーズ＋ID / パスポート番号",
+      "contact": "連絡先情報",
+      "tournament": "トーナメント情報",
+      "bank": "銀行情報",
+      "privacyPolicy": "プライバシーポリシー"
+    },
+    "fields": {
+      "lastNameKanji": {
+        "label": "姓（漢字）",
+        "placeholder": "山田",
+        "description": "外国人の場合は、カタカナで入力してください"
+      },
+      "firstNameKanji": {
+        "label": "名（漢字）",
+        "placeholder": "太郎"
+      },
+      "lastNameKana": {
+        "label": "姓（カナ）",
+        "placeholder": "ヤマダ",
+        "description": "全角カタカナで入力してください"
+      },
+      "firstNameKana": {
+        "label": "名（カナ）",
+        "placeholder": "タロウ"
+      },
+      "playersId": {
+        "label": "プレイヤーズ＋ID / パスポート番号",
+        "placeholder": "プレイヤーズプラスIDまたはパスポート番号を入力",
+        "description": "日本のプレイヤーはプレイヤーズプラスID、外国人はパスポート番号を入力してください"
+      },
+      "postalCode": {
+        "label": "郵便番号",
+        "placeholder": "1000005",
+        "description": "ハイフンなしの7桁の数字"
+      },
+      "address": {
+        "label": "住所",
+        "placeholder": "都道府県市区町村番地"
+      },
+      "phoneNumber": {
+        "label": "電話番号",
+        "placeholder": "03-1234-5678",
+        "description": "例: 03-1234-5678 / 090-1234-5678"
+      },
+      "email": {
+        "label": "メールアドレス",
+        "placeholder": "example@example.com"
+      },
+      "tournamentDate": {
+        "label": "開催日",
+        "placeholder": "開催日を選択"
+      },
+      "tournamentName": {
+        "label": "トーナメント名",
+        "placeholder": "トーナメントを選択"
+      },
+      "rank": {
+        "label": "順位",
+        "placeholder": "順位を選択"
+      },
+      "prizeAmount": {
+        "label": "賞金額",
+        "description": "選択したトーナメントと順位に基づいて自動計算されます"
+      },
+      "bankName": {
+        "label": "銀行名",
+        "placeholder": "銀行を検索または選択"
+      },
+      "branchName": {
+        "label": "支店名",
+        "placeholder": "支店を検索または選択"
+      },
+      "accountType": {
+        "label": "口座種別",
+        "placeholder": "口座種別を選択",
+        "options": {
+          "savings": "普通",
+          "checking": "当座"
+        }
+      },
+      "accountNumber": {
+        "label": "口座番号",
+        "placeholder": "1234567",
+        "description": "7桁の数字（不足は0埋め）"
+      },
+      "accountHolderName": {
+        "label": "口座名義（カナ）",
+        "placeholder": "ﾔﾏﾀﾞ ﾀﾛｳ",
+        "description": "口座名義を半角カタカナで入力してください"
+      },
+      "privacyAgreement": {
+        "label": "プライバシーポリシーに同意する",
+        "description": "上記のプライバシーポリシーを確認し、同意してください"
+      }
+    },
+    "buttons": {
+      "searchAddress": "住所検索",
+      "searchBank": "銀行検索",
+      "searchBranch": "支店検索",
+      "submit": "送信する",
+      "clear": "クリア"
+    },
+    "validation": {
+      "required": "この項目は必須です",
+      "invalidEmail": "有効なメールアドレスを入力してください",
+      "invalidPostalCode": "7桁の郵便番号を入力してください",
+      "invalidPhoneNumber": "有効な電話番号を入力してください（例: 03-1234-5678）",
+      "invalidAccountNumber": "7桁の口座番号を入力してください",
+      "mustAgreeToPrivacyPolicy": "プライバシーポリシーに同意してください",
+      "katakanaOnly": "全角カタカナで入力してください"
+    },
+    "confirmDialog": {
+      "title": "送信確認",
+      "message": "入力内容を送信してもよろしいですか？",
+      "confirm": "送信する",
+      "cancel": "キャンセル"
+    },
+    "privacyPolicy": {
+      "title": "プライバシーポリシー",
+      "content": "本プライバシーポリシーは、賞金請求フォームの提出時に、お客様の個人情報をどのように収集、使用、保護するかを説明するものです。\n\n1. 収集する情報\n当社は以下の個人情報を収集します：\n- 氏名（漢字およびカタカナ）\n- プレイヤーズ＋IDまたはパスポート番号\n- 連絡先情報（住所、電話番号、メールアドレス）\n- トーナメント参加詳細\n- 賞金支払いのための銀行口座情報\n\n2. 収集の目的\nお客様の個人情報は、以下の目的のために収集されます：\n- 賞金の支払い処理\n- トーナメント参加と順位の確認\n- 賞金請求に関するご連絡\n- 法的および税務上の要件の遵守\n\n3. データセキュリティ\n当社は、お客様の個人情報を不正アクセス、開示、改ざん、破壊から保護するために、適切なセキュリティ対策を実施しています。\n\n4. データの保持\nお客様の個人情報は、法律で定められた期間および上記の目的のために必要な期間、保持されます。\n\n5. 第三者への開示\n当社は、お客様の同意なく、お客様の個人情報を第三者に販売、交換、または譲渡することはありません。ただし、以下の場合を除きます：\n- 法律で要求される場合\n- 支払い処理を支援する権限のあるサービスプロバイダーへの提供\n\n6. お客様の権利\nお客様には以下の権利があります：\n- ご自身の個人情報へのアクセス\n- 不正確な情報の訂正要求\n- 情報の削除要求（法的要件に従う）\n\n7. お問い合わせ\n本プライバシーポリシーまたはお客様の個人情報に関するご質問は、提供されたチャネルを通じてお問い合わせください。\n\n8. ポリシーの変更\n当社は、本プライバシーポリシーを随時更新する場合があります。変更は本ページに掲載されます。\n\n最終更新日：2025年"
+    },
+    "ranks": {
+      "1": "1位",
+      "2": "2位",
+      "3": "3位",
+      "4": "4位",
+      "5": "5位",
+      "6": "6位",
+      "7": "7位",
+      "8": "8位"
+    },
+    "errors": {
+      "backendUnavailable": "サーバーが現在利用できません。しばらくしてから再度お試しください。"
+    }
+  },
+  "admin": {
+    "navigation": {
+      "forms": "フォーム管理",
+      "tournaments": "トーナメント管理",
+      "services": "サービス管理"
+    },
+    "changePassword": {
+      "button": "パスワード変更",
+      "title": "パスワード変更",
+      "fields": {
+        "oldPassword": {
+          "label": "現在のパスワード",
+          "placeholder": "現在のパスワードを入力"
+        },
+        "newPassword": {
+          "label": "新しいパスワード",
+          "placeholder": "新しいパスワードを入力"
+        },
+        "confirmPassword": {
+          "label": "新しいパスワード（確認）",
+          "placeholder": "新しいパスワードを再入力"
+        }
+      },
+      "submit": "パスワードを変更",
+      "success": "パスワードが正常に変更されました！リダイレクト中...",
+      "errors": {
+        "required": "すべての項目は必須です",
+        "mismatch": "新しいパスワードが一致しません",
+        "tooShort": "パスワードは8文字以上である必要があります",
+        "samePassword": "新しいパスワードは現在のパスワードと異なる必要があります",
+        "failed": "パスワードの変更に失敗しました。現在のパスワードを確認して再度お試しください。"
+      }
+    },
+    "forms": {
+      "title": "フォーム管理",
+      "refresh": "更新",
+      "filters": {
+        "title": "フィルター",
+        "tournamentName": "トーナメント名",
+        "tournamentNamePlaceholder": "トーナメント名で検索",
+        "status": "ステータス",
+        "statusPlaceholder": "全てのステータス",
+        "termsAgreed": "利用規約同意",
+        "termsAgreedPlaceholder": "すべて",
+        "dateFrom": "開始日",
+        "dateTo": "終了日",
+        "dateFromPlaceholder": "開始日を選択",
+        "dateToPlaceholder": "終了日を選択",
+        "apply": "適用",
+        "clear": "クリア"
+      },
+      "table": {
+        "id": "ID",
+        "playerName": "プレイヤー名",
+        "email": "メールアドレス",
+        "tournament": "トーナメント",
+        "rank": "順位",
+        "amount": "金額",
+        "status": "ステータス",
+        "termsAgreed": "利用規約同意",
+        "createdAt": "作成日時",
+        "actions": "操作",
+        "noForms": "フォームが見つかりません",
+        "formsFound": "件のフォーム"
+      },
+      "status": {
+        "pending": "保留中",
+        "approved": "承認済み",
+        "rejected": "却下"
+      },
+      "detail": {
+        "title": "フォーム詳細",
+        "formId": "フォームID",
+        "submittedAt": "送信日時",
+        "personalInfo": "個人情報",
+        "contactInfo": "連絡先情報",
+        "tournamentInfo": "トーナメント情報",
+        "bankInfo": "銀行情報",
+        "agreements": "同意事項"
+      }
+    },
+    "tournaments": {
+      "title": "トーナメント管理",
+      "refresh": "更新",
+      "create": "トーナメント作成",
+      "viewDetails": "詳細を見る",
+      "participants": "名参加",
+      "created": "作成日",
+      "import": {
+        "button": "CSVインポート",
+        "title": "CSVからトーナメントをインポート",
+        "instructions": "テンプレートCSVファイルをダウンロードし、トーナメントデータを入力してアップロードしてください。各賞金は別々の行に記載してください。必須列：eventName、eventNameJa、tournamentName、tournamentNameJa、date、status、prize、amount。",
+        "downloadTemplate": "テンプレートをダウンロード",
+        "selectFile": "CSVファイルを選択",
+        "validationSuccess": "検証成功",
+        "validationFailed": "検証失敗",
+        "validRecords": "{{count}}件の有効なレコード",
+        "errors": "エラーが見つかりました",
+        "row": "行",
+        "preview": "プレビュー",
+        "eventName": "イベント名",
+        "tournamentName": "トーナメント名",
+        "date": "開催日",
+        "status": "ステータス",
+        "prizesCount": "賞金",
+        "import": "{{count}}件のトーナメントをインポート"
+      },
+      "modal": {
+        "title": "新しいトーナメントを作成",
+        "editTitle": "トーナメントを編集",
+        "eventName": "イベント名（英語）",
+        "eventNameJa": "イベント名（日本語）",
+        "tournamentName": "トーナメント名（英語）",
+        "tournamentNameJa": "トーナメント名（日本語）",
+        "name": "トーナメント名",
+        "namePlaceholder": "トーナメント名を入力",
+        "date": "開催日",
+        "datePlaceholder": "日付を選択",
+        "location": "開催地",
+        "locationPlaceholder": "開催地を入力",
+        "prizes": "賞金",
+        "rank": "順位",
+        "amount": "金額",
+        "addPrize": "追加",
+        "cancel": "キャンセル",
+        "createButton": "トーナメントを作成",
+        "updateButton": "トーナメントを更新"
+      },
+      "status": {
+        "active": "有効",
+        "inactive": "無効",
+        "upcoming": "開催予定",
+        "ongoing": "開催中",
+        "completed": "終了"
+      },
+      "rank": "順位",
+      "amount": "金額",
+      "claimed": "申請済み",
+      "prizes": "賞金",
+      "morePrizes": "その他の賞金",
+      "detail": {
+        "backToList": "トーナメント一覧に戻る",
+        "notFound": "トーナメントが見つかりません",
+        "tournamentInfo": "トーナメント情報",
+        "date": "開催日",
+        "status": "ステータス",
+        "activate": "有効化",
+        "deactivate": "無効化",
+        "prizesInfo": "賞金情報",
+        "submittedForms": "提出されたフォーム",
+        "noForms": "このトーナメントに提出されたフォームはありません"
+      }
+    },
+    "services": {
+      "title": "サービス管理",
+      "tabs": {
+        "terms": "利用規約",
+        "privacy": "プライバシーポリシー",
+        "contract": "契約書",
+        "receipt": "領収書テンプレート"
+      },
+      "version": "バージョン",
+      "lastUpdated": "最終更新",
+      "updatedBy": "更新者",
+      "success": "成功",
+      "successMessage": {
+        "terms": "利用規約が正常に更新されました",
+        "privacy": "プライバシーポリシーが正常に更新されました",
+        "contract": "契約書が正常に更新されました",
+        "receipt": "領収書テンプレートが正常に更新されました"
+      },
+      "editor": {
+        "title": "HTMLエディター",
+        "description": "以下にHTMLコンテンツを記述できます。サポートされているタグ: h1, h2, h3, p, ul, ol, li, strong, em, a など",
+        "termsLabel": "利用規約コンテンツ",
+        "privacyLabel": "プライバシーポリシーコンテンツ",
+        "contractLabel": "契約書コンテンツ",
+        "receiptLabel": "領収書テンプレートコンテンツ",
+        "placeholder": "HTMLコンテンツを入力...",
+        "preview": "プレビュー",
+        "edit": "編集",
+        "saveTerms": "利用規約を保存",
+        "savePrivacy": "プライバシーポリシーを保存"
+      }
+    }
+  }
+}
