@@ -1,0 +1,79 @@
+{
+  "001": {
+    "code": "001",
+    "name": "本店",
+    "kana": "ホンテン",
+    "hira": "ほんてん",
+    "roma": "honten"
+  },
+  "002": {
+    "code": "002",
+    "name": "北条",
+    "kana": "ホウジヨウ",
+    "hira": "ほうじよう",
+    "roma": "houjiyou"
+  },
+  "005": {
+    "code": "005",
+    "name": "神戸",
+    "kana": "カンベ",
+    "hira": "かんべ",
+    "roma": "kambe"
+  },
+  "011": {
+    "code": "011",
+    "name": "富山",
+    "kana": "トミヤマ",
+    "hira": "とみやま",
+    "roma": "tomiyama"
+  },
+  "013": {
+    "code": "013",
+    "name": "三芳",
+    "kana": "ミヨシ",
+    "hira": "みよし",
+    "roma": "miyoshi"
+  },
+  "016": {
+    "code": "016",
+    "name": "富浦",
+    "kana": "トミウラ",
+    "hira": "とみうら",
+    "roma": "tomiura"
+  },
+  "023": {
+    "code": "023",
+    "name": "丸山",
+    "kana": "マルヤマ",
+    "hira": "まるやま",
+    "roma": "maruyama"
+  },
+  "027": {
+    "code": "027",
+    "name": "千倉",
+    "kana": "チクラ",
+    "hira": "ちくら",
+    "roma": "chikura"
+  },
+  "031": {
+    "code": "031",
+    "name": "和田",
+    "kana": "ワダ",
+    "hira": "わだ",
+    "roma": "wada"
+  },
+  "034": {
+    "code": "034",
+    "name": "長狭",
+    "kana": "ナガサ",
+    "hira": "ながさ",
+    "roma": "nagasa"
+  },
+  "035": {
+    "code": "035",
+    "name": "鴨川",
+    "kana": "カモガワ",
+    "hira": "かもがわ",
+    "roma": "kamogawa"
+  }
+}
