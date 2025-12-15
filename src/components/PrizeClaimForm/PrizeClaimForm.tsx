@@ -352,7 +352,7 @@ export function PrizeClaimForm() {
           </Paper>
 
           {/* Players+ ID / Passport Number Section */}
-          <Paper shadow="xs" p="md" withBorder>
+          {/* <Paper shadow="xs" p="md" withBorder>
             <Title order={4} mb="md">
               {t('prizeClaim.sections.playersId')}
             </Title>
@@ -365,7 +365,7 @@ export function PrizeClaimForm() {
               key={form.key('playersId')}
               {...form.getInputProps('playersId')}
             />
-          </Paper>
+          </Paper> */}
 
           {/* Contact Information Section */}
           <Paper shadow="xs" p="md" withBorder>
@@ -430,78 +430,6 @@ export function PrizeClaimForm() {
                     type="email"
                     key={form.key('email')}
                     {...form.getInputProps('email')}
-                  />
-                </Grid.Col>
-              </Grid>
-            </Stack>
-          </Paper>
-
-          {/* Tournament Information Section */}
-          <Paper shadow="xs" p="md" withBorder>
-            <Title order={4} mb="md">
-              {t('prizeClaim.sections.tournament')}
-            </Title>
-            <Stack gap="md">
-              <Grid>
-                <Grid.Col span={{ base: 12, sm: 6 }}>
-                  <Select
-                    label={t('prizeClaim.fields.tournamentDate.label')}
-                    placeholder={t('prizeClaim.fields.tournamentDate.placeholder')}
-                    description={'\u00A0'}
-                    data={dateOptions}
-                    withAsterisk
-                    searchable
-                    clearable
-                    disabled={isFormDisabled}
-                    value={formValues.tournamentDate || null}
-                    onChange={handleTournamentDateChange}
-                    error={form.errors.tournamentDate}
-                  />
-                </Grid.Col>
-                <Grid.Col span={{ base: 12, sm: 6 }}>
-                  <Select
-                    label={t('prizeClaim.fields.tournamentName.label')}
-                    placeholder={t('prizeClaim.fields.tournamentName.placeholder')}
-                    description={'\u00A0'}
-                    data={tournamentOptions}
-                    withAsterisk
-                    searchable
-                    clearable
-                    disabled={isFormDisabled || !formValues.tournamentDate}
-                    value={formValues.tournamentId || null}
-                    onChange={handleTournamentSelect}
-                    error={form.errors.tournamentId}
-                  />
-                </Grid.Col>
-              </Grid>
-
-              <Grid>
-                <Grid.Col span={{ base: 12, sm: 6 }}>
-                  <Select
-                    label={t('prizeClaim.fields.rank.label')}
-                    placeholder={t('prizeClaim.fields.rank.placeholder')}
-                    description={'\u00A0'}
-                    data={rankOptions}
-                    withAsterisk
-                    clearable
-                    disabled={isFormDisabled || !formValues.tournamentId}
-                    value={formValues.rank || null}
-                    onChange={handleRankSelect}
-                    error={form.errors.rank}
-                  />
-                </Grid.Col>
-                <Grid.Col span={{ base: 12, sm: 6 }}>
-                  <TextInput
-                    label={t('prizeClaim.fields.prizeAmount.label')}
-                    description={t('prizeClaim.fields.prizeAmount.description')}
-                    value={formValues.amount > 0 ? `¥${formValues.amount.toLocaleString()}` : ''}
-                    readOnly
-                    styles={{
-                      input: {
-                        fontWeight: 'bold',
-                        backgroundColor: 'var(--mantine-color-gray-1)',
-                      },
-                    }}
                   />
                 </Grid.Col>
               </Grid>

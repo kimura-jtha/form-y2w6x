@@ -61,7 +61,7 @@ const generateMockForms = (): PrizeClaimFormSubmission[] => {
         postalCode: '1000001',
         address: '東京都千代田区千代田1-1',
         phoneNumber: '090-1234-5678',
-        email: `player${i}@example.com`,
+        email: `user${i}@example.com`,
         tournamentDate: tournament.date,
         tournamentId: tournament.id,
         tournamentName: tournament.name,
