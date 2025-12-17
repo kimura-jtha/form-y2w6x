@@ -1,4 +1,5 @@
-import { getAccessKey } from '@/utils/auth';
+import { ROUTES } from '@/constants';
+import { clearAuth, getAccessKey } from '@/utils/auth';
 
 const baseUrl = 'https://wwzd303c6l.execute-api.ap-northeast-1.amazonaws.com/default/lambda-runner';
 const xApiKey = 'ak_1767958064_334e41e2273de69be6ef94b9d9933769';
@@ -25,6 +26,11 @@ export function fetchLambda<T>({
     headers,
     body: body ? JSON.stringify(body) : undefined,
   }).then(async (response) => {
+    if (response.status === 401) {
+      clearAuth();
+      alert('セッションが切れました。再度ログインしてください。');
+      window.location.href = ROUTES.AUTH.LOGIN;
+    }
     if (!response.ok) {
       throw new Error(await response.text());
     }

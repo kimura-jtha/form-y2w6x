@@ -297,8 +297,10 @@ export function usePrizeClaimForm() {
       const tournament = tournaments.find((t) => t.id === tournamentId);
       form.setFieldValue('tournamentId', tournamentId);
       // Store both event and tournament names
-      const fullName = tournament ? `${tournament.eventName} - ${tournament.tournamentName}` : '';
-      form.setFieldValue('tournamentName', fullName);
+      const tournamentName = tournament
+        ? `${tournament.eventNameJa} - ${tournament.tournamentNameJa}`
+        : '';
+      form.setFieldValue('tournamentName', tournamentName);
       // Reset rank and amount when tournament changes
       form.setFieldValue('rank', '');
       form.setFieldValue('amount', 0);

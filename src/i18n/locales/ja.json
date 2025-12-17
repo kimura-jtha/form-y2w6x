@@ -189,6 +189,44 @@
       "backendUnavailable": "サーバーが現在利用できません。しばらくしてから再度お試しください。"
     }
   },
+  "termsAgreement": {
+    "loading": "フォームデータを読み込み中...",
+    "error": {
+      "title": "エラー",
+      "formIdNotFound": "URLにフォームIDが見つかりません",
+      "hashNotFound": "URLにハッシュが見つかりません",
+      "loadFailed": "フォームデータの読み込みに失敗しました",
+      "agreeFailed": "利用規約への同意に失敗しました",
+      "formNotFound": "フォームデータが見つかりません"
+    },
+    "alreadyConfirmed": {
+      "title": "確認済み",
+      "message": "このフォームはすでに確認済みで、利用規約に同意しています。"
+    },
+    "title": "利用規約同意",
+    "formInfo": {
+      "title": "フォーム情報",
+      "name": "氏名",
+      "email": "メールアドレス",
+      "tournament": "トーナメント",
+      "rank": "順位",
+      "prizeAmount": "賞金額",
+      "playersId": "プレイヤーズID"
+    },
+    "bankInfo": {
+      "title": "銀行情報",
+      "bank": "銀行",
+      "branch": "支店",
+      "accountType": "口座種別",
+      "accountNumber": "口座番号",
+      "accountHolder": "口座名義"
+    },
+    "termsAlert": {
+      "title": "利用規約",
+      "message": "以下の「同意する」をクリックすることで、提供されたすべての情報が正確であることを確認し、賞金支払いに関する利用規約に同意したことになります。"
+    },
+    "agreeButton": "利用規約に同意する"
+  },
   "admin": {
     "navigation": {
       "forms": "フォーム管理",
@@ -280,7 +318,7 @@
       "import": {
         "button": "CSVインポート",
         "title": "CSVからトーナメントをインポート",
-        "instructions": "テンプレートCSVファイルをダウンロードし、トーナメントデータを入力してアップロードしてください。各賞金は別々の行に記載してください。必須列：eventName、eventNameJa、tournamentName、tournamentNameJa、date、status、prize、amount。",
+        "instructions": "テンプレートCSVファイルをダウンロードし、トーナメントデータを入力してアップロードしてください。各賞金は別々の行に記載してください。",
         "downloadTemplate": "テンプレートをダウンロード",
         "selectFile": "CSVファイルを選択",
         "validationSuccess": "検証成功",

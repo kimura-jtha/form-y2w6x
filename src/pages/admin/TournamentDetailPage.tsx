@@ -193,10 +193,10 @@ export function TournamentDetailPage() {
           </Button>
           <Stack gap={0}>
             <Title order={2}>
-              {tournament.eventName} / {tournament.eventNameJa}
+              {tournament.eventNameJa} / {tournament.eventName ?? '-'}
             </Title>
             <Text size="sm" c="dimmed">
-              {tournament.tournamentName} / {tournament.tournamentNameJa}
+              {tournament.tournamentNameJa} / {tournament.tournamentName ?? '-'}
             </Text>
           </Stack>
         </Group>
@@ -226,16 +226,6 @@ export function TournamentDetailPage() {
                 {t('admin.tournaments.detail.tournamentInfo')}
               </Text>
 
-              {/* Event Name (English) */}
-              <Group gap="xs" align="flex-start">
-                <Text size="sm" c="dimmed" fw={500} style={{ minWidth: 180 }}>
-                  {t('admin.tournaments.modal.eventName')}:
-                </Text>
-                <Text size="sm" flex={1}>
-                  {tournament.eventName}
-                </Text>
-              </Group>
-
               {/* Event Name (Japanese) */}
               <Group gap="xs" align="flex-start">
                 <Text size="sm" c="dimmed" fw={500} style={{ minWidth: 180 }}>
@@ -246,13 +236,13 @@ export function TournamentDetailPage() {
                 </Text>
               </Group>
 
-              {/* Tournament Name (English) */}
+              {/* Event Name (English) */}
               <Group gap="xs" align="flex-start">
                 <Text size="sm" c="dimmed" fw={500} style={{ minWidth: 180 }}>
-                  {t('admin.tournaments.modal.tournamentName')}:
+                  {t('admin.tournaments.modal.eventName')}:
                 </Text>
                 <Text size="sm" flex={1}>
-                  {tournament.tournamentName}
+                  {tournament.eventName}
                 </Text>
               </Group>
 
@@ -263,6 +253,16 @@ export function TournamentDetailPage() {
                 </Text>
                 <Text size="sm" flex={1}>
                   {tournament.tournamentNameJa}
+                </Text>
+              </Group>
+
+              {/* Tournament Name (English) */}
+              <Group gap="xs" align="flex-start">
+                <Text size="sm" c="dimmed" fw={500} style={{ minWidth: 180 }}>
+                  {t('admin.tournaments.modal.tournamentName')}:
+                </Text>
+                <Text size="sm" flex={1}>
+                  {tournament.tournamentName}
                 </Text>
               </Group>
 

@@ -17,7 +17,7 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <MantineProvider theme={theme}>
+    <MantineProvider theme={theme} forceColorScheme="light">
       <App />
     </MantineProvider>
   </StrictMode>,

@@ -189,6 +189,44 @@
       "backendUnavailable": "The server is currently unavailable. Please try again later."
     }
   },
+  "termsAgreement": {
+    "loading": "Loading form data...",
+    "error": {
+      "title": "Error",
+      "formIdNotFound": "Form ID not found in URL",
+      "hashNotFound": "Hash not found in URL",
+      "loadFailed": "Failed to load form data",
+      "agreeFailed": "Failed to agree to terms",
+      "formNotFound": "Form data not found"
+    },
+    "alreadyConfirmed": {
+      "title": "Already Confirmed",
+      "message": "This form has already been confirmed and you have agreed to the terms of service."
+    },
+    "title": "Terms of Service Agreement",
+    "formInfo": {
+      "title": "Form Information",
+      "name": "Name",
+      "email": "Email",
+      "tournament": "Tournament",
+      "rank": "Rank",
+      "prizeAmount": "Prize Amount",
+      "playersId": "Players ID"
+    },
+    "bankInfo": {
+      "title": "Bank Information",
+      "bank": "Bank",
+      "branch": "Branch",
+      "accountType": "Account Type",
+      "accountNumber": "Account Number",
+      "accountHolder": "Account Holder"
+    },
+    "termsAlert": {
+      "title": "Terms of Service",
+      "message": "By clicking \"I Agree\" below, you confirm that all the information provided is accurate and you agree to our terms of service for prize disbursement."
+    },
+    "agreeButton": "I Agree to Terms of Service"
+  },
   "admin": {
     "navigation": {
       "forms": "Forms Management",
@@ -291,7 +329,7 @@
       "import": {
         "button": "Import CSV",
         "title": "Import Tournaments from CSV",
-        "instructions": "Download the template CSV file, fill in your tournament data, and upload it here. Each prize should be on a separate row. Required columns: eventName, eventNameJa, tournamentName, tournamentNameJa, date, status, prize, and amount.",
+        "instructions": "Download the template CSV file, fill in your tournament data, and upload it here. Each prize should be on a separate row.",
         "downloadTemplate": "Download Template",
         "selectFile": "Select CSV File",
         "validationSuccess": "Validation Passed",

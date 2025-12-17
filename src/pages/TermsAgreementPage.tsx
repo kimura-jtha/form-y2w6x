@@ -13,11 +13,13 @@ import {
   Title,
 } from '@mantine/core';
 import { IconAlertCircle, IconCheck } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 
 import { agreeTermsOfService, getFormById } from '@/lib/lambda/form';
 import type { PrizeClaimFormValues } from '@/types';
 
 export function TermsAgreementPage() {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,7 +37,7 @@ export function TermsAgreementPage() {
       if (match) {
         setFormId(match[1]);
       } else {
-        setError('Form ID not found in URL');
+        setError(t('termsAgreement.error.formIdNotFound'));
         setIsLoading(false);
       }
     }
@@ -45,11 +47,11 @@ export function TermsAgreementPage() {
       if (match) {
         setHash(match[1]);
       } else {
-        setError('Hash not found in URL');
+        setError(t('termsAgreement.error.hashNotFound'));
         setIsLoading(false);
       }
     }
-  }, []);
+  }, [t]);
 
   // Fetch form data when formId is available
   useEffect(() => {
@@ -67,14 +69,14 @@ export function TermsAgreementPage() {
           setAlreadyAgreed(true);
         }
       } catch (error_) {
-        setError(error_ instanceof Error ? error_.message : 'Failed to load form data');
+        setError(error_ instanceof Error ? error_.message : t('termsAgreement.error.loadFailed'));
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchFormData();
-  }, [formId, hash]);
+  }, [formId, hash, t]);
 
   const handleAgree = async () => {
     if (!formId || !hash) return;
@@ -85,7 +87,7 @@ export function TermsAgreementPage() {
       await agreeTermsOfService(formId, hash);
       setAlreadyAgreed(true);
     } catch (error_) {
-      setError(error_ instanceof Error ? error_.message : 'Failed to agree to terms');
+      setError(error_ instanceof Error ? error_.message : t('termsAgreement.error.agreeFailed'));
     } finally {
       setIsSubmitting(false);
     }
@@ -96,7 +98,7 @@ export function TermsAgreementPage() {
       <Container size="md" py="xl">
         <Stack align="center" gap="md">
           <Loader size="lg" />
-          <Text c="dimmed">Loading form data...</Text>
+          <Text c="dimmed">{t('termsAgreement.loading')}</Text>
         </Stack>
       </Container>
     );
@@ -105,7 +107,11 @@ export function TermsAgreementPage() {
   if (error) {
     return (
       <Container size="md" py="xl">
-        <Alert icon={<IconAlertCircle size={16} />} title="Error" color="red">
+        <Alert
+          icon={<IconAlertCircle size={16} />}
+          title={t('termsAgreement.error.title')}
+          color="red"
+        >
           {error}
         </Alert>
       </Container>
@@ -115,8 +121,12 @@ export function TermsAgreementPage() {
   if (alreadyAgreed) {
     return (
       <Container size="md" py="xl">
-        <Alert icon={<IconCheck size={16} />} title="Already Confirmed" color="green">
-          This form has already been confirmed and you have agreed to the terms of service.
+        <Alert
+          icon={<IconCheck size={16} />}
+          title={t('termsAgreement.alreadyConfirmed.title')}
+          color="green"
+        >
+          {t('termsAgreement.alreadyConfirmed.message')}
         </Alert>
       </Container>
     );
@@ -125,8 +135,12 @@ export function TermsAgreementPage() {
   if (!formData) {
     return (
       <Container size="md" py="xl">
-        <Alert icon={<IconAlertCircle size={16} />} title="Error" color="red">
-          Form data not found
+        <Alert
+          icon={<IconAlertCircle size={16} />}
+          title={t('termsAgreement.error.title')}
+          color="red"
+        >
+          {t('termsAgreement.error.formNotFound')}
         </Alert>
       </Container>
     );
@@ -136,16 +150,16 @@ export function TermsAgreementPage() {
     <Container size="md" py="xl">
       <Paper shadow="sm" p="xl" radius="md">
         <Stack gap="lg">
-          <Title order={2}>Terms of Service Agreement</Title>
+          <Title order={2}>{t('termsAgreement.title')}</Title>
 
           <Box>
             <Text fw={500} size="sm" mb="xs">
-              Form Information
+              {t('termsAgreement.formInfo.title')}
             </Text>
             <Grid>
               <Grid.Col span={6}>
                 <Text size="xs" c="dimmed">
-                  Name
+                  {t('termsAgreement.formInfo.name')}
                 </Text>
                 <Text size="sm">
                   {formData.lastNameKanji} {formData.firstNameKanji}
@@ -153,31 +167,31 @@ export function TermsAgreementPage() {
               </Grid.Col>
               <Grid.Col span={6}>
                 <Text size="xs" c="dimmed">
-                  Email
+                  {t('termsAgreement.formInfo.email')}
                 </Text>
                 <Text size="sm">{formData.email}</Text>
               </Grid.Col>
               <Grid.Col span={6}>
                 <Text size="xs" c="dimmed">
-                  Tournament
+                  {t('termsAgreement.formInfo.tournament')}
                 </Text>
                 <Text size="sm">{formData.tournamentName}</Text>
               </Grid.Col>
               <Grid.Col span={6}>
                 <Text size="xs" c="dimmed">
-                  Rank
+                  {t('termsAgreement.formInfo.rank')}
                 </Text>
                 <Text size="sm">{formData.rank}</Text>
               </Grid.Col>
               <Grid.Col span={6}>
                 <Text size="xs" c="dimmed">
-                  Prize Amount
+                  {t('termsAgreement.formInfo.prizeAmount')}
                 </Text>
                 <Text size="sm">¥{formData.amount.toLocaleString()}</Text>
               </Grid.Col>
               <Grid.Col span={6}>
                 <Text size="xs" c="dimmed">
-                  Players ID
+                  {t('termsAgreement.formInfo.playersId')}
                 </Text>
                 <Text size="sm">{formData.playersId}</Text>
               </Grid.Col>
@@ -186,12 +200,12 @@ export function TermsAgreementPage() {
 
           <Box>
             <Text fw={500} size="sm" mb="xs">
-              Bank Information
+              {t('termsAgreement.bankInfo.title')}
             </Text>
             <Grid>
               <Grid.Col span={6}>
                 <Text size="xs" c="dimmed">
-                  Bank
+                  {t('termsAgreement.bankInfo.bank')}
                 </Text>
                 <Text size="sm">
                   {formData.bankName} ({formData.bankCode})
@@ -199,7 +213,7 @@ export function TermsAgreementPage() {
               </Grid.Col>
               <Grid.Col span={6}>
                 <Text size="xs" c="dimmed">
-                  Branch
+                  {t('termsAgreement.bankInfo.branch')}
                 </Text>
                 <Text size="sm">
                   {formData.branchName} ({formData.branchCode})
@@ -207,34 +221,35 @@ export function TermsAgreementPage() {
               </Grid.Col>
               <Grid.Col span={6}>
                 <Text size="xs" c="dimmed">
-                  Account Type
+                  {t('termsAgreement.bankInfo.accountType')}
                 </Text>
                 <Text size="sm">{formData.accountType}</Text>
               </Grid.Col>
               <Grid.Col span={6}>
                 <Text size="xs" c="dimmed">
-                  Account Number
+                  {t('termsAgreement.bankInfo.accountNumber')}
                 </Text>
                 <Text size="sm">{formData.accountNumber}</Text>
               </Grid.Col>
               <Grid.Col span={12}>
                 <Text size="xs" c="dimmed">
-                  Account Holder
+                  {t('termsAgreement.bankInfo.accountHolder')}
                 </Text>
                 <Text size="sm">{formData.accountHolderName}</Text>
               </Grid.Col>
             </Grid>
           </Box>
 
-          <Alert icon={<IconAlertCircle size={16} />} title="Terms of Service" color="blue">
-            <Text size="sm">
-              By clicking "I Agree" below, you confirm that all the information provided is accurate
-              and you agree to our terms of service for prize disbursement.
-            </Text>
+          <Alert
+            icon={<IconAlertCircle size={16} />}
+            title={t('termsAgreement.termsAlert.title')}
+            color="blue"
+          >
+            <Text size="sm">{t('termsAgreement.termsAlert.message')}</Text>
           </Alert>
 
           <Button onClick={handleAgree} loading={isSubmitting} fullWidth size="lg">
-            I Agree to Terms of Service
+            {t('termsAgreement.agreeButton')}
           </Button>
         </Stack>
       </Paper>

@@ -182,19 +182,19 @@ export function TournamentFormModal({
         <Grid>
           <Grid.Col span={6}>
             <TextInput
-              label={t('admin.tournaments.modal.eventName')}
+              label={t('admin.tournaments.modal.eventNameJa')}
               placeholder=""
-              value={eventName}
-              onChange={(event) => setEventName(event.currentTarget.value)}
+              value={eventNameJa}
+              onChange={(event) => setEventNameJa(event.currentTarget.value)}
               required
             />
           </Grid.Col>
           <Grid.Col span={6}>
             <TextInput
-              label={t('admin.tournaments.modal.eventNameJa')}
+              label={t('admin.tournaments.modal.eventName')}
               placeholder=""
-              value={eventNameJa}
-              onChange={(event) => setEventNameJa(event.currentTarget.value)}
+              value={eventName}
+              onChange={(event) => setEventName(event.currentTarget.value)}
               required
             />
           </Grid.Col>
@@ -204,19 +204,19 @@ export function TournamentFormModal({
         <Grid>
           <Grid.Col span={6}>
             <TextInput
-              label={t('admin.tournaments.modal.tournamentName')}
+              label={t('admin.tournaments.modal.tournamentNameJa')}
               placeholder=""
-              value={tournamentName}
-              onChange={(event) => setTournamentName(event.currentTarget.value)}
+              value={tournamentNameJa}
+              onChange={(event) => setTournamentNameJa(event.currentTarget.value)}
               required
             />
           </Grid.Col>
           <Grid.Col span={6}>
             <TextInput
-              label={t('admin.tournaments.modal.tournamentNameJa')}
+              label={t('admin.tournaments.modal.tournamentName')}
               placeholder=""
-              value={tournamentNameJa}
-              onChange={(event) => setTournamentNameJa(event.currentTarget.value)}
+              value={tournamentName}
+              onChange={(event) => setTournamentName(event.currentTarget.value)}
               required
             />
           </Grid.Col>

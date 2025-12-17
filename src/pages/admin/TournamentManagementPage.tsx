@@ -197,10 +197,10 @@ export function TournamentManagementPage() {
                   <Group justify="space-between">
                     <Stack gap={0}>
                       <Text fw={500} size="lg">
-                        {tournament.eventName}
+                        {tournament.eventNameJa}
                       </Text>
                       <Text size="sm" c="dimmed">
-                        {tournament.eventNameJa}
+                        {tournament.eventName ?? '-'}
                       </Text>
                     </Stack>
                     <Badge color={getStatusColor(tournament.status)} size="sm">
@@ -209,7 +209,7 @@ export function TournamentManagementPage() {
                   </Group>
 
                   <Text size="sm">
-                    {tournament.tournamentName} / {tournament.tournamentNameJa}
+                    {tournament.tournamentNameJa} / {tournament.tournamentName ?? '-'}
                   </Text>
 
                   <Stack gap="xs">

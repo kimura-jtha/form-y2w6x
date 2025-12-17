@@ -2,6 +2,8 @@
  * CSV Export and Import Utilities
  */
 
+import Encoding from 'encoding-japanese';
+
 import type { PrizeClaimFormSubmission, PrizeRank, Tournament, TournamentStatus } from '@/types';
 
 /**
@@ -41,13 +43,92 @@ function escapeCSV(value: unknown): string {
 /**
  * Convert array of objects to CSV string
  */
-function arrayToCSV(headers: string[], rows: string[][]): string {
+function arrayToCSV(rows: string[][], headers?: string[]): string {
   const csvRows = [
-    headers.map(escapeCSV).join(','),
+    headers ? headers.map(escapeCSV).join(',') : undefined,
     ...rows.map((row) => row.map(escapeCSV).join(',')),
-  ];
+  ].filter((row) => row !== undefined);
 
   return csvRows.join('\n');
+}
+
+/**
+ * Export prize claim forms to PayPay CSV format in Shift_JIS encoding
+ * PayPay banking format requires:
+ * - Shift_JIS encoding (Japanese banking standard)
+ * - Specific column format for bank transfer data
+ * - Summary row at the end
+ *
+ * @param forms - Array of form submissions to export
+ * @param filename - Filename for the download (without extension)
+ */
+export function exportFormsToPayPayCSV(forms: PrizeClaimFormSubmission[], filename: string) {
+  if (forms.length === 0) {
+    throw new Error('No forms to export');
+  }
+
+  // Convert forms to CSV rows
+  let totalAmount = 0;
+  const rows = forms.map((form) => {
+    const { formContent } = form;
+    totalAmount += formContent.amount;
+    return [
+      // レコード区分 (Record type)
+      '1',
+      // 銀行コード (Bank code)
+      formContent.bankCode,
+      // 支店コード (Branch code)
+      formContent.branchCode,
+      // 預金種目 (Account type: 1=savings, 2=checking)
+      formContent.accountType === 'savings' ? '1' : '2',
+      // 口座番号 (Account number)
+      formContent.accountNumber,
+      // 受取人名 (Recipient name in half-width katakana)
+      formContent.accountHolderName,
+      // 振込金額 (Transfer amount)
+      formContent.amount.toString(),
+      // 振込依頼人名 (Client name - optional)
+      '',
+    ];
+  });
+
+  // Add summary row (trailer record)
+  // レコード区分=2, 合計件数, 合計金額
+  rows.push(['2', '', '', '', '', '', totalAmount.toString(), '']);
+
+  // Generate CSV content
+  const csvContent = arrayToCSV(rows);
+
+  // Convert string to Shift_JIS encoding
+  // encoding-japanese expects Unicode code points as input
+  const unicodeArray = [];
+  for (let i = 0; i < csvContent.length; i++) {
+    unicodeArray.push(csvContent.codePointAt(i) || 0);
+  }
+
+  // Convert Unicode to Shift_JIS
+  const sjisArray = Encoding.convert(unicodeArray, {
+    to: 'SJIS',
+    from: 'UNICODE',
+  });
+
+  // Create Uint8Array from Shift_JIS array
+  const sjisUint8Array = new Uint8Array(sjisArray);
+
+  // Create blob with Shift_JIS encoding
+  const blob = new Blob([sjisUint8Array], { type: 'text/csv;charset=shift_jis;' });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+
+  link.setAttribute('href', url);
+  link.setAttribute('download', `${filename}.csv`);
+  link.style.visibility = 'hidden';
+
+  document.body.append(link);
+  link.click();
+  link.remove();
+
+  URL.revokeObjectURL(url);
 }
 
 /**
@@ -135,7 +216,7 @@ export function exportFormsToCSV(forms: PrizeClaimFormSubmission[], filename: st
   });
 
   // Generate CSV content
-  const csvContent = arrayToCSV(headers, rows);
+  const csvContent = arrayToCSV(rows, headers);
 
   // Create blob and download
   const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -173,10 +254,10 @@ export function parseTournamentCSV(csvText: string): CSVImportResult {
     // Parse header
     const header = parseCSVLine(lines[0]);
     const requiredFields = [
+      'eventNameEn',
       'eventName',
-      'eventNameJa',
+      'tournamentNameEn',
       'tournamentName',
-      'tournamentNameJa',
       'date',
       'status',
       'prize',
@@ -237,10 +318,10 @@ export function parseTournamentCSV(csvText: string): CSVImportResult {
         if (!tournamentMap.has(tournamentKey)) {
           tournamentMap.set(tournamentKey, {
             tournament: {
-              eventName: row['eventName'],
-              eventNameJa: row['eventNameJa'],
-              tournamentName: row['tournamentName'],
-              tournamentNameJa: row['tournamentNameJa'],
+              eventName: row['eventNameEn'],
+              eventNameJa: row['eventName'],
+              tournamentName: row['tournamentNameEn'],
+              tournamentNameJa: row['tournamentName'],
               date: row['date'],
               status: row['status'] as TournamentStatus,
             },

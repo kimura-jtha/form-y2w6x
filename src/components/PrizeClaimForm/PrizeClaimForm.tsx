@@ -21,6 +21,7 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { IconAlertCircle } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
+
 import { alive } from '@/lib/lambda/health';
 
 // import { PRIVACY_POLICY_HTML } from './privacyPolicyContent';
@@ -71,7 +72,11 @@ export function PrizeClaimForm() {
     };
 
     getPrivacyPolicyTemplate().then((template) => {
-      setPrivacyPolicy(template.content);
+      setPrivacyPolicy(
+        renderTemplate(template.content, {
+          year: new Date().getFullYear().toString(),
+        }),
+      );
     });
 
     checkHealth();
@@ -103,7 +108,7 @@ export function PrizeClaimForm() {
         postalCode: '1000001',
         address: '東京都千代田区千代田1-1',
         phoneNumber: '090-1234-5678',
-        email: 'test@example.com',
+        email: `check-${Math.random().toString(36).slice(2, 8)}@jtha.info`,
         tournamentDate: availableDates[0] || '',
         accountType: 'savings',
         accountNumber: '1234567',
@@ -224,7 +229,7 @@ export function PrizeClaimForm() {
     const filteredTournaments = getFilteredTournaments(formValues.tournamentDate);
     return filteredTournaments.map((tournament) => ({
       value: tournament.id,
-      label: `${tournament.eventName} - ${tournament.tournamentName}`,
+      label: `${tournament.eventNameJa} - ${tournament.tournamentNameJa}`,
     }));
   }, [formValues.tournamentDate, getFilteredTournaments]);
 
@@ -506,6 +511,7 @@ export function PrizeClaimForm() {
                       input: {
                         fontWeight: 'bold',
                         backgroundColor: 'var(--mantine-color-gray-1)',
+                        cursor: 'not-allowed',
                       },
                     }}
                   />
@@ -675,3 +681,16 @@ export function PrizeClaimForm() {
     </Box>
   );
 }
+
+/**
+ * Render template by replacing {{variableName}} placeholders with actual values
+ * @param template - Template string with placeholders
+ * @param variables - Variable values to inject
+ * @returns Rendered template string
+ */
+const renderTemplate = (template: string, variables: Record<string, string>): string => {
+  return template.replaceAll(/{{(\w+)}}/g, (match, key) => {
+    const value = variables[key];
+    return value !== undefined ? String(value) : match;
+  });
+};

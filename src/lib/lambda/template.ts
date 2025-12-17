@@ -98,36 +98,7 @@ export async function getReceiptTemplate(lang = 'ja'): Promise<Template> {
   return _getTemplate(`receipt-${lang}`);
 }
 
-function _extractBodyContent(content: string): string {
-  const body = content.match(/<body[^>]*>(.|\n)*<\/body>/g);
-  // extract only content inside body
-  if (body) {
-    return body[0]
-      .replace(/<body[^>]*>/, '')
-      .replace(/<\/body>/, '')
-      .trim();
-  }
-  return '';
-}
-
-function _generateHtmlTemplate(content: string): string {
-  return `<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-
-<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-${content}
-</body>
-
-</html>`;
-}
-
-async function _saveTemplate(id: string, subject: string, content: string): Promise<void> {
-  const html = _generateHtmlTemplate(content);
+async function _saveTemplate(id: string, subject: string, html: string): Promise<void> {
   await fetchLambda({
     path: `admin/templates/${id}`,
     method: 'PUT',
@@ -136,7 +107,7 @@ async function _saveTemplate(id: string, subject: string, content: string): Prom
       isDraft: false,
       content: JSON.stringify({
         subject: subject,
-        html: html,
+        html,
         // TODO: strip html tags and get text content with new line separator
         text: '',
       }),
@@ -170,7 +141,7 @@ function _getTemplate(key: string): Promise<Template> {
     const template: Template = {
       id: response.template.id,
       subject: content.subject,
-      content: _extractBodyContent(content.html),
+      content: content.html,
       versionHistory: response.template.versionHistory,
     };
     cache.set(key, template);

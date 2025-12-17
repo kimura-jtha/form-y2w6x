@@ -23,7 +23,7 @@ import { getForms } from '@/lib/lambda/form';
 import { fetchAllTournaments } from '@/lib/lambda/tournament';
 import { useAppStore } from '@/stores';
 import type { PrizeClaimFormSubmission } from '@/types';
-import { exportFormsToCSV, maskEmail } from '@/utils';
+import { exportFormsToPayPayCSV, maskEmail } from '@/utils';
 
 export function FormManagementPage() {
   const { t } = useTranslation();
@@ -147,19 +147,15 @@ export function FormManagementPage() {
         alert(t('admin.forms.export.noData'));
         return;
       }
-
-      // Get tournament name for filename
-      const tournament = tournaments.find((t) => t.id === appliedTournamentId);
-      const tournamentName = tournament
-        ? `${tournament.eventName}_${tournament.tournamentName}`
-        : 'tournament';
-
       // Generate filename with tournament name and timestamp
-      const timestamp = new Date().toISOString().slice(0, 10);
-      const filename = `${tournamentName}_forms_${timestamp}`;
-
+      const timestamp = new Date()
+        .toISOString()
+        .slice(0, -8)
+        .replaceAll(/[:TZ-]/g, '_');
+      // cspell:disable-next-line
+      const filename = `paypay_${timestamp}`;
       // Export to CSV
-      exportFormsToCSV(allForms, filename);
+      exportFormsToPayPayCSV(allForms, filename);
     } catch (error) {
       console.error('Failed to export forms:', error);
       alert(t('admin.forms.export.error'));
@@ -202,7 +198,7 @@ export function FormManagementPage() {
             onChange={setSelectedTournamentId}
             data={tournaments.map((t) => ({
               value: t.id,
-              label: `${t.eventName} - ${t.tournamentName}`,
+              label: `${t.eventNameJa} - ${t.tournamentNameJa}`,
             }))}
             searchable
             clearable
