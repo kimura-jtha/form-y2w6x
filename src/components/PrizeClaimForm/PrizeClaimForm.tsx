@@ -24,7 +24,9 @@ import { useTranslation } from 'react-i18next';
 
 import { alive } from '@/lib/lambda/health';
 
-import { PRIVACY_POLICY_HTML } from './privacyPolicyContent';
+// import { PRIVACY_POLICY_HTML } from './privacyPolicyContent';
+import { getPrivacyPolicyTemplate } from '@/lib/lambda/template';
+
 import { usePrizeClaimForm } from './usePrizeClaimForm';
 
 export function PrizeClaimForm() {
@@ -34,6 +36,7 @@ export function PrizeClaimForm() {
   const [isBackendAlive, setIsBackendAlive] = useState(false);
   const [isDevMode, setIsDevMode] = useState(false);
   const hasPopulatedDevData = useRef(false);
+  const [privacyPolicy, setPrivacyPolicy] = useState<string>('');
 
   const {
     form,
@@ -67,6 +70,10 @@ export function PrizeClaimForm() {
         setIsCheckingHealth(false);
       }
     };
+
+    getPrivacyPolicyTemplate().then((template) => {
+      setPrivacyPolicy(template.content);
+    });
 
     checkHealth();
   }, []);
@@ -606,7 +613,7 @@ export function PrizeClaimForm() {
                     style={{
                       borderRadius: 'var(--mantine-radius-sm)',
                     }}
-                    dangerouslySetInnerHTML={{ __html: PRIVACY_POLICY_HTML }}
+                    dangerouslySetInnerHTML={{ __html: privacyPolicy }}
                   />
                 </ScrollArea>
               </Box>

@@ -6,36 +6,96 @@ import { fetchLambda } from './_helper';
 
 const cache = new Map<string, Template>();
 
-export async function savePrivacyPolicyTemplate(id: string, content: string): Promise<void> {
-  return _saveTemplate(id, content);
+export async function savePrivacyPolicyTemplate({
+  id,
+  content,
+}: {
+  id: string;
+  content: string;
+  subject?: string;
+}): Promise<void> {
+  return _saveTemplate(id, 'Privacy Policy', content);
 }
 
-export async function saveTermsOfServiceTemplate(id: string, content: string): Promise<void> {
-  return _saveTemplate(id, content);
+export async function saveTermsOfServiceTemplate({
+  id,
+  content,
+}: {
+  id: string;
+  content: string;
+  subject?: string;
+}): Promise<void> {
+  return _saveTemplate(id, 'Terms of Service', content);
 }
 
-export async function saveContractTemplate(id: string, content: string): Promise<void> {
-  return _saveTemplate(id, content);
+export async function saveContractTemplate({
+  id,
+  content,
+}: {
+  id: string;
+  content: string;
+  subject?: string;
+}): Promise<void> {
+  return _saveTemplate(id, 'Contract', content);
 }
 
-export async function saveReceiptTemplate(id: string, content: string): Promise<void> {
-  return _saveTemplate(id, content);
+export async function saveReceiptTemplate({
+  id,
+  content,
+}: {
+  id: string;
+  content: string;
+  subject?: string;
+}): Promise<void> {
+  return _saveTemplate(id, 'Receipt', content);
 }
 
-export async function getPrivacyPolicyTemplate(): Promise<Template> {
-  return _getTemplate('privacy-policy-ja');
+export async function saveConfirmationEmailTemplate({
+  id,
+  content,
+  subject,
+}: {
+  id: string;
+  content: string;
+  subject?: string;
+}): Promise<void> {
+  return _saveTemplate(id, subject ?? 'Confirmation Email', content);
 }
 
-export async function getTermsOfServiceTemplate(): Promise<Template> {
-  return _getTemplate('terms-of-service-ja');
+export async function saveContractEmailTemplate({
+  id,
+  content,
+  subject,
+}: {
+  id: string;
+  content: string;
+  subject?: string;
+}): Promise<void> {
+  return _saveTemplate(id, subject ?? 'Contract Email', content);
 }
 
-export async function getContractTemplate(): Promise<Template> {
-  return _getTemplate('contract-ja');
+export async function getContractEmailTemplate(lang = 'ja'): Promise<Template> {
+  return _getTemplate(`contract-email-${lang}`);
 }
 
-export async function getReceiptTemplate(): Promise<Template> {
-  return _getTemplate('receipt-ja');
+export async function getConfirmationEmailTemplate(lang = 'ja'): Promise<Template> {
+  return _getTemplate(`confirmation-email-${lang}`);
+}
+
+export async function getPrivacyPolicyTemplate(lang = 'ja'): Promise<Template> {
+  return _getTemplate(`privacy-policy-${lang}`);
+}
+
+export async function getTermsOfServiceTemplate(lang = 'ja'): Promise<Template> {
+  return _getTemplate(`terms-of-service-${lang}`);
+}
+
+export async function getContractTemplate(lang = 'ja'): Promise<Template> {
+  return _getTemplate(`contract-${lang}`);
+}
+
+export async function getReceiptTemplate(lang = 'ja'): Promise<Template> {
+  return _getTemplate(`receipt-${lang}`);
 }
 
 function _extractBodyContent(content: string): string {
@@ -66,7 +126,7 @@ ${content}
 </html>`;
 }
 
-async function _saveTemplate(id: string, content: string): Promise<void> {
+async function _saveTemplate(id: string, subject: string, content: string): Promise<void> {
   const html = _generateHtmlTemplate(content);
   await fetchLambda({
     path: `admin/templates/${id}`,
@@ -75,6 +135,7 @@ async function _saveTemplate(id: string, content: string): Promise<void> {
       updatedBy: getUserName(),
       isDraft: false,
       content: JSON.stringify({
+        subject: subject,
         html: html,
         // TODO: strip html tags and get text content with new line separator
         text: '',
@@ -93,6 +154,7 @@ function _getTemplate(key: string): Promise<Template> {
     const response = await fetchLambda<{
       template: {
         id: string;
+        subject: string;
         content: string;
         versionHistory: {
           version: string;
@@ -107,6 +169,7 @@ function _getTemplate(key: string): Promise<Template> {
     const content = JSON.parse(response.template.content);
     const template: Template = {
       id: response.template.id,
+      subject: content.subject,
       content: _extractBodyContent(content.html),
       versionHistory: response.template.versionHistory,
     };

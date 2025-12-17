@@ -354,7 +354,9 @@
         "terms": "Terms of Service",
         "privacy": "Privacy Policy",
         "contract": "Contract",
-        "receipt": "Receipt Template"
+        "receipt": "Receipt Template",
+        "confirmationEmail": "Confirmation Email Template",
+        "contractEmail": "Contract Email Template"
       },
       "version": "Version",
       "lastUpdated": "Last updated",
@@ -364,20 +366,34 @@
         "terms": "Terms of Service updated successfully",
         "privacy": "Privacy Policy updated successfully",
         "contract": "Contract updated successfully",
-        "receipt": "Receipt template updated successfully"
+        "receipt": "Receipt template updated successfully",
+        "confirmationEmail": "Confirmation email updated successfully",
+        "contractEmail": "Contract email updated successfully"
       },
       "editor": {
         "title": "HTML Editor",
         "description": "You can write HTML content below. Supported tags: h1, h2, h3, p, ul, ol, li, strong, em, a, etc.",
         "termsLabel": "Terms of Service Content",
+        "termsSubjectLabel": "Terms of Service Subject",
         "privacyLabel": "Privacy Policy Content",
+        "privacySubjectLabel": "Privacy Policy Subject",
         "contractLabel": "Contract Content",
+        "contractSubjectLabel": "Contract Subject",
         "receiptLabel": "Receipt Template Content",
+        "receiptSubjectLabel": "Receipt Template Subject",
+        "confirmationEmailLabel": "Confirmation Email Template Content",
+        "confirmationEmailSubjectLabel": "Confirmation Email Subject",
+        "contractEmailLabel": "Contract Email Template Content",
+        "contractEmailSubjectLabel": "Contract Email Subject",
         "placeholder": "Enter HTML content...",
         "preview": "Preview",
         "edit": "Edit",
         "saveTerms": "Save Terms of Service",
-        "savePrivacy": "Save Privacy Policy"
+        "savePrivacy": "Save Privacy Policy",
+        "saveContract": "Save Contract",
+        "saveReceipt": "Save Receipt Template",
+        "saveConfirmationEmail": "Save Confirmation Email",
+        "saveContractEmail": "Save Contract Email"
       },
       "variables": {
         "buttonLabel": "Template Variables",
@@ -392,6 +408,152 @@
         "usage": {
           "title": "Usage Example",
           "description": "To use a variable in your template, wrap it with double curly braces:"
+        },
+        "groups": {
+          "common": {
+            "title": "Common Variables",
+            "description": "General information available in all templates"
+          },
+          "templateContent": {
+            "title": "Template Content",
+            "description": "Full content of other templates (HTML or text format)"
+          },
+          "personalInfo": {
+            "title": "Personal Information",
+            "description": "Information about the form submitter"
+          },
+          "tournamentInfo": {
+            "title": "Tournament Information",
+            "description": "Details about the tournament and prize"
+          },
+          "bankingInfo": {
+            "title": "Banking Information",
+            "description": "Bank account details for prize payment"
+          }
+        },
+        "fields": {
+          "year": {
+            "description": "Current year",
+            "example": "2025"
+          },
+          "today": {
+            "description": "Today's date (formatted)",
+            "example": "December 17, 2025"
+          },
+          "tosLink": {
+            "description": "Link to Terms of Service page",
+            "example": "https://example.com/terms"
+          },
+          "contractNumber": {
+            "description": "Contract reference number",
+            "example": "C-2025-001"
+          },
+          "receiptNumber": {
+            "description": "Receipt reference number",
+            "example": "R-2025-001"
+          },
+          "termsOfServiceHtml": {
+            "description": "Terms of Service content (HTML format)"
+          },
+          "termsOfServiceText": {
+            "description": "Terms of Service content (plain text)"
+          },
+          "contractHtml": {
+            "description": "Contract content (HTML format)"
+          },
+          "contractText": {
+            "description": "Contract content (plain text)"
+          },
+          "receiptHtml": {
+            "description": "Receipt content (HTML format)"
+          },
+          "receiptText": {
+            "description": "Receipt content (plain text)"
+          },
+          "lastNameKanji": {
+            "description": "Last name in Kanji",
+            "example": "Yamada"
+          },
+          "firstNameKanji": {
+            "description": "First name in Kanji",
+            "example": "Taro"
+          },
+          "lastNameKana": {
+            "description": "Last name in Katakana",
+            "example": "ヤマダ"
+          },
+          "firstNameKana": {
+            "description": "First name in Katakana",
+            "example": "タロウ"
+          },
+          "email": {
+            "description": "Email address",
+            "example": "user@example.com"
+          },
+          "phoneNumber": {
+            "description": "Phone number",
+            "example": "090-1234-5678"
+          },
+          "postalCode": {
+            "description": "Postal code",
+            "example": "123-4567"
+          },
+          "address": {
+            "description": "Full address",
+            "example": "Tokyo, Shibuya 1-2-3"
+          },
+          "playersId": {
+            "description": "Players+ ID or Passport number",
+            "example": "P123456"
+          },
+          "tournamentName": {
+            "description": "Tournament name",
+            "example": "1st Tournament"
+          },
+          "tournamentDate": {
+            "description": "Tournament date (formatted)",
+            "example": "December 17, 2025"
+          },
+          "rank": {
+            "description": "Prize rank/position",
+            "example": "1st"
+          },
+          "amount": {
+            "description": "Prize amount (formatted with currency)",
+            "example": "¥100,000"
+          },
+          "bankName": {
+            "description": "Bank name",
+            "example": "MUFG Bank"
+          },
+          "bankCode": {
+            "description": "Bank code",
+            "example": "0005"
+          },
+          "branchName": {
+            "description": "Branch name",
+            "example": "Shibuya Branch"
+          },
+          "branchCode": {
+            "description": "Branch code",
+            "example": "123"
+          },
+          "accountTypeJa": {
+            "description": "Account type in Japanese (普通/当座)",
+            "example": "普通"
+          },
+          "accountTypeEn": {
+            "description": "Account type in English (savings/checking)",
+            "example": "savings"
+          },
+          "accountNumber": {
+            "description": "Account number",
+            "example": "1234567"
+          },
+          "accountHolderName": {
+            "description": "Account holder name in Katakana",
+            "example": "ヤマダタロウ"
+          }
         }
       }
     }

@@ -1,17 +1,32 @@
 import { useEffect, useState } from 'react';
-import { useEffect, useState } from 'react';
 
-import { Alert, Box, Button, Group, Loader, Paper, Stack, Tabs, Text, Title } from '@mantine/core';
+import {
+  Alert,
+  Box,
+  Button,
+  Group,
+  Loader,
+  Paper,
+  Stack,
+  Tabs,
+  Text,
+  TextInput,
+  Title,
+} from '@mantine/core';
 import { IconCheck, IconHelp } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
 import { RichTextEditor } from '@/components/RichTextEditor';
 import { TemplateVariablesModal } from '@/components/TemplateVariablesModal';
 import {
+  getConfirmationEmailTemplate,
+  getContractEmailTemplate,
   getContractTemplate,
   getPrivacyPolicyTemplate,
   getReceiptTemplate,
   getTermsOfServiceTemplate,
+  saveConfirmationEmailTemplate,
+  saveContractEmailTemplate,
   saveContractTemplate,
   savePrivacyPolicyTemplate,
   saveReceiptTemplate,
@@ -19,7 +34,13 @@ import {
 } from '@/lib/lambda/template';
 import type { Template } from '@/types/template';
 
-type TabValue = 'terms' | 'privacy' | 'contract' | 'receipt';
+type TabValue =
+  | 'terms'
+  | 'privacy'
+  | 'contract'
+  | 'receipt'
+  | 'confirmationEmail'
+  | 'contractEmail';
 
 interface TabState {
   data: Template | null;
@@ -34,11 +55,28 @@ export function ServiceManagementPage() {
   const [activeTab, setActiveTab] = useState<TabValue>('terms');
   const [variablesModalOpened, setVariablesModalOpened] = useState(false);
 
+  const [tabSubjects, setTabSubjects] = useState<Record<TabValue, string>>({
+    terms: '',
+    privacy: '',
+    contract: '',
+    receipt: '',
+    confirmationEmail: '',
+    contractEmail: '',
+  });
+
   const [tabStates, setTabStates] = useState<Record<TabValue, TabState>>({
     terms: { data: null, content: '', isLoading: true, isSaving: false, success: false },
     privacy: { data: null, content: '', isLoading: true, isSaving: false, success: false },
     contract: { data: null, content: '', isLoading: true, isSaving: false, success: false },
     receipt: { data: null, content: '', isLoading: true, isSaving: false, success: false },
+    confirmationEmail: {
+      data: null,
+      content: '',
+      isLoading: true,
+      isSaving: false,
+      success: false,
+    },
+    contractEmail: { data: null, content: '', isLoading: true, isSaving: false, success: false },
   });
 
   // Fetch data for each tab
@@ -49,14 +87,25 @@ export function ServiceManagementPage() {
         privacy: getPrivacyPolicyTemplate,
         contract: getContractTemplate,
         receipt: getReceiptTemplate,
+        confirmationEmail: getConfirmationEmailTemplate,
+        contractEmail: getContractEmailTemplate,
       };
 
       try {
-        const [termsData, privacyData, contractData, receiptData] = await Promise.all([
+        const [
+          termsData,
+          privacyData,
+          contractData,
+          receiptData,
+          confirmationEmailData,
+          contractEmailData,
+        ] = await Promise.all([
           fetchers.terms(),
           fetchers.privacy(),
           fetchers.contract(),
           fetchers.receipt(),
+          fetchers.confirmationEmail(),
+          fetchers.contractEmail(),
         ]);
 
         setTabStates({
@@ -88,7 +137,31 @@ export function ServiceManagementPage() {
             isSaving: false,
             success: false,
           },
+          confirmationEmail: {
+            data: confirmationEmailData,
+            content: confirmationEmailData.content,
+            isLoading: false,
+            isSaving: false,
+            success: false,
+          },
+          contractEmail: {
+            data: contractEmailData,
+            content: contractEmailData.content,
+            isLoading: false,
+            isSaving: false,
+            success: false,
+          },
         });
+
+        setTabSubjects((prev) => ({
+          ...prev,
+          terms: termsData.subject,
+          privacy: privacyData.subject,
+          contract: contractData.subject,
+          receipt: receiptData.subject,
+          confirmationEmail: confirmationEmailData.subject,
+          contractEmail: contractEmailData.subject,
+        }));
       } catch (error_) {
         console.error('Failed to fetch data:', error_);
         setTabStates((prev) => ({
@@ -96,6 +169,17 @@ export function ServiceManagementPage() {
           privacy: { ...prev.privacy, isLoading: false },
           contract: { ...prev.contract, isLoading: false },
           receipt: { ...prev.receipt, isLoading: false },
+          confirmationEmail: { ...prev.confirmationEmail, isLoading: false },
+          contractEmail: { ...prev.contractEmail, isLoading: false },
+        }));
+        setTabSubjects((prev) => ({
+          ...prev,
+          terms: '',
+          privacy: '',
+          contract: '',
+          receipt: '',
+          confirmationEmail: '',
+          contractEmail: '',
         }));
       }
     };
@@ -110,12 +194,21 @@ export function ServiceManagementPage() {
     }));
   };
 
+  const handleSubjectChange = (tab: TabValue, subject: string) => {
+    setTabSubjects((prev) => ({
+      ...prev,
+      [tab]: subject,
+    }));
+  };
+
   const handleSave = async (tab: TabValue) => {
     const updaters = {
       terms: saveTermsOfServiceTemplate,
       privacy: savePrivacyPolicyTemplate,
       contract: saveContractTemplate,
       receipt: saveReceiptTemplate,
+      confirmationEmail: saveConfirmationEmailTemplate,
+      contractEmail: saveContractEmailTemplate,
     };
 
     const fetchers = {
@@ -123,12 +216,14 @@ export function ServiceManagementPage() {
       privacy: getPrivacyPolicyTemplate,
       contract: getContractTemplate,
       receipt: getReceiptTemplate,
+      confirmationEmail: getConfirmationEmailTemplate,
+      contractEmail: getContractEmailTemplate,
     };
 
     try {
       setTabStates((prev) => ({
         ...prev,
-        [tab]: { ...prev[tab], isSaving: true, success: false },
+        [tab]: { ...prev[tab], isSaving: true, success: false, subject: tabSubjects[tab] },
       }));
 
       const tabId = tabStates[tab].data?.id ?? '';
@@ -136,7 +231,11 @@ export function ServiceManagementPage() {
         throw new Error(`Template id is not found for ${tab}`);
       }
 
-      await updaters[tab](tabId, tabStates[tab].content);
+      await updaters[tab]({
+        id: tabId,
+        content: tabStates[tab].content,
+        subject: tabSubjects[tab],
+      });
 
       // Refetch the template to get updated version history
       const updatedData = await fetchers[tab]();
@@ -147,6 +246,7 @@ export function ServiceManagementPage() {
           ...prev[tab],
           data: updatedData,
           content: updatedData.content,
+          subject: updatedData.subject,
           isSaving: false,
           success: true,
         },
@@ -168,7 +268,7 @@ export function ServiceManagementPage() {
     }
   };
 
-  const renderTabPanel = (tab: TabValue) => {
+  const renderTabPanel = (tab: TabValue, withSubject: boolean = false) => {
     const state = tabStates[tab];
 
     if (state.isLoading) {
@@ -211,6 +311,16 @@ export function ServiceManagementPage() {
           </Alert>
         )}
 
+        {withSubject && (
+          <TextInput
+            size="sm"
+            fw={500}
+            label={t(`admin.services.editor.${tab}SubjectLabel`)}
+            value={tabSubjects[tab]}
+            onChange={(event) => handleSubjectChange(tab, event.currentTarget.value)}
+          ></TextInput>
+        )}
+
         <RichTextEditor
           content={state.content}
           onChange={(content) => handleContentChange(tab, content)}
@@ -240,7 +350,12 @@ export function ServiceManagementPage() {
         onClose={() => setVariablesModalOpened(false)}
       />
 
-      <Tabs value={activeTab} onChange={(value) => setActiveTab(value as TabValue)}>
+      <Tabs
+        value={activeTab}
+        onChange={(value) => {
+          setActiveTab(value as TabValue);
+        }}
+      >
         <Tabs.List>
           <Tabs.Tab fw="bold" value="terms">
             {t('admin.services.tabs.terms')}
@@ -253,6 +368,12 @@ export function ServiceManagementPage() {
           </Tabs.Tab>
           <Tabs.Tab fw="bold" value="receipt">
             {t('admin.services.tabs.receipt')}
+          </Tabs.Tab>
+          <Tabs.Tab fw="bold" value="confirmationEmail">
+            {t('admin.services.tabs.confirmationEmail')}
+          </Tabs.Tab>
+          <Tabs.Tab fw="bold" value="contractEmail">
+            {t('admin.services.tabs.contractEmail')}
           </Tabs.Tab>
         </Tabs.List>
 
@@ -270,6 +391,14 @@ export function ServiceManagementPage() {
 
         <Tabs.Panel value="receipt" pt="lg">
           {renderTabPanel('receipt')}
+        </Tabs.Panel>
+
+        <Tabs.Panel value="confirmationEmail" pt="lg">
+          {renderTabPanel('confirmationEmail', true)}
+        </Tabs.Panel>
+
+        <Tabs.Panel value="contractEmail" pt="lg">
+          {renderTabPanel('contractEmail', true)}
         </Tabs.Panel>
       </Tabs>
     </Stack>

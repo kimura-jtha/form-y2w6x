@@ -348,7 +348,9 @@
         "terms": "利用規約",
         "privacy": "プライバシーポリシー",
         "contract": "契約書",
-        "receipt": "領収書テンプレート"
+        "receipt": "領収書テンプレート",
+        "confirmationEmail": "確認メールテンプレート",
+        "contractEmail": "契約書メールテンプレート"
       },
       "version": "バージョン",
       "lastUpdated": "最終更新",
@@ -358,15 +360,25 @@
         "terms": "利用規約が正常に更新されました",
         "privacy": "プライバシーポリシーが正常に更新されました",
         "contract": "契約書が正常に更新されました",
-        "receipt": "領収書テンプレートが正常に更新されました"
+        "receipt": "領収書テンプレートが正常に更新されました",
+        "confirmationEmail": "確認メールテンプレートが正常に更新されました",
+        "contractEmail": "契約書メールテンプレートが正常に更新されました"
       },
       "editor": {
         "title": "HTMLエディター",
         "description": "以下にHTMLコンテンツを記述できます。サポートされているタグ: h1, h2, h3, p, ul, ol, li, strong, em, a など",
         "termsLabel": "利用規約コンテンツ",
+        "termsSubjectLabel": "利用規約サブジェクト",
         "privacyLabel": "プライバシーポリシーコンテンツ",
+        "privacySubjectLabel": "プライバシーポリシーサブジェクト",
         "contractLabel": "契約書コンテンツ",
+        "contractSubjectLabel": "契約書サブジェクト",
         "receiptLabel": "領収書テンプレートコンテンツ",
+        "receiptSubjectLabel": "領収書テンプレートサブジェクト",
+        "confirmationEmailLabel": "確認メールテンプレートコンテンツ",
+        "confirmationEmailSubjectLabel": "確認メールテンプレートサブジェクト",
+        "contractEmailLabel": "契約書メールテンプレートコンテンツ",
+        "contractEmailSubjectLabel": "契約書メールテンプレートサブジェクト",
         "placeholder": "HTMLコンテンツを入力...",
         "preview": "プレビュー",
         "edit": "編集",
@@ -386,6 +398,152 @@
         "usage": {
           "title": "使用例",
           "description": "テンプレートで変数を使用するには、二重の波括弧で囲みます："
+        },
+        "groups": {
+          "common": {
+            "title": "共通変数",
+            "description": "すべてのテンプレートで利用可能な一般情報"
+          },
+          "templateContent": {
+            "title": "テンプレートコンテンツ",
+            "description": "他のテンプレートの完全なコンテンツ（HTMLまたはテキスト形式）"
+          },
+          "personalInfo": {
+            "title": "個人情報",
+            "description": "フォーム提出者の情報"
+          },
+          "tournamentInfo": {
+            "title": "トーナメント情報",
+            "description": "トーナメントと賞金の詳細"
+          },
+          "bankingInfo": {
+            "title": "銀行情報",
+            "description": "賞金支払いのための銀行口座情報"
+          }
+        },
+        "fields": {
+          "year": {
+            "description": "現在の年",
+            "example": "2025"
+          },
+          "today": {
+            "description": "今日の日付（フォーマット済み）",
+            "example": "2025年12月17日"
+          },
+          "tosLink": {
+            "description": "利用規約ページへのリンク",
+            "example": "https://example.com/terms"
+          },
+          "contractNumber": {
+            "description": "契約参照番号",
+            "example": "C-2025-001"
+          },
+          "receiptNumber": {
+            "description": "領収書参照番号",
+            "example": "R-2025-001"
+          },
+          "termsOfServiceHtml": {
+            "description": "利用規約コンテンツ（HTML形式）"
+          },
+          "termsOfServiceText": {
+            "description": "利用規約コンテンツ（プレーンテキスト）"
+          },
+          "contractHtml": {
+            "description": "契約書コンテンツ（HTML形式）"
+          },
+          "contractText": {
+            "description": "契約書コンテンツ（プレーンテキスト）"
+          },
+          "receiptHtml": {
+            "description": "領収書コンテンツ（HTML形式）"
+          },
+          "receiptText": {
+            "description": "領収書コンテンツ（プレーンテキスト）"
+          },
+          "lastNameKanji": {
+            "description": "姓（漢字）",
+            "example": "山田"
+          },
+          "firstNameKanji": {
+            "description": "名（漢字）",
+            "example": "太郎"
+          },
+          "lastNameKana": {
+            "description": "姓（カタカナ）",
+            "example": "ヤマダ"
+          },
+          "firstNameKana": {
+            "description": "名（カタカナ）",
+            "example": "タロウ"
+          },
+          "email": {
+            "description": "メールアドレス",
+            "example": "user@example.com"
+          },
+          "phoneNumber": {
+            "description": "電話番号",
+            "example": "090-1234-5678"
+          },
+          "postalCode": {
+            "description": "郵便番号",
+            "example": "123-4567"
+          },
+          "address": {
+            "description": "住所（完全）",
+            "example": "東京都渋谷区1-2-3"
+          },
+          "playersId": {
+            "description": "プレイヤーズ＋IDまたはパスポート番号",
+            "example": "P123456"
+          },
+          "tournamentName": {
+            "description": "トーナメント名",
+            "example": "第1回トーナメント"
+          },
+          "tournamentDate": {
+            "description": "トーナメント開催日（フォーマット済み）",
+            "example": "2025年12月17日"
+          },
+          "rank": {
+            "description": "賞金順位",
+            "example": "1位"
+          },
+          "amount": {
+            "description": "賞金額（通貨付きフォーマット）",
+            "example": "¥100,000"
+          },
+          "bankName": {
+            "description": "銀行名",
+            "example": "三菱UFJ銀行"
+          },
+          "bankCode": {
+            "description": "銀行コード",
+            "example": "0005"
+          },
+          "branchName": {
+            "description": "支店名",
+            "example": "渋谷支店"
+          },
+          "branchCode": {
+            "description": "支店コード",
+            "example": "123"
+          },
+          "accountTypeJa": {
+            "description": "口座種別（日本語：普通/当座）",
+            "example": "普通"
+          },
+          "accountTypeEn": {
+            "description": "口座種別（英語：savings/checking）",
+            "example": "savings"
+          },
+          "accountNumber": {
+            "description": "口座番号",
+            "example": "1234567"
+          },
+          "accountHolderName": {
+            "description": "口座名義（カタカナ）",
+            "example": "ヤマダタロウ"
+          }
         }
       }
     }
