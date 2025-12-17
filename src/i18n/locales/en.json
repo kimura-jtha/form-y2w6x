@@ -378,6 +378,21 @@
         "edit": "Edit",
         "saveTerms": "Save Terms of Service",
         "savePrivacy": "Save Privacy Policy"
+      },
+      "variables": {
+        "buttonLabel": "Template Variables",
+        "title": "Available Template Variables",
+        "helpLabel": "Help",
+        "description": "Use these variables in your templates by wrapping them with double curly braces, e.g., {{variableName}}. The variables will be replaced with actual values when generating documents.",
+        "table": {
+          "variable": "Variable",
+          "description": "Description",
+          "example": "Example"
+        },
+        "usage": {
+          "title": "Usage Example",
+          "description": "To use a variable in your template, wrap it with double curly braces:"
+        }
       }
     }
   }

@@ -372,6 +372,21 @@
         "edit": "編集",
         "saveTerms": "利用規約を保存",
         "savePrivacy": "プライバシーポリシーを保存"
+      },
+      "variables": {
+        "buttonLabel": "テンプレート変数",
+        "title": "利用可能なテンプレート変数",
+        "helpLabel": "ヘルプ",
+        "description": "テンプレート内でこれらの変数を使用するには、二重の波括弧で囲みます（例: {{variableName}}）。変数はドキュメント生成時に実際の値に置き換えられます。",
+        "table": {
+          "variable": "変数",
+          "description": "説明",
+          "example": "例"
+        },
+        "usage": {
+          "title": "使用例",
+          "description": "テンプレートで変数を使用するには、二重の波括弧で囲みます："
+        }
       }
     }
   }

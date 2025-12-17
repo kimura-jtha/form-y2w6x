@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { Alert, Box, Group, Loader, Paper, Stack, Tabs, Text, Title } from '@mantine/core';
-import { IconCheck } from '@tabler/icons-react';
+import { Alert, Box, Button, Group, Loader, Paper, Stack, Tabs, Text, Title } from '@mantine/core';
+import { IconCheck, IconHelp } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
 import { RichTextEditor } from '@/components/RichTextEditor';
+import { TemplateVariablesModal } from '@/components/TemplateVariablesModal';
 import {
   getContractTemplate,
   getPrivacyPolicyTemplate,
@@ -30,6 +32,7 @@ interface TabState {
 export function ServiceManagementPage() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<TabValue>('terms');
+  const [variablesModalOpened, setVariablesModalOpened] = useState(false);
 
   const [tabStates, setTabStates] = useState<Record<TabValue, TabState>>({
     terms: { data: null, content: '', isLoading: true, isSaving: false, success: false },
@@ -221,7 +224,21 @@ export function ServiceManagementPage() {
 
   return (
     <Stack gap="lg">
-      <Title order={2}>{t('admin.services.title')}</Title>
+      <Group justify="space-between" align="center">
+        <Title order={2}>{t('admin.services.title')}</Title>
+        <Button
+          leftSection={<IconHelp size={16} />}
+          variant="light"
+          onClick={() => setVariablesModalOpened(true)}
+        >
+          {t('admin.services.variables.buttonLabel')}
+        </Button>
+      </Group>
+
+      <TemplateVariablesModal
+        opened={variablesModalOpened}
+        onClose={() => setVariablesModalOpened(false)}
+      />
 
       <Tabs value={activeTab} onChange={(value) => setActiveTab(value as TabValue)}>
         <Tabs.List>
