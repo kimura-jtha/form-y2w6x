@@ -21,7 +21,6 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { IconAlertCircle } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
-
 import { alive } from '@/lib/lambda/health';
 
 // import { PRIVACY_POLICY_HTML } from './privacyPolicyContent';
