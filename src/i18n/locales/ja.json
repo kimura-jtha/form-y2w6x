@@ -1,28 +1,403 @@
 {
-  "common": {
-    "loading": "読み込み中...",
-    "error": "エラーが発生しました",
-    "success": "成功",
-    "save": "保存",
-    "cancel": "キャンセル",
-    "delete": "削除",
-    "edit": "編集",
-    "create": "作成",
-    "search": "検索",
-    "notFound": "見つかりません",
-    "required": "必須",
-    "submit": "送信する",
-    "clear": "クリア",
-    "confirm": "確認",
-    "yes": "はい",
-    "no": "いいえ",
-    "loadMore": "もっと見る",
-    "logout": "ログアウト"
+  "admin": {
+    "changePassword": {
+      "button": "パスワード変更",
+      "errors": {
+        "failed": "パスワードの変更に失敗しました。現在のパスワードを確認して再度お試しください。",
+        "mismatch": "新しいパスワードが一致しません",
+        "required": "すべての項目は必須です",
+        "samePassword": "新しいパスワードは現在のパスワードと異なる必要があります",
+        "tooShort": "パスワードは8文字以上である必要があります"
+      },
+      "fields": {
+        "confirmPassword": {
+          "label": "新しいパスワード（確認）",
+          "placeholder": "新しいパスワードを再入力"
+        },
+        "newPassword": {
+          "label": "新しいパスワード",
+          "placeholder": "新しいパスワードを入力"
+        },
+        "oldPassword": {
+          "label": "現在のパスワード",
+          "placeholder": "現在のパスワードを入力"
+        }
+      },
+      "submit": "パスワードを変更",
+      "success": "パスワードが正常に変更されました！リダイレクト中...",
+      "title": "パスワード変更"
+    },
+    "forms": {
+      "detail": {
+        "agreements": "同意事項",
+        "bankInfo": "銀行情報",
+        "contactInfo": "連絡先情報",
+        "formId": "フォームID",
+        "personalInfo": "個人情報",
+        "submittedAt": "送信日時",
+        "title": "フォーム詳細",
+        "tournamentInfo": "トーナメント情報"
+      },
+      "export": {
+        "error": "データのエクスポートに失敗しました。もう一度お試しください。",
+        "noData": "選択したトーナメントにエクスポートするデータがありません",
+        "noTournamentSelected": "エクスポートするトーナメントを選択してください"
+      },
+      "exportCSV": "CSVエクスポート",
+      "filters": {
+        "apply": "適用",
+        "clear": "クリア",
+        "dateFrom": "開始日",
+        "dateFromPlaceholder": "開始日を選択",
+        "dateTo": "終了日",
+        "dateToPlaceholder": "終了日を選択",
+        "status": "ステータス",
+        "statusPlaceholder": "全てのステータス",
+        "termsAgreed": "利用規約同意",
+        "termsAgreedPlaceholder": "すべて",
+        "title": "フィルター",
+        "tournamentName": "トーナメント名",
+        "tournamentNamePlaceholder": "トーナメント名で検索"
+      },
+      "notifications": {
+        "exportError": {
+          "message": "データのエクスポートに失敗しました。もう一度お試しください。",
+          "title": "エクスポート失敗"
+        },
+        "noData": {
+          "message": "選択したトーナメントにエクスポートするデータがありません",
+          "title": "データなし"
+        },
+        "noTournamentSelected": {
+          "message": "エクスポートするトーナメントを選択してください",
+          "title": "トーナメントが必要です"
+        }
+      },
+      "refresh": "更新",
+      "status": {
+        "approved": "承認済み",
+        "pending": "保留中",
+        "rejected": "却下"
+      },
+      "table": {
+        "actions": "操作",
+        "amount": "金額",
+        "createdAt": "作成日時",
+        "email": "メールアドレス",
+        "formsFound": "件のフォーム",
+        "id": "ID",
+        "noForms": "フォームが見つかりません",
+        "playerName": "プレイヤー名",
+        "rank": "順位",
+        "status": "ステータス",
+        "termsAgreed": "利用規約同意",
+        "tournament": "トーナメント"
+      },
+      "title": "フォーム管理"
+    },
+    "navigation": {
+      "forms": "フォーム管理",
+      "services": "サービス管理",
+      "tournaments": "トーナメント管理"
+    },
+    "services": {
+      "editor": {
+        "confirmationEmailLabel": "確認メールテンプレートコンテンツ",
+        "confirmationEmailSubjectLabel": "確認メールテンプレートサブジェクト",
+        "contractEmailLabel": "契約書メールテンプレートコンテンツ",
+        "contractEmailSubjectLabel": "契約書メールテンプレートサブジェクト",
+        "contractLabel": "契約書コンテンツ",
+        "contractSubjectLabel": "契約書サブジェクト",
+        "description": "以下にHTMLコンテンツを記述できます。サポートされているタグ: h1, h2, h3, p, ul, ol, li, strong, em, a など",
+        "edit": "編集",
+        "placeholder": "HTMLコンテンツを入力...",
+        "preview": "プレビュー",
+        "privacyLabel": "プライバシーポリシーコンテンツ",
+        "privacySubjectLabel": "プライバシーポリシーサブジェクト",
+        "receiptLabel": "領収書テンプレートコンテンツ",
+        "receiptSubjectLabel": "領収書テンプレートサブジェクト",
+        "savePrivacy": "プライバシーポリシーを保存",
+        "saveTerms": "利用規約を保存",
+        "termsLabel": "利用規約コンテンツ",
+        "termsSubjectLabel": "利用規約サブジェクト",
+        "title": "HTMLエディター"
+      },
+      "lastUpdated": "最終更新",
+      "success": "成功",
+      "successMessage": {
+        "confirmationEmail": "確認メールテンプレートが正常に更新されました",
+        "contract": "契約書が正常に更新されました",
+        "contractEmail": "契約書メールテンプレートが正常に更新されました",
+        "privacy": "プライバシーポリシーが正常に更新されました",
+        "receipt": "領収書テンプレートが正常に更新されました",
+        "terms": "利用規約が正常に更新されました"
+      },
+      "tabs": {
+        "confirmationEmail": "確認メールテンプレート",
+        "contract": "契約書",
+        "contractEmail": "契約書メールテンプレート",
+        "privacy": "プライバシーポリシー",
+        "receipt": "領収書テンプレート",
+        "terms": "利用規約"
+      },
+      "title": "サービス管理",
+      "updatedBy": "更新者",
+      "variables": {
+        "buttonLabel": "テンプレート変数",
+        "description": "テンプレート内でこれらの変数を使用するには、二重の波括弧で囲みます（例: {{variableName}}）。変数はドキュメント生成時に実際の値に置き換えられます。",
+        "fields": {
+          "accountHolderName": {
+            "description": "口座名義（カタカナ）",
+            "example": "ヤマダタロウ"
+          },
+          "accountNumber": {
+            "description": "口座番号",
+            "example": "1234567"
+          },
+          "accountTypeEn": {
+            "description": "口座種別（英語：savings/checking）",
+            "example": "savings"
+          },
+          "accountTypeJa": {
+            "description": "口座種別（日本語：普通/当座）",
+            "example": "普通"
+          },
+          "address": {
+            "description": "住所（完全）",
+            "example": "東京都渋谷区1-2-3"
+          },
+          "amount": {
+            "description": "賞金額（通貨付きフォーマット）",
+            "example": "¥100,000"
+          },
+          "bankCode": {
+            "description": "銀行コード",
+            "example": "0005"
+          },
+          "bankName": {
+            "description": "銀行名",
+            "example": "三菱UFJ銀行"
+          },
+          "branchCode": {
+            "description": "支店コード",
+            "example": "123"
+          },
+          "branchName": {
+            "description": "支店名",
+            "example": "渋谷支店"
+          },
+          "contractHtml": {
+            "description": "契約書コンテンツ（HTML形式）"
+          },
+          "contractNumber": {
+            "description": "契約参照番号",
+            "example": "C-2025-001"
+          },
+          "contractText": {
+            "description": "契約書コンテンツ（プレーンテキスト）"
+          },
+          "email": {
+            "description": "メールアドレス",
+            "example": "user@example.com"
+          },
+          "firstNameKana": {
+            "description": "名（カタカナ）",
+            "example": "タロウ"
+          },
+          "firstNameKanji": {
+            "description": "名（漢字）",
+            "example": "太郎"
+          },
+          "lastNameKana": {
+            "description": "姓（カタカナ）",
+            "example": "ヤマダ"
+          },
+          "lastNameKanji": {
+            "description": "姓（漢字）",
+            "example": "山田"
+          },
+          "phoneNumber": {
+            "description": "電話番号",
+            "example": "090-1234-5678"
+          },
+          "playersId": {
+            "description": "プレイヤーズ＋IDまたはパスポート番号",
+            "example": "P123456"
+          },
+          "postalCode": {
+            "description": "郵便番号",
+            "example": "123-4567"
+          },
+          "rank": {
+            "description": "賞金順位",
+            "example": "1位"
+          },
+          "receiptHtml": {
+            "description": "領収書コンテンツ（HTML形式）"
+          },
+          "receiptNumber": {
+            "description": "領収書参照番号",
+            "example": "R-2025-001"
+          },
+          "receiptText": {
+            "description": "領収書コンテンツ（プレーンテキスト）"
+          },
+          "termsOfServiceHtml": {
+            "description": "利用規約コンテンツ（HTML形式）"
+          },
+          "termsOfServiceText": {
+            "description": "利用規約コンテンツ（プレーンテキスト）"
+          },
+          "today": {
+            "description": "今日の日付（フォーマット済み）",
+            "example": "2025年12月17日"
+          },
+          "tosLink": {
+            "description": "利用規約ページへのリンク",
+            "example": "https://example.com/terms"
+          },
+          "tournamentDate": {
+            "description": "トーナメント開催日（フォーマット済み）",
+            "example": "2025年12月17日"
+          },
+          "tournamentName": {
+            "description": "トーナメント名",
+            "example": "第1回トーナメント"
+          },
+          "year": {
+            "description": "現在の年",
+            "example": "2025"
+          }
+        },
+        "groups": {
+          "bankingInfo": {
+            "description": "賞金支払いのための銀行口座情報",
+            "title": "銀行情報"
+          },
+          "common": {
+            "description": "すべてのテンプレートで利用可能な一般情報",
+            "title": "共通変数"
+          },
+          "personalInfo": {
+            "description": "フォーム提出者の情報",
+            "title": "個人情報"
+          },
+          "templateContent": {
+            "description": "他のテンプレートの完全なコンテンツ（HTMLまたはテキスト形式）",
+            "title": "テンプレートコンテンツ"
+          },
+          "tournamentInfo": {
+            "description": "トーナメントと賞金の詳細",
+            "title": "トーナメント情報"
+          }
+        },
+        "helpLabel": "ヘルプ",
+        "table": {
+          "description": "説明",
+          "example": "例",
+          "variable": "変数"
+        },
+        "title": "利用可能なテンプレート変数",
+        "usage": {
+          "description": "テンプレートで変数を使用するには、二重の波括弧で囲みます：",
+          "title": "使用例"
+        }
+      },
+      "version": "バージョン"
+    },
+    "tournaments": {
+      "amount": "金額",
+      "claimed": "申請済み",
+      "create": "トーナメント作成",
+      "created": "作成日",
+      "detail": {
+        "activate": "有効化",
+        "backToList": "トーナメント一覧に戻る",
+        "date": "開催日",
+        "deactivate": "無効化",
+        "noForms": "このトーナメントに提出されたフォームはありません",
+        "notFound": "トーナメントが見つかりません",
+        "prizesInfo": "賞金情報",
+        "status": "ステータス",
+        "submittedForms": "提出されたフォーム",
+        "tournamentInfo": "トーナメント情報"
+      },
+      "import": {
+        "button": "CSVインポート",
+        "date": "開催日",
+        "downloadTemplate": "テンプレートをダウンロード",
+        "errors": "エラーが見つかりました",
+        "eventName": "イベント名",
+        "import": "{{count}}件のトーナメントをインポート",
+        "instructions": "テンプレートCSVファイルをダウンロードし、トーナメントデータを入力してアップロードしてください。各賞金は別々の行に記載してください。",
+        "preview": "プレビュー",
+        "prizesCount": "賞金",
+        "row": "行",
+        "selectFile": "CSVファイルを選択",
+        "status": "ステータス",
+        "title": "CSVからトーナメントをインポート",
+        "tournamentName": "トーナメント名",
+        "validRecords": "{{count}}件の有効なレコード",
+        "validationFailed": "検証失敗",
+        "validationSuccess": "検証成功"
+      },
+      "modal": {
+        "addPrize": "追加",
+        "amount": "金額",
+        "cancel": "キャンセル",
+        "createButton": "トーナメントを作成",
+        "date": "開催日",
+        "datePlaceholder": "日付を選択",
+        "editTitle": "トーナメントを編集",
+        "eventName": "イベント名（英語）",
+        "eventNameJa": "イベント名（日本語）",
+        "location": "開催地",
+        "locationPlaceholder": "開催地を入力",
+        "name": "トーナメント名",
+        "namePlaceholder": "トーナメント名を入力",
+        "notifications": {
+          "fillAllFields": {
+            "message": "新しい賞金を追加するには、すべてのフィールドを入力してください",
+            "title": "検証エラー"
+          },
+          "fillAllFieldsEdit": {
+            "message": "すべてのフィールドを入力してください",
+            "title": "検証エラー"
+          },
+          "rankExists": {
+            "message": "この順位は既に存在します",
+            "title": "重複する順位"
+          }
+        },
+        "prizes": "賞金",
+        "rank": "順位",
+        "title": "新しいトーナメントを作成",
+        "tournamentName": "トーナメント名（英語）",
+        "tournamentNameJa": "トーナメント名（日本語）",
+        "updateButton": "トーナメントを更新"
+      },
+      "morePrizes": "その他の賞金",
+      "participants": "名参加",
+      "prizes": "賞金",
+      "rank": "順位",
+      "refresh": "更新",
+      "status": {
+        "active": "有効",
+        "completed": "終了",
+        "inactive": "無効",
+        "ongoing": "開催中",
+        "upcoming": "開催予定"
+      },
+      "title": "トーナメント管理",
+      "viewDetails": "詳細を見る"
+    }
   },
   "auth": {
     "login": {
-      "title": "管理者ログイン",
-      "subtitle": "管理画面にアクセスするにはサインインしてください",
+      "errors": {
+        "failed": "ログインに失敗しました。認証情報を確認してください。",
+        "required": "メールアドレスとパスワードは必須です"
+      },
       "fields": {
         "email": {
           "label": "メールアドレス",
@@ -34,89 +409,84 @@
         }
       },
       "submit": "ログイン",
-      "errors": {
-        "required": "メールアドレスとパスワードは必須です",
-        "failed": "ログインに失敗しました。認証情報を確認してください。"
+      "subtitle": "管理画面にアクセスするにはサインインしてください",
+      "title": "管理者ログイン"
+    },
+    "notifications": {
+      "sessionExpired": {
+        "message": "セッションが切れました。再度ログインしてください。",
+        "title": "セッション期限切れ"
       }
     }
+  },
+  "common": {
+    "cancel": "キャンセル",
+    "clear": "クリア",
+    "confirm": "確認",
+    "create": "作成",
+    "delete": "削除",
+    "edit": "編集",
+    "error": "エラーが発生しました",
+    "loadMore": "もっと見る",
+    "loading": "読み込み中...",
+    "logout": "ログアウト",
+    "no": "いいえ",
+    "notFound": "見つかりません",
+    "required": "必須",
+    "save": "保存",
+    "search": "検索",
+    "submit": "送信する",
+    "success": "成功",
+    "yes": "はい"
   },
   "pages": {
     "home": {
       "title": "ホーム"
     },
     "notFound": {
-      "title": "ページが見つかりません",
-      "description": "お探しのページは存在しません。"
+      "description": "お探しのページは存在しません。",
+      "title": "ページが見つかりません"
     }
   },
   "prizeClaim": {
-    "title": "賞金請求フォーム",
-    "sections": {
-      "name": "氏名",
-      "nameKana": "氏名（カナ）",
-      "playersId": "プレイヤーズ＋ID / パスポート番号",
-      "contact": "連絡先情報",
-      "tournament": "トーナメント情報",
-      "bank": "銀行情報",
-      "privacyPolicy": "プライバシーポリシー"
+    "buttons": {
+      "clear": "クリア",
+      "searchAddress": "住所検索",
+      "searchBank": "銀行検索",
+      "searchBranch": "支店検索",
+      "submit": "送信する"
+    },
+    "confirmDialog": {
+      "cancel": "キャンセル",
+      "confirm": "送信する",
+      "message": "入力内容を送信してもよろしいですか？",
+      "title": "送信確認"
+    },
+    "errors": {
+      "backendUnavailable": "サーバーが現在利用できません。しばらくしてから再度お試しください。"
     },
     "fields": {
-      "lastNameKanji": {
-        "label": "姓（漢字）",
-        "placeholder": "山田",
-        "description": "外国人の場合は、カタカナで入力してください"
+      "accountHolderName": {
+        "description": "口座名義を半角カタカナで入力してください",
+        "label": "口座名義（カナ）",
+        "placeholder": "ﾔﾏﾀﾞ ﾀﾛｳ"
       },
-      "firstNameKanji": {
-        "label": "名（漢字）",
-        "placeholder": "太郎"
+      "accountNumber": {
+        "description": "7桁の数字（不足は0埋め）",
+        "label": "口座番号",
+        "placeholder": "1234567"
       },
-      "lastNameKana": {
-        "label": "姓（カナ）",
-        "placeholder": "ヤマダ",
-        "description": "全角カタカナで入力してください"
-      },
-      "firstNameKana": {
-        "label": "名（カナ）",
-        "placeholder": "タロウ"
-      },
-      "playersId": {
-        "label": "プレイヤーズ＋ID / パスポート番号",
-        "placeholder": "プレイヤーズプラスIDまたはパスポート番号を入力",
-        "description": "日本のプレイヤーはプレイヤーズプラスID、外国人はパスポート番号を入力してください"
-      },
-      "postalCode": {
-        "label": "郵便番号",
-        "placeholder": "1000005",
-        "description": "ハイフンなしの7桁の数字"
+      "accountType": {
+        "label": "口座種別",
+        "options": {
+          "checking": "当座",
+          "savings": "普通"
+        },
+        "placeholder": "口座種別を選択"
       },
       "address": {
         "label": "住所",
         "placeholder": "都道府県市区町村番地"
-      },
-      "phoneNumber": {
-        "label": "電話番号",
-        "placeholder": "03-1234-5678",
-        "description": "例: 03-1234-5678 / 090-1234-5678"
-      },
-      "email": {
-        "label": "メールアドレス",
-        "placeholder": "example@example.com"
-      },
-      "tournamentDate": {
-        "label": "開催日",
-        "placeholder": "開催日を選択"
-      },
-      "tournamentName": {
-        "label": "トーナメント名",
-        "placeholder": "トーナメントを選択"
-      },
-      "rank": {
-        "label": "順位",
-        "placeholder": "順位を選択"
-      },
-      "prizeAmount": {
-        "label": "賞金額",
-        "description": "選択したトーナメントと順位に基づいて自動計算されます"
       },
       "bankName": {
         "label": "銀行名",
@@ -126,54 +496,77 @@
         "label": "支店名",
         "placeholder": "支店を検索または選択"
       },
-      "accountType": {
-        "label": "口座種別",
-        "placeholder": "口座種別を選択",
-        "options": {
-          "savings": "普通",
-          "checking": "当座"
-        }
+      "email": {
+        "label": "メールアドレス",
+        "placeholder": "example@example.com"
       },
-      "accountNumber": {
-        "label": "口座番号",
-        "placeholder": "1234567",
-        "description": "7桁の数字（不足は0埋め）"
+      "firstNameKana": {
+        "label": "名（カナ）",
+        "placeholder": "タロウ"
       },
-      "accountHolderName": {
-        "label": "口座名義（カナ）",
-        "placeholder": "ﾔﾏﾀﾞ ﾀﾛｳ",
-        "description": "口座名義を半角カタカナで入力してください"
+      "firstNameKanji": {
+        "label": "名（漢字）",
+        "placeholder": "太郎"
+      },
+      "lastNameKana": {
+        "description": "全角カタカナで入力してください",
+        "label": "姓（カナ）",
+        "placeholder": "ヤマダ"
+      },
+      "lastNameKanji": {
+        "description": "外国人の場合は、カタカナで入力してください",
+        "label": "姓（漢字）",
+        "placeholder": "山田"
+      },
+      "phoneNumber": {
+        "description": "例: 03-1234-5678 / 090-1234-5678",
+        "label": "電話番号",
+        "placeholder": "03-1234-5678"
+      },
+      "playersId": {
+        "description": "日本のプレイヤーはプレイヤーズプラスID、外国人はパスポート番号を入力してください",
+        "label": "プレイヤーズ＋ID / パスポート番号",
+        "placeholder": "プレイヤーズプラスIDまたはパスポート番号を入力"
+      },
+      "postalCode": {
+        "description": "ハイフンなしの7桁の数字",
+        "label": "郵便番号",
+        "placeholder": "1000005"
       },
       "privacyAgreement": {
-        "label": "プライバシーポリシーに同意する",
-        "description": "上記のプライバシーポリシーを確認し、同意してください"
+        "description": "上記のプライバシーポリシーを確認し、同意してください",
+        "label": "プライバシーポリシーに同意する"
+      },
+      "prizeAmount": {
+        "description": "選択したトーナメントと順位に基づいて自動計算されます",
+        "label": "賞金額"
+      },
+      "rank": {
+        "label": "順位",
+        "placeholder": "順位を選択"
+      },
+      "tournamentDate": {
+        "label": "開催日",
+        "placeholder": "開催日を選択"
+      },
+      "tournamentName": {
+        "label": "トーナメント名",
+        "placeholder": "トーナメントを選択"
       }
     },
-    "buttons": {
-      "searchAddress": "住所検索",
-      "searchBank": "銀行検索",
-      "searchBranch": "支店検索",
-      "submit": "送信する",
-      "clear": "クリア"
-    },
-    "validation": {
-      "required": "この項目は必須です",
-      "invalidEmail": "有効なメールアドレスを入力してください",
-      "invalidPostalCode": "7桁の郵便番号を入力してください",
-      "invalidPhoneNumber": "有効な電話番号を入力してください（例: 03-1234-5678）",
-      "invalidAccountNumber": "7桁の口座番号を入力してください",
-      "mustAgreeToPrivacyPolicy": "プライバシーポリシーに同意してください",
-      "katakanaOnly": "全角カタカナで入力してください"
-    },
-    "confirmDialog": {
-      "title": "送信確認",
-      "message": "入力内容を送信してもよろしいですか？",
-      "confirm": "送信する",
-      "cancel": "キャンセル"
-    },
-    "privacyPolicy": {
-      "title": "プライバシーポリシー",
-      "content": "本プライバシーポリシーは、賞金請求フォームの提出時に、お客様の個人情報をどのように収集、使用、保護するかを説明するものです。\n\n1. 収集する情報\n当社は以下の個人情報を収集します：\n- 氏名（漢字およびカタカナ）\n- プレイヤーズ＋IDまたはパスポート番号\n- 連絡先情報（住所、電話番号、メールアドレス）\n- トーナメント参加詳細\n- 賞金支払いのための銀行口座情報\n\n2. 収集の目的\nお客様の個人情報は、以下の目的のために収集されます：\n- 賞金の支払い処理\n- トーナメント参加と順位の確認\n- 賞金請求に関するご連絡\n- 法的および税務上の要件の遵守\n\n3. データセキュリティ\n当社は、お客様の個人情報を不正アクセス、開示、改ざん、破壊から保護するために、適切なセキュリティ対策を実施しています。\n\n4. データの保持\nお客様の個人情報は、法律で定められた期間および上記の目的のために必要な期間、保持されます。\n\n5. 第三者への開示\n当社は、お客様の同意なく、お客様の個人情報を第三者に販売、交換、または譲渡することはありません。ただし、以下の場合を除きます：\n- 法律で要求される場合\n- 支払い処理を支援する権限のあるサービスプロバイダーへの提供\n\n6. お客様の権利\nお客様には以下の権利があります：\n- ご自身の個人情報へのアクセス\n- 不正確な情報の訂正要求\n- 情報の削除要求（法的要件に従う）\n\n7. お問い合わせ\n本プライバシーポリシーまたはお客様の個人情報に関するご質問は、提供されたチャネルを通じてお問い合わせください。\n\n8. ポリシーの変更\n当社は、本プライバシーポリシーを随時更新する場合があります。変更は本ページに掲載されます。\n\n最終更新日：2025年"
+    "notifications": {
+      "submitError": {
+        "message": "フォームの送信中にエラーが発生しました。もう一度お試しください。",
+        "title": "送信エラー"
+      },
+      "submitFailed": {
+        "message": "{{message}}",
+        "title": "送信失敗"
+      },
+      "submitSuccess": {
+        "message": "メールをご確認ください。",
+        "title": "フォームが正常に送信されました"
+      }
     },
     "ranks": {
       "1": "1位",
@@ -185,405 +578,62 @@
       "7": "7位",
       "8": "8位"
     },
-    "errors": {
-      "backendUnavailable": "サーバーが現在利用できません。しばらくしてから再度お試しください。"
+    "sections": {
+      "bank": "銀行情報",
+      "contact": "連絡先情報",
+      "name": "氏名",
+      "nameKana": "氏名（カナ）",
+      "playersId": "プレイヤーズ＋ID / パスポート番号",
+      "privacyPolicy": "プライバシーポリシー",
+      "tournament": "トーナメント情報"
+    },
+    "title": "賞金請求フォーム",
+    "validation": {
+      "invalidAccountNumber": "7桁の口座番号を入力してください",
+      "invalidEmail": "有効なメールアドレスを入力してください",
+      "invalidPhoneNumber": "有効な電話番号を入力してください（例: 03-1234-5678）",
+      "invalidPostalCode": "7桁の郵便番号を入力してください",
+      "katakanaOnly": "全角カタカナで入力してください",
+      "mustAgreeToPrivacyPolicy": "プライバシーポリシーに同意してください",
+      "required": "この項目は必須です"
     }
   },
   "termsAgreement": {
-    "loading": "フォームデータを読み込み中...",
-    "error": {
-      "title": "エラー",
-      "formIdNotFound": "URLにフォームIDが見つかりません",
-      "hashNotFound": "URLにハッシュが見つかりません",
-      "loadFailed": "フォームデータの読み込みに失敗しました",
-      "agreeFailed": "利用規約への同意に失敗しました",
-      "formNotFound": "フォームデータが見つかりません"
-    },
+    "agreeButton": "利用規約に同意する",
     "alreadyConfirmed": {
-      "title": "確認済み",
-      "message": "このフォームはすでに確認済みで、利用規約に同意しています。"
-    },
-    "title": "利用規約同意",
-    "formInfo": {
-      "title": "フォーム情報",
-      "name": "氏名",
-      "email": "メールアドレス",
-      "tournament": "トーナメント",
-      "rank": "順位",
-      "prizeAmount": "賞金額",
-      "playersId": "プレイヤーズID"
+      "message": "このフォームはすでに確認済みで、利用規約に同意しています。",
+      "title": "確認済み"
     },
     "bankInfo": {
-      "title": "銀行情報",
+      "accountHolder": "口座名義",
+      "accountNumber": "口座番号",
+      "accountType": "口座種別",
       "bank": "銀行",
       "branch": "支店",
-      "accountType": "口座種別",
-      "accountNumber": "口座番号",
-      "accountHolder": "口座名義"
+      "title": "銀行情報"
     },
-    "termsAlert": {
-      "title": "利用規約",
-      "message": "以下の「同意する」をクリックすることで、提供されたすべての情報が正確であることを確認し、賞金支払いに関する利用規約に同意したことになります。"
+    "error": {
+      "agreeFailed": "利用規約への同意に失敗しました",
+      "formIdNotFound": "URLにフォームIDが見つかりません",
+      "formNotFound": "フォームデータが見つかりません",
+      "hashNotFound": "URLにハッシュが見つかりません",
+      "loadFailed": "フォームデータの読み込みに失敗しました",
+      "title": "エラー"
     },
-    "agreeButton": "利用規約に同意する"
-  },
-  "admin": {
-    "navigation": {
-      "forms": "フォーム管理",
-      "tournaments": "トーナメント管理",
-      "services": "サービス管理"
-    },
-    "changePassword": {
-      "button": "パスワード変更",
-      "title": "パスワード変更",
-      "fields": {
-        "oldPassword": {
-          "label": "現在のパスワード",
-          "placeholder": "現在のパスワードを入力"
-        },
-        "newPassword": {
-          "label": "新しいパスワード",
-          "placeholder": "新しいパスワードを入力"
-        },
-        "confirmPassword": {
-          "label": "新しいパスワード（確認）",
-          "placeholder": "新しいパスワードを再入力"
-        }
-      },
-      "submit": "パスワードを変更",
-      "success": "パスワードが正常に変更されました！リダイレクト中...",
-      "errors": {
-        "required": "すべての項目は必須です",
-        "mismatch": "新しいパスワードが一致しません",
-        "tooShort": "パスワードは8文字以上である必要があります",
-        "samePassword": "新しいパスワードは現在のパスワードと異なる必要があります",
-        "failed": "パスワードの変更に失敗しました。現在のパスワードを確認して再度お試しください。"
-      }
-    },
-    "forms": {
-      "title": "フォーム管理",
-      "refresh": "更新",
-      "filters": {
-        "title": "フィルター",
-        "tournamentName": "トーナメント名",
-        "tournamentNamePlaceholder": "トーナメント名で検索",
-        "status": "ステータス",
-        "statusPlaceholder": "全てのステータス",
-        "termsAgreed": "利用規約同意",
-        "termsAgreedPlaceholder": "すべて",
-        "dateFrom": "開始日",
-        "dateTo": "終了日",
-        "dateFromPlaceholder": "開始日を選択",
-        "dateToPlaceholder": "終了日を選択",
-        "apply": "適用",
-        "clear": "クリア"
-      },
-      "table": {
-        "id": "ID",
-        "playerName": "プレイヤー名",
-        "email": "メールアドレス",
-        "tournament": "トーナメント",
-        "rank": "順位",
-        "amount": "金額",
-        "status": "ステータス",
-        "termsAgreed": "利用規約同意",
-        "createdAt": "作成日時",
-        "actions": "操作",
-        "noForms": "フォームが見つかりません",
-        "formsFound": "件のフォーム"
-      },
-      "status": {
-        "pending": "保留中",
-        "approved": "承認済み",
-        "rejected": "却下"
-      },
-      "detail": {
-        "title": "フォーム詳細",
-        "formId": "フォームID",
-        "submittedAt": "送信日時",
-        "personalInfo": "個人情報",
-        "contactInfo": "連絡先情報",
-        "tournamentInfo": "トーナメント情報",
-        "bankInfo": "銀行情報",
-        "agreements": "同意事項"
-      }
-    },
-    "tournaments": {
-      "title": "トーナメント管理",
-      "refresh": "更新",
-      "create": "トーナメント作成",
-      "viewDetails": "詳細を見る",
-      "participants": "名参加",
-      "created": "作成日",
-      "import": {
-        "button": "CSVインポート",
-        "title": "CSVからトーナメントをインポート",
-        "instructions": "テンプレートCSVファイルをダウンロードし、トーナメントデータを入力してアップロードしてください。各賞金は別々の行に記載してください。",
-        "downloadTemplate": "テンプレートをダウンロード",
-        "selectFile": "CSVファイルを選択",
-        "validationSuccess": "検証成功",
-        "validationFailed": "検証失敗",
-        "validRecords": "{{count}}件の有効なレコード",
-        "errors": "エラーが見つかりました",
-        "row": "行",
-        "preview": "プレビュー",
-        "eventName": "イベント名",
-        "tournamentName": "トーナメント名",
-        "date": "開催日",
-        "status": "ステータス",
-        "prizesCount": "賞金",
-        "import": "{{count}}件のトーナメントをインポート"
-      },
-      "modal": {
-        "title": "新しいトーナメントを作成",
-        "editTitle": "トーナメントを編集",
-        "eventName": "イベント名（英語）",
-        "eventNameJa": "イベント名（日本語）",
-        "tournamentName": "トーナメント名（英語）",
-        "tournamentNameJa": "トーナメント名（日本語）",
-        "name": "トーナメント名",
-        "namePlaceholder": "トーナメント名を入力",
-        "date": "開催日",
-        "datePlaceholder": "日付を選択",
-        "location": "開催地",
-        "locationPlaceholder": "開催地を入力",
-        "prizes": "賞金",
-        "rank": "順位",
-        "amount": "金額",
-        "addPrize": "追加",
-        "cancel": "キャンセル",
-        "createButton": "トーナメントを作成",
-        "updateButton": "トーナメントを更新"
-      },
-      "status": {
-        "active": "有効",
-        "inactive": "無効",
-        "upcoming": "開催予定",
-        "ongoing": "開催中",
-        "completed": "終了"
-      },
+    "formInfo": {
+      "email": "メールアドレス",
+      "name": "氏名",
+      "playersId": "プレイヤーズID",
+      "prizeAmount": "賞金額",
       "rank": "順位",
-      "amount": "金額",
-      "claimed": "申請済み",
-      "prizes": "賞金",
-      "morePrizes": "その他の賞金",
-      "detail": {
-        "backToList": "トーナメント一覧に戻る",
-        "notFound": "トーナメントが見つかりません",
-        "tournamentInfo": "トーナメント情報",
-        "date": "開催日",
-        "status": "ステータス",
-        "activate": "有効化",
-        "deactivate": "無効化",
-        "prizesInfo": "賞金情報",
-        "submittedForms": "提出されたフォーム",
-        "noForms": "このトーナメントに提出されたフォームはありません"
-      }
+      "title": "フォーム情報",
+      "tournament": "トーナメント"
     },
-    "services": {
-      "title": "サービス管理",
-      "tabs": {
-        "terms": "利用規約",
-        "privacy": "プライバシーポリシー",
-        "contract": "契約書",
-        "receipt": "領収書テンプレート",
-        "confirmationEmail": "確認メールテンプレート",
-        "contractEmail": "契約書メールテンプレート"
-      },
-      "version": "バージョン",
-      "lastUpdated": "最終更新",
-      "updatedBy": "更新者",
-      "success": "成功",
-      "successMessage": {
-        "terms": "利用規約が正常に更新されました",
-        "privacy": "プライバシーポリシーが正常に更新されました",
-        "contract": "契約書が正常に更新されました",
-        "receipt": "領収書テンプレートが正常に更新されました",
-        "confirmationEmail": "確認メールテンプレートが正常に更新されました",
-        "contractEmail": "契約書メールテンプレートが正常に更新されました"
-      },
-      "editor": {
-        "title": "HTMLエディター",
-        "description": "以下にHTMLコンテンツを記述できます。サポートされているタグ: h1, h2, h3, p, ul, ol, li, strong, em, a など",
-        "termsLabel": "利用規約コンテンツ",
-        "termsSubjectLabel": "利用規約サブジェクト",
-        "privacyLabel": "プライバシーポリシーコンテンツ",
-        "privacySubjectLabel": "プライバシーポリシーサブジェクト",
-        "contractLabel": "契約書コンテンツ",
-        "contractSubjectLabel": "契約書サブジェクト",
-        "receiptLabel": "領収書テンプレートコンテンツ",
-        "receiptSubjectLabel": "領収書テンプレートサブジェクト",
-        "confirmationEmailLabel": "確認メールテンプレートコンテンツ",
-        "confirmationEmailSubjectLabel": "確認メールテンプレートサブジェクト",
-        "contractEmailLabel": "契約書メールテンプレートコンテンツ",
-        "contractEmailSubjectLabel": "契約書メールテンプレートサブジェクト",
-        "placeholder": "HTMLコンテンツを入力...",
-        "preview": "プレビュー",
-        "edit": "編集",
-        "saveTerms": "利用規約を保存",
-        "savePrivacy": "プライバシーポリシーを保存"
-      },
-      "variables": {
-        "buttonLabel": "テンプレート変数",
-        "title": "利用可能なテンプレート変数",
-        "helpLabel": "ヘルプ",
-        "description": "テンプレート内でこれらの変数を使用するには、二重の波括弧で囲みます（例: {{variableName}}）。変数はドキュメント生成時に実際の値に置き換えられます。",
-        "table": {
-          "variable": "変数",
-          "description": "説明",
-          "example": "例"
-        },
-        "usage": {
-          "title": "使用例",
-          "description": "テンプレートで変数を使用するには、二重の波括弧で囲みます："
-        },
-        "groups": {
-          "common": {
-            "title": "共通変数",
-            "description": "すべてのテンプレートで利用可能な一般情報"
-          },
-          "templateContent": {
-            "title": "テンプレートコンテンツ",
-            "description": "他のテンプレートの完全なコンテンツ（HTMLまたはテキスト形式）"
-          },
-          "personalInfo": {
-            "title": "個人情報",
-            "description": "フォーム提出者の情報"
-          },
-          "tournamentInfo": {
-            "title": "トーナメント情報",
-            "description": "トーナメントと賞金の詳細"
-          },
-          "bankingInfo": {
-            "title": "銀行情報",
-            "description": "賞金支払いのための銀行口座情報"
-          }
-        },
-        "fields": {
-          "year": {
-            "description": "現在の年",
-            "example": "2025"
-          },
-          "today": {
-            "description": "今日の日付（フォーマット済み）",
-            "example": "2025年12月17日"
-          },
-          "tosLink": {
-            "description": "利用規約ページへのリンク",
-            "example": "https://example.com/terms"
-          },
-          "contractNumber": {
-            "description": "契約参照番号",
-            "example": "C-2025-001"
-          },
-          "receiptNumber": {
-            "description": "領収書参照番号",
-            "example": "R-2025-001"
-          },
-          "termsOfServiceHtml": {
-            "description": "利用規約コンテンツ（HTML形式）"
-          },
-          "termsOfServiceText": {
-            "description": "利用規約コンテンツ（プレーンテキスト）"
-          },
-          "contractHtml": {
-            "description": "契約書コンテンツ（HTML形式）"
-          },
-          "contractText": {
-            "description": "契約書コンテンツ（プレーンテキスト）"
-          },
-          "receiptHtml": {
-            "description": "領収書コンテンツ（HTML形式）"
-          },
-          "receiptText": {
-            "description": "領収書コンテンツ（プレーンテキスト）"
-          },
-          "lastNameKanji": {
-            "description": "姓（漢字）",
-            "example": "山田"
-          },
-          "firstNameKanji": {
-            "description": "名（漢字）",
-            "example": "太郎"
-          },
-          "lastNameKana": {
-            "description": "姓（カタカナ）",
-            "example": "ヤマダ"
-          },
-          "firstNameKana": {
-            "description": "名（カタカナ）",
-            "example": "タロウ"
-          },
-          "email": {
-            "description": "メールアドレス",
-            "example": "user@example.com"
-          },
-          "phoneNumber": {
-            "description": "電話番号",
-            "example": "090-1234-5678"
-          },
-          "postalCode": {
-            "description": "郵便番号",
-            "example": "123-4567"
-          },
-          "address": {
-            "description": "住所（完全）",
-            "example": "東京都渋谷区1-2-3"
-          },
-          "playersId": {
-            "description": "プレイヤーズ＋IDまたはパスポート番号",
-            "example": "P123456"
-          },
-          "tournamentName": {
-            "description": "トーナメント名",
-            "example": "第1回トーナメント"
-          },
-          "tournamentDate": {
-            "description": "トーナメント開催日（フォーマット済み）",
-            "example": "2025年12月17日"
-          },
-          "rank": {
-            "description": "賞金順位",
-            "example": "1位"
-          },
-          "amount": {
-            "description": "賞金額（通貨付きフォーマット）",
-            "example": "¥100,000"
-          },
-          "bankName": {
-            "description": "銀行名",
-            "example": "三菱UFJ銀行"
-          },
-          "bankCode": {
-            "description": "銀行コード",
-            "example": "0005"
-          },
-          "branchName": {
-            "description": "支店名",
-            "example": "渋谷支店"
-          },
-          "branchCode": {
-            "description": "支店コード",
-            "example": "123"
-          },
-          "accountTypeJa": {
-            "description": "口座種別（日本語：普通/当座）",
-            "example": "普通"
-          },
-          "accountTypeEn": {
-            "description": "口座種別（英語：savings/checking）",
-            "example": "savings"
-          },
-          "accountNumber": {
-            "description": "口座番号",
-            "example": "1234567"
-          },
-          "accountHolderName": {
-            "description": "口座名義（カタカナ）",
-            "example": "ヤマダタロウ"
-          }
-        }
-      }
-    }
+    "loading": "フォームデータを読み込み中...",
+    "termsAlert": {
+      "message": "以下の「同意する」をクリックすることで、提供されたすべての情報が正確であることを確認し、賞金支払いに関する利用規約に同意したことになります。",
+      "title": "利用規約"
+    },
+    "title": "利用規約同意"
   }
 }

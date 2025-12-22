@@ -1,3 +1,6 @@
+import { notifications } from '@mantine/notifications';
+import i18next from 'i18next';
+
 import { ROUTES } from '@/constants';
 import { clearAuth, getAccessKey } from '@/utils/auth';
 
@@ -28,7 +31,11 @@ export function fetchLambda<T>({
   }).then(async (response) => {
     if (response.status === 401) {
       clearAuth();
-      alert('セッションが切れました。再度ログインしてください。');
+      notifications.show({
+        title: i18next.t('auth.notifications.sessionExpired.title'),
+        message: i18next.t('auth.notifications.sessionExpired.message'),
+        color: 'red',
+      });
       window.location.href = ROUTES.AUTH.LOGIN;
     }
     if (!response.ok) {

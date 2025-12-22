@@ -15,6 +15,7 @@ import {
   Title,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { notifications } from '@mantine/notifications';
 import { IconDownload, IconRefresh, IconX } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
@@ -118,7 +119,11 @@ export function FormManagementPage() {
 
   const handleExportCSV = async () => {
     if (!appliedTournamentId) {
-      alert(t('admin.forms.export.noTournamentSelected'));
+      notifications.show({
+        title: t('admin.forms.notifications.noTournamentSelected.title'),
+        message: t('admin.forms.notifications.noTournamentSelected.message'),
+        color: 'orange',
+      });
       return;
     }
 
@@ -144,7 +149,11 @@ export function FormManagementPage() {
       }
 
       if (allForms.length === 0) {
-        alert(t('admin.forms.export.noData'));
+        notifications.show({
+          title: t('admin.forms.notifications.noData.title'),
+          message: t('admin.forms.notifications.noData.message'),
+          color: 'orange',
+        });
         return;
       }
       // Generate filename with tournament name and timestamp
@@ -158,7 +167,11 @@ export function FormManagementPage() {
       exportFormsToPayPayCSV(allForms, filename);
     } catch (error) {
       console.error('Failed to export forms:', error);
-      alert(t('admin.forms.export.error'));
+      notifications.show({
+        title: t('admin.forms.notifications.exportError.title'),
+        message: t('admin.forms.notifications.exportError.message'),
+        color: 'red',
+      });
     } finally {
       setIsExporting(false);
     }

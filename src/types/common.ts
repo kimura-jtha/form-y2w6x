@@ -16,6 +16,8 @@ export interface SelectOption<T = string> {
 
 export type Status = 'idle' | 'loading' | 'success' | 'error';
 
+export type SupportedLanguage = 'en' | 'ja' | 'kr' | 'zh';
+
 export type Nullable<T> = T | null;
 
 export type Optional<T> = T | undefined;

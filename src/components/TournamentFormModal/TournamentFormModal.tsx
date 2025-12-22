@@ -14,6 +14,7 @@ import {
   TextInput,
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
+import { notifications } from '@mantine/notifications';
 import { IconCheck, IconEdit, IconPlus, IconTrash, IconX } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
@@ -82,7 +83,11 @@ export function TournamentFormModal({
 
   const handleAddPrize = () => {
     if (!newRank || !newAmount) {
-      alert('Please fill all the fields to add a new prize');
+      notifications.show({
+        title: t('admin.tournaments.modal.notifications.fillAllFields.title'),
+        message: t('admin.tournaments.modal.notifications.fillAllFields.message'),
+        color: 'red',
+      });
       return;
     }
     const rank = newRank;
@@ -116,7 +121,11 @@ export function TournamentFormModal({
 
   const handleSaveEdit = () => {
     if (!editRank || !editAmount) {
-      alert('Please fill all the fields');
+      notifications.show({
+        title: t('admin.tournaments.modal.notifications.fillAllFieldsEdit.title'),
+        message: t('admin.tournaments.modal.notifications.fillAllFieldsEdit.message'),
+        color: 'red',
+      });
       return;
     }
 
@@ -124,7 +133,11 @@ export function TournamentFormModal({
 
     // Check if new rank conflicts with existing (excluding current)
     if (editRank !== editingRank && prizes.some((p) => p.rank === editRank)) {
-      alert('This rank already exists');
+      notifications.show({
+        title: t('admin.tournaments.modal.notifications.rankExists.title'),
+        message: t('admin.tournaments.modal.notifications.rankExists.message'),
+        color: 'red',
+      });
       return;
     }
 

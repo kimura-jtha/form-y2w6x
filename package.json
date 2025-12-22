@@ -12,6 +12,7 @@
     "@mantine/dates": "^8.3.9",
     "@mantine/form": "^8.3.9",
     "@mantine/hooks": "^8.3.9",
+    "@mantine/notifications": "^8.3.10",
     "@mantine/tiptap": "^8.3.10",
     "@tabler/icons-react": "^3.35.0",
     "@tiptap/core": "^3.13.0",

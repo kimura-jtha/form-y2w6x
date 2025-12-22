@@ -1,28 +1,407 @@
 {
-  "common": {
-    "loading": "Loading...",
-    "error": "An error occurred",
-    "success": "Success",
-    "save": "Save",
-    "cancel": "Cancel",
-    "delete": "Delete",
-    "edit": "Edit",
-    "create": "Create",
-    "search": "Search",
-    "notFound": "Not Found",
-    "required": "Required",
-    "submit": "Submit",
-    "clear": "Clear",
-    "confirm": "Confirm",
-    "yes": "Yes",
-    "no": "No",
-    "loadMore": "Load More",
-    "logout": "Logout"
+  "admin": {
+    "changePassword": {
+      "button": "Change Password",
+      "errors": {
+        "failed": "Failed to change password. Please check your current password and try again.",
+        "mismatch": "New passwords do not match",
+        "required": "All fields are required",
+        "samePassword": "New password must be different from current password",
+        "tooShort": "Password must be at least 8 characters long"
+      },
+      "fields": {
+        "confirmPassword": {
+          "label": "Confirm New Password",
+          "placeholder": "Re-enter your new password"
+        },
+        "newPassword": {
+          "label": "New Password",
+          "placeholder": "Enter your new password"
+        },
+        "oldPassword": {
+          "label": "Current Password",
+          "placeholder": "Enter your current password"
+        }
+      },
+      "submit": "Change Password",
+      "success": "Password changed successfully! Redirecting...",
+      "title": "Change Password"
+    },
+    "forms": {
+      "detail": {
+        "agreements": "Agreements",
+        "bankInfo": "Bank Information",
+        "contactInfo": "Contact Information",
+        "formId": "Form ID",
+        "personalInfo": "Personal Information",
+        "submittedAt": "Submitted At",
+        "title": "Form Details",
+        "tournamentInfo": "Tournament Information"
+      },
+      "export": {
+        "error": "Failed to export data. Please try again.",
+        "noData": "No data to export for selected tournament",
+        "noTournamentSelected": "Please select a tournament to export"
+      },
+      "exportCSV": "Export CSV",
+      "filters": {
+        "apply": "Apply",
+        "clear": "Clear",
+        "dateFrom": "Date From",
+        "dateFromPlaceholder": "Select start date",
+        "dateTo": "Date To",
+        "dateToPlaceholder": "Select end date",
+        "status": "Status",
+        "statusPlaceholder": "All statuses",
+        "termsAgreed": "Terms Agreed",
+        "termsAgreedPlaceholder": "All",
+        "title": "Filters",
+        "tournamentName": "Tournament Name",
+        "tournamentNamePlaceholder": "Search by tournament name"
+      },
+      "notifications": {
+        "exportError": {
+          "message": "Failed to export data. Please try again.",
+          "title": "Export Failed"
+        },
+        "noData": {
+          "message": "No data to export for selected tournament",
+          "title": "No Data"
+        },
+        "noTournamentSelected": {
+          "message": "Please select a tournament to export",
+          "title": "Tournament Required"
+        }
+      },
+      "refresh": "Refresh",
+      "status": {
+        "approved": "Approved",
+        "pending": "Pending",
+        "rejected": "Rejected"
+      },
+      "table": {
+        "actions": "Actions",
+        "amount": "Amount",
+        "createdAt": "Created At",
+        "email": "Email",
+        "formsFound": "form(s) found",
+        "id": "ID",
+        "noForms": "No forms found",
+        "playerName": "Player Name",
+        "rank": "Rank",
+        "status": "Status",
+        "termsAgreed": "Terms Agreed",
+        "tournament": "Tournament"
+      },
+      "title": "Form Management"
+    },
+    "navigation": {
+      "forms": "Forms Management",
+      "services": "Services",
+      "tournaments": "Tournaments"
+    },
+    "services": {
+      "editor": {
+        "confirmationEmailLabel": "Confirmation Email Template Content",
+        "confirmationEmailSubjectLabel": "Confirmation Email Subject",
+        "contractEmailLabel": "Contract Email Template Content",
+        "contractEmailSubjectLabel": "Contract Email Subject",
+        "contractLabel": "Contract Content",
+        "contractSubjectLabel": "Contract Subject",
+        "description": "You can write HTML content below. Supported tags: h1, h2, h3, p, ul, ol, li, strong, em, a, etc.",
+        "edit": "Edit",
+        "placeholder": "Enter HTML content...",
+        "preview": "Preview",
+        "privacyLabel": "Privacy Policy Content",
+        "privacySubjectLabel": "Privacy Policy Subject",
+        "receiptLabel": "Receipt Template Content",
+        "receiptSubjectLabel": "Receipt Template Subject",
+        "saveConfirmationEmail": "Save Confirmation Email",
+        "saveContract": "Save Contract",
+        "saveContractEmail": "Save Contract Email",
+        "savePrivacy": "Save Privacy Policy",
+        "saveReceipt": "Save Receipt Template",
+        "saveTerms": "Save Terms of Service",
+        "termsLabel": "Terms of Service Content",
+        "termsSubjectLabel": "Terms of Service Subject",
+        "title": "HTML Editor"
+      },
+      "lastUpdated": "Last updated",
+      "success": "Success",
+      "successMessage": {
+        "confirmationEmail": "Confirmation email updated successfully",
+        "contract": "Contract updated successfully",
+        "contractEmail": "Contract email updated successfully",
+        "privacy": "Privacy Policy updated successfully",
+        "receipt": "Receipt template updated successfully",
+        "terms": "Terms of Service updated successfully"
+      },
+      "tabs": {
+        "confirmationEmail": "Confirmation Email Template",
+        "contract": "Contract",
+        "contractEmail": "Contract Email Template",
+        "privacy": "Privacy Policy",
+        "receipt": "Receipt Template",
+        "terms": "Terms of Service"
+      },
+      "title": "Service Management",
+      "updatedBy": "By",
+      "variables": {
+        "buttonLabel": "Template Variables",
+        "description": "Use these variables in your templates by wrapping them with double curly braces, e.g., {{variableName}}. The variables will be replaced with actual values when generating documents.",
+        "fields": {
+          "accountHolderName": {
+            "description": "Account holder name in Katakana",
+            "example": "ヤマダタロウ"
+          },
+          "accountNumber": {
+            "description": "Account number",
+            "example": "1234567"
+          },
+          "accountTypeEn": {
+            "description": "Account type in English (savings/checking)",
+            "example": "savings"
+          },
+          "accountTypeJa": {
+            "description": "Account type in Japanese (普通/当座)",
+            "example": "普通"
+          },
+          "address": {
+            "description": "Full address",
+            "example": "Tokyo, Shibuya 1-2-3"
+          },
+          "amount": {
+            "description": "Prize amount (formatted with currency)",
+            "example": "¥100,000"
+          },
+          "bankCode": {
+            "description": "Bank code",
+            "example": "0005"
+          },
+          "bankName": {
+            "description": "Bank name",
+            "example": "MUFG Bank"
+          },
+          "branchCode": {
+            "description": "Branch code",
+            "example": "123"
+          },
+          "branchName": {
+            "description": "Branch name",
+            "example": "Shibuya Branch"
+          },
+          "contractHtml": {
+            "description": "Contract content (HTML format)"
+          },
+          "contractNumber": {
+            "description": "Contract reference number",
+            "example": "C-2025-001"
+          },
+          "contractText": {
+            "description": "Contract content (plain text)"
+          },
+          "email": {
+            "description": "Email address",
+            "example": "user@example.com"
+          },
+          "firstNameKana": {
+            "description": "First name in Katakana",
+            "example": "タロウ"
+          },
+          "firstNameKanji": {
+            "description": "First name in Kanji",
+            "example": "Taro"
+          },
+          "lastNameKana": {
+            "description": "Last name in Katakana",
+            "example": "ヤマダ"
+          },
+          "lastNameKanji": {
+            "description": "Last name in Kanji",
+            "example": "Yamada"
+          },
+          "phoneNumber": {
+            "description": "Phone number",
+            "example": "090-1234-5678"
+          },
+          "playersId": {
+            "description": "Players+ ID or Passport number",
+            "example": "P123456"
+          },
+          "postalCode": {
+            "description": "Postal code",
+            "example": "123-4567"
+          },
+          "rank": {
+            "description": "Prize rank/position",
+            "example": "1st"
+          },
+          "receiptHtml": {
+            "description": "Receipt content (HTML format)"
+          },
+          "receiptNumber": {
+            "description": "Receipt reference number",
+            "example": "R-2025-001"
+          },
+          "receiptText": {
+            "description": "Receipt content (plain text)"
+          },
+          "termsOfServiceHtml": {
+            "description": "Terms of Service content (HTML format)"
+          },
+          "termsOfServiceText": {
+            "description": "Terms of Service content (plain text)"
+          },
+          "today": {
+            "description": "Today's date (formatted)",
+            "example": "December 17, 2025"
+          },
+          "tosLink": {
+            "description": "Link to Terms of Service page",
+            "example": "https://example.com/terms"
+          },
+          "tournamentDate": {
+            "description": "Tournament date (formatted)",
+            "example": "December 17, 2025"
+          },
+          "tournamentName": {
+            "description": "Tournament name",
+            "example": "1st Tournament"
+          },
+          "year": {
+            "description": "Current year",
+            "example": "2025"
+          }
+        },
+        "groups": {
+          "bankingInfo": {
+            "description": "Bank account details for prize payment",
+            "title": "Banking Information"
+          },
+          "common": {
+            "description": "General information available in all templates",
+            "title": "Common Variables"
+          },
+          "personalInfo": {
+            "description": "Information about the form submitter",
+            "title": "Personal Information"
+          },
+          "templateContent": {
+            "description": "Full content of other templates (HTML or text format)",
+            "title": "Template Content"
+          },
+          "tournamentInfo": {
+            "description": "Details about the tournament and prize",
+            "title": "Tournament Information"
+          }
+        },
+        "helpLabel": "Help",
+        "table": {
+          "description": "Description",
+          "example": "Example",
+          "variable": "Variable"
+        },
+        "title": "Available Template Variables",
+        "usage": {
+          "description": "To use a variable in your template, wrap it with double curly braces:",
+          "title": "Usage Example"
+        }
+      },
+      "version": "Version"
+    },
+    "tournaments": {
+      "amount": "Amount",
+      "claimed": "Claimed",
+      "create": "Create Tournament",
+      "created": "Created",
+      "detail": {
+        "activate": "Activate",
+        "backToList": "Back to Tournaments",
+        "date": "Date",
+        "deactivate": "Deactivate",
+        "noForms": "No forms submitted for this tournament",
+        "notFound": "Tournament not found",
+        "prizesInfo": "Prizes Information",
+        "status": "Status",
+        "submittedForms": "Submitted Forms",
+        "tournamentInfo": "Tournament Information"
+      },
+      "import": {
+        "button": "Import CSV",
+        "date": "Date",
+        "downloadTemplate": "Download Template",
+        "errors": "Errors found",
+        "eventName": "Event Name",
+        "import": "Import {{count}} Tournament(s)",
+        "instructions": "Download the template CSV file, fill in your tournament data, and upload it here. Each prize should be on a separate row.",
+        "preview": "Preview",
+        "prizesCount": "Prizes",
+        "row": "Row",
+        "selectFile": "Select CSV File",
+        "status": "Status",
+        "title": "Import Tournaments from CSV",
+        "tournamentName": "Tournament Name",
+        "validRecords": "{{count}} valid record(s)",
+        "validationFailed": "Validation Failed",
+        "validationSuccess": "Validation Passed"
+      },
+      "modal": {
+        "addPrize": "Add",
+        "amount": "Amount",
+        "cancel": "Cancel",
+        "createButton": "Create Tournament",
+        "date": "Tournament Date",
+        "datePlaceholder": "Select date",
+        "editTitle": "Edit Tournament",
+        "eventName": "Event Name (English)",
+        "eventNameJa": "Event Name (Japanese)",
+        "location": "Location",
+        "locationPlaceholder": "Enter location",
+        "name": "Tournament Name",
+        "namePlaceholder": "Enter tournament name",
+        "notifications": {
+          "fillAllFields": {
+            "message": "Please fill all the fields to add a new prize",
+            "title": "Validation Error"
+          },
+          "fillAllFieldsEdit": {
+            "message": "Please fill all the fields",
+            "title": "Validation Error"
+          },
+          "rankExists": {
+            "message": "This rank already exists",
+            "title": "Duplicate Rank"
+          }
+        },
+        "prizes": "Prizes",
+        "rank": "Rank",
+        "title": "Create New Tournament",
+        "tournamentName": "Tournament Name (English)",
+        "tournamentNameJa": "Tournament Name (Japanese)",
+        "updateButton": "Update Tournament"
+      },
+      "morePrizes": "more prizes",
+      "participants": "participants",
+      "prizes": "prizes",
+      "rank": "Rank",
+      "refresh": "Refresh",
+      "status": {
+        "active": "Active",
+        "completed": "Completed",
+        "inactive": "Inactive",
+        "ongoing": "Ongoing",
+        "upcoming": "Upcoming"
+      },
+      "title": "Tournament Management",
+      "viewDetails": "View Details"
+    }
   },
   "auth": {
     "login": {
-      "title": "Admin Login",
-      "subtitle": "Sign in to access the admin panel",
+      "errors": {
+        "failed": "Login failed. Please check your credentials.",
+        "required": "Email and password are required"
+      },
       "fields": {
         "email": {
           "label": "Email",
@@ -34,89 +413,84 @@
         }
       },
       "submit": "Sign In",
-      "errors": {
-        "required": "Email and password are required",
-        "failed": "Login failed. Please check your credentials."
+      "subtitle": "Sign in to access the admin panel",
+      "title": "Admin Login"
+    },
+    "notifications": {
+      "sessionExpired": {
+        "message": "Your session has expired. Please log in again.",
+        "title": "Session Expired"
       }
     }
+  },
+  "common": {
+    "cancel": "Cancel",
+    "clear": "Clear",
+    "confirm": "Confirm",
+    "create": "Create",
+    "delete": "Delete",
+    "edit": "Edit",
+    "error": "An error occurred",
+    "loadMore": "Load More",
+    "loading": "Loading...",
+    "logout": "Logout",
+    "no": "No",
+    "notFound": "Not Found",
+    "required": "Required",
+    "save": "Save",
+    "search": "Search",
+    "submit": "Submit",
+    "success": "Success",
+    "yes": "Yes"
   },
   "pages": {
     "home": {
       "title": "Home"
     },
     "notFound": {
-      "title": "Page Not Found",
-      "description": "The page you are looking for does not exist."
+      "description": "The page you are looking for does not exist.",
+      "title": "Page Not Found"
     }
   },
   "prizeClaim": {
-    "title": "Prize Claim Form",
-    "sections": {
-      "name": "Name",
-      "nameKana": "Name (Katakana)",
-      "playersId": "Players+ ID / Passport Number",
-      "contact": "Contact Information",
-      "tournament": "Tournament Information",
-      "bank": "Bank Information",
-      "privacyPolicy": "Privacy Policy"
+    "buttons": {
+      "clear": "Clear",
+      "searchAddress": "Search Address",
+      "searchBank": "Search Bank",
+      "searchBranch": "Search Branch",
+      "submit": "Submit"
+    },
+    "confirmDialog": {
+      "cancel": "Cancel",
+      "confirm": "Submit",
+      "message": "Are you sure you want to submit this form?",
+      "title": "Confirm Submission"
+    },
+    "errors": {
+      "backendUnavailable": "The server is currently unavailable. Please try again later."
     },
     "fields": {
-      "lastNameKanji": {
-        "label": "Last Name (Kanji)",
-        "placeholder": "Yamada",
-        "description": "For non-Japanese, please enter in Katakana"
+      "accountHolderName": {
+        "description": "Enter account holder name in half-width Katakana",
+        "label": "Account Holder Name (Katakana)",
+        "placeholder": "ﾔﾏﾀﾞ ﾀﾛｳ"
       },
-      "firstNameKanji": {
-        "label": "First Name (Kanji)",
-        "placeholder": "Tarou"
+      "accountNumber": {
+        "description": "7 digits (padded with zeros if shorter)",
+        "label": "Account Number",
+        "placeholder": "1234567"
       },
-      "lastNameKana": {
-        "label": "Last Name (Katakana)",
-        "placeholder": "ヤマダ",
-        "description": "Please enter in full-width Katakana"
-      },
-      "firstNameKana": {
-        "label": "First Name (Katakana)",
-        "placeholder": "タロウ"
-      },
-      "playersId": {
-        "label": "Players+ ID / Passport Number",
-        "placeholder": "Enter Players+ ID or Passport Number",
-        "description": "Japanese players use Players+ ID, non-Japanese use Passport Number"
-      },
-      "postalCode": {
-        "label": "Postal Code",
-        "placeholder": "1000005",
-        "description": "7 digits without hyphen"
+      "accountType": {
+        "label": "Account Type",
+        "options": {
+          "checking": "Checking",
+          "savings": "Savings"
+        },
+        "placeholder": "Select account type"
       },
       "address": {
         "label": "Address",
         "placeholder": "Prefecture, City, Street"
-      },
-      "phoneNumber": {
-        "label": "Phone Number",
-        "placeholder": "03-1234-5678",
-        "description": "Example: 03-1234-5678 / 090-1234-5678"
-      },
-      "email": {
-        "label": "Email Address",
-        "placeholder": "example@example.com"
-      },
-      "tournamentDate": {
-        "label": "Tournament Date",
-        "placeholder": "Select date"
-      },
-      "tournamentName": {
-        "label": "Tournament Name",
-        "placeholder": "Select tournament"
-      },
-      "rank": {
-        "label": "Rank",
-        "placeholder": "Select rank"
-      },
-      "prizeAmount": {
-        "label": "Prize Amount",
-        "description": "Auto-calculated based on selected tournament and rank"
       },
       "bankName": {
         "label": "Bank Name",
@@ -126,54 +500,77 @@
         "label": "Branch Name",
         "placeholder": "Search or select branch"
       },
-      "accountType": {
-        "label": "Account Type",
-        "placeholder": "Select account type",
-        "options": {
-          "savings": "Savings",
-          "checking": "Checking"
-        }
+      "email": {
+        "label": "Email Address",
+        "placeholder": "example@example.com"
       },
-      "accountNumber": {
-        "label": "Account Number",
-        "placeholder": "1234567",
-        "description": "7 digits (padded with zeros if shorter)"
+      "firstNameKana": {
+        "label": "First Name (Katakana)",
+        "placeholder": "タロウ"
       },
-      "accountHolderName": {
-        "label": "Account Holder Name (Katakana)",
-        "placeholder": "ﾔﾏﾀﾞ ﾀﾛｳ",
-        "description": "Enter account holder name in half-width Katakana"
+      "firstNameKanji": {
+        "label": "First Name (Kanji)",
+        "placeholder": "Tarou"
+      },
+      "lastNameKana": {
+        "description": "Please enter in full-width Katakana",
+        "label": "Last Name (Katakana)",
+        "placeholder": "ヤマダ"
+      },
+      "lastNameKanji": {
+        "description": "For non-Japanese, please enter in Katakana",
+        "label": "Last Name (Kanji)",
+        "placeholder": "Yamada"
+      },
+      "phoneNumber": {
+        "description": "Example: 03-1234-5678 / 090-1234-5678",
+        "label": "Phone Number",
+        "placeholder": "03-1234-5678"
+      },
+      "playersId": {
+        "description": "Japanese players use Players+ ID, non-Japanese use Passport Number",
+        "label": "Players+ ID / Passport Number",
+        "placeholder": "Enter Players+ ID or Passport Number"
+      },
+      "postalCode": {
+        "description": "7 digits without hyphen",
+        "label": "Postal Code",
+        "placeholder": "1000005"
       },
       "privacyAgreement": {
-        "label": "I agree to the Privacy Policy",
-        "description": "Please review and agree to the privacy policy above"
+        "description": "Please review and agree to the privacy policy above",
+        "label": "I agree to the Privacy Policy"
+      },
+      "prizeAmount": {
+        "description": "Auto-calculated based on selected tournament and rank",
+        "label": "Prize Amount"
+      },
+      "rank": {
+        "label": "Rank",
+        "placeholder": "Select rank"
+      },
+      "tournamentDate": {
+        "label": "Tournament Date",
+        "placeholder": "Select date"
+      },
+      "tournamentName": {
+        "label": "Tournament Name",
+        "placeholder": "Select tournament"
       }
     },
-    "buttons": {
-      "searchAddress": "Search Address",
-      "searchBank": "Search Bank",
-      "searchBranch": "Search Branch",
-      "submit": "Submit",
-      "clear": "Clear"
-    },
-    "validation": {
-      "required": "This field is required",
-      "invalidEmail": "Please enter a valid email address",
-      "invalidPostalCode": "Please enter a 7-digit postal code",
-      "invalidPhoneNumber": "Please enter a valid phone number (e.g., 03-1234-5678)",
-      "invalidAccountNumber": "Please enter a 7-digit account number",
-      "mustAgreeToPrivacyPolicy": "You must agree to the privacy policy",
-      "katakanaOnly": "Please enter in full-width Katakana"
-    },
-    "confirmDialog": {
-      "title": "Confirm Submission",
-      "message": "Are you sure you want to submit this form?",
-      "confirm": "Submit",
-      "cancel": "Cancel"
-    },
-    "privacyPolicy": {
-      "title": "Privacy Policy",
-      "content": "This Privacy Policy describes how we collect, use, and protect your personal information when you submit a prize claim form.\n\n1. Information We Collect\nWe collect the following personal information:\n- Full name (Kanji and Katakana)\n- Players+ ID or Passport Number\n- Contact information (address, phone number, email)\n- Tournament participation details\n- Bank account information for prize payments\n\n2. Purpose of Collection\nYour personal information is collected for the following purposes:\n- Processing prize money payments\n- Verifying tournament participation and rankings\n- Communicating with you regarding prize claims\n- Complying with legal and tax requirements\n\n3. Data Security\nWe implement appropriate security measures to protect your personal information from unauthorized access, disclosure, alteration, or destruction.\n\n4. Data Retention\nYour personal information will be retained for the period required by law and for the purposes stated above.\n\n5. Third-Party Disclosure\nWe do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except:\n- When required by law\n- To authorized service providers who assist in processing payments\n\n6. Your Rights\nYou have the right to:\n- Access your personal information\n- Request correction of inaccurate information\n- Request deletion of your information (subject to legal requirements)\n\n7. Contact\nFor questions about this Privacy Policy or your personal information, please contact us through the provided channels.\n\n8. Changes to This Policy\nWe may update this Privacy Policy from time to time. Changes will be posted on this page.\n\nLast Updated: 2025"
+    "notifications": {
+      "submitError": {
+        "message": "An error occurred while submitting the form. Please try again.",
+        "title": "Submission Error"
+      },
+      "submitFailed": {
+        "message": "{{message}}",
+        "title": "Submission Failed"
+      },
+      "submitSuccess": {
+        "message": "Please check your email for the confirmation.",
+        "title": "Form Submitted Successfully"
+      }
     },
     "ranks": {
       "1": "1st Place",
@@ -185,415 +582,62 @@
       "7": "7th Place",
       "8": "8th Place"
     },
-    "errors": {
-      "backendUnavailable": "The server is currently unavailable. Please try again later."
+    "sections": {
+      "bank": "Bank Information",
+      "contact": "Contact Information",
+      "name": "Name",
+      "nameKana": "Name (Katakana)",
+      "playersId": "Players+ ID / Passport Number",
+      "privacyPolicy": "Privacy Policy",
+      "tournament": "Tournament Information"
+    },
+    "title": "Prize Claim Form",
+    "validation": {
+      "invalidAccountNumber": "Please enter a 7-digit account number",
+      "invalidEmail": "Please enter a valid email address",
+      "invalidPhoneNumber": "Please enter a valid phone number (e.g., 03-1234-5678)",
+      "invalidPostalCode": "Please enter a 7-digit postal code",
+      "katakanaOnly": "Please enter in full-width Katakana",
+      "mustAgreeToPrivacyPolicy": "You must agree to the privacy policy",
+      "required": "This field is required"
     }
   },
   "termsAgreement": {
-    "loading": "Loading form data...",
-    "error": {
-      "title": "Error",
-      "formIdNotFound": "Form ID not found in URL",
-      "hashNotFound": "Hash not found in URL",
-      "loadFailed": "Failed to load form data",
-      "agreeFailed": "Failed to agree to terms",
-      "formNotFound": "Form data not found"
-    },
+    "agreeButton": "I Agree to Terms of Service",
     "alreadyConfirmed": {
-      "title": "Already Confirmed",
-      "message": "This form has already been confirmed and you have agreed to the terms of service."
-    },
-    "title": "Terms of Service Agreement",
-    "formInfo": {
-      "title": "Form Information",
-      "name": "Name",
-      "email": "Email",
-      "tournament": "Tournament",
-      "rank": "Rank",
-      "prizeAmount": "Prize Amount",
-      "playersId": "Players ID"
+      "message": "This form has already been confirmed and you have agreed to the terms of service.",
+      "title": "Already Confirmed"
     },
     "bankInfo": {
-      "title": "Bank Information",
+      "accountHolder": "Account Holder",
+      "accountNumber": "Account Number",
+      "accountType": "Account Type",
       "bank": "Bank",
       "branch": "Branch",
-      "accountType": "Account Type",
-      "accountNumber": "Account Number",
-      "accountHolder": "Account Holder"
+      "title": "Bank Information"
     },
-    "termsAlert": {
-      "title": "Terms of Service",
-      "message": "By clicking \"I Agree\" below, you confirm that all the information provided is accurate and you agree to our terms of service for prize disbursement."
+    "error": {
+      "agreeFailed": "Failed to agree to terms",
+      "formIdNotFound": "Form ID not found in URL",
+      "formNotFound": "Form data not found",
+      "hashNotFound": "Hash not found in URL",
+      "loadFailed": "Failed to load form data",
+      "title": "Error"
     },
-    "agreeButton": "I Agree to Terms of Service"
-  },
-  "admin": {
-    "navigation": {
-      "forms": "Forms Management",
-      "tournaments": "Tournaments",
-      "services": "Services"
-    },
-    "changePassword": {
-      "button": "Change Password",
-      "title": "Change Password",
-      "fields": {
-        "oldPassword": {
-          "label": "Current Password",
-          "placeholder": "Enter your current password"
-        },
-        "newPassword": {
-          "label": "New Password",
-          "placeholder": "Enter your new password"
-        },
-        "confirmPassword": {
-          "label": "Confirm New Password",
-          "placeholder": "Re-enter your new password"
-        }
-      },
-      "submit": "Change Password",
-      "success": "Password changed successfully! Redirecting...",
-      "errors": {
-        "required": "All fields are required",
-        "mismatch": "New passwords do not match",
-        "tooShort": "Password must be at least 8 characters long",
-        "samePassword": "New password must be different from current password",
-        "failed": "Failed to change password. Please check your current password and try again."
-      }
-    },
-    "forms": {
-      "title": "Form Management",
-      "refresh": "Refresh",
-      "exportCSV": "Export CSV",
-      "export": {
-        "noTournamentSelected": "Please select a tournament to export",
-        "noData": "No data to export for selected tournament",
-        "error": "Failed to export data. Please try again."
-      },
-      "filters": {
-        "title": "Filters",
-        "tournamentName": "Tournament Name",
-        "tournamentNamePlaceholder": "Search by tournament name",
-        "status": "Status",
-        "statusPlaceholder": "All statuses",
-        "termsAgreed": "Terms Agreed",
-        "termsAgreedPlaceholder": "All",
-        "dateFrom": "Date From",
-        "dateTo": "Date To",
-        "dateFromPlaceholder": "Select start date",
-        "dateToPlaceholder": "Select end date",
-        "apply": "Apply",
-        "clear": "Clear"
-      },
-      "table": {
-        "id": "ID",
-        "playerName": "Player Name",
-        "email": "Email",
-        "tournament": "Tournament",
-        "rank": "Rank",
-        "amount": "Amount",
-        "status": "Status",
-        "termsAgreed": "Terms Agreed",
-        "createdAt": "Created At",
-        "actions": "Actions",
-        "noForms": "No forms found",
-        "formsFound": "form(s) found"
-      },
-      "status": {
-        "pending": "Pending",
-        "approved": "Approved",
-        "rejected": "Rejected"
-      },
-      "detail": {
-        "title": "Form Details",
-        "formId": "Form ID",
-        "submittedAt": "Submitted At",
-        "personalInfo": "Personal Information",
-        "contactInfo": "Contact Information",
-        "tournamentInfo": "Tournament Information",
-        "bankInfo": "Bank Information",
-        "agreements": "Agreements"
-      }
-    },
-    "tournaments": {
-      "title": "Tournament Management",
-      "refresh": "Refresh",
-      "create": "Create Tournament",
-      "viewDetails": "View Details",
-      "participants": "participants",
-      "prizes": "prizes",
+    "formInfo": {
+      "email": "Email",
+      "name": "Name",
+      "playersId": "Players ID",
+      "prizeAmount": "Prize Amount",
       "rank": "Rank",
-      "amount": "Amount",
-      "claimed": "Claimed",
-      "morePrizes": "more prizes",
-      "created": "Created",
-      "import": {
-        "button": "Import CSV",
-        "title": "Import Tournaments from CSV",
-        "instructions": "Download the template CSV file, fill in your tournament data, and upload it here. Each prize should be on a separate row.",
-        "downloadTemplate": "Download Template",
-        "selectFile": "Select CSV File",
-        "validationSuccess": "Validation Passed",
-        "validationFailed": "Validation Failed",
-        "validRecords": "{{count}} valid record(s)",
-        "errors": "Errors found",
-        "row": "Row",
-        "preview": "Preview",
-        "eventName": "Event Name",
-        "tournamentName": "Tournament Name",
-        "date": "Date",
-        "status": "Status",
-        "prizesCount": "Prizes",
-        "import": "Import {{count}} Tournament(s)"
-      },
-      "modal": {
-        "title": "Create New Tournament",
-        "editTitle": "Edit Tournament",
-        "eventName": "Event Name (English)",
-        "eventNameJa": "Event Name (Japanese)",
-        "tournamentName": "Tournament Name (English)",
-        "tournamentNameJa": "Tournament Name (Japanese)",
-        "name": "Tournament Name",
-        "namePlaceholder": "Enter tournament name",
-        "date": "Tournament Date",
-        "datePlaceholder": "Select date",
-        "location": "Location",
-        "locationPlaceholder": "Enter location",
-        "prizes": "Prizes",
-        "rank": "Rank",
-        "amount": "Amount",
-        "addPrize": "Add",
-        "cancel": "Cancel",
-        "createButton": "Create Tournament",
-        "updateButton": "Update Tournament"
-      },
-      "status": {
-        "active": "Active",
-        "inactive": "Inactive",
-        "upcoming": "Upcoming",
-        "ongoing": "Ongoing",
-        "completed": "Completed"
-      },
-      "detail": {
-        "backToList": "Back to Tournaments",
-        "notFound": "Tournament not found",
-        "tournamentInfo": "Tournament Information",
-        "date": "Date",
-        "status": "Status",
-        "activate": "Activate",
-        "deactivate": "Deactivate",
-        "prizesInfo": "Prizes Information",
-        "submittedForms": "Submitted Forms",
-        "noForms": "No forms submitted for this tournament"
-      }
+      "title": "Form Information",
+      "tournament": "Tournament"
     },
-    "services": {
-      "title": "Service Management",
-      "tabs": {
-        "terms": "Terms of Service",
-        "privacy": "Privacy Policy",
-        "contract": "Contract",
-        "receipt": "Receipt Template",
-        "confirmationEmail": "Confirmation Email Template",
-        "contractEmail": "Contract Email Template"
-      },
-      "version": "Version",
-      "lastUpdated": "Last updated",
-      "updatedBy": "By",
-      "success": "Success",
-      "successMessage": {
-        "terms": "Terms of Service updated successfully",
-        "privacy": "Privacy Policy updated successfully",
-        "contract": "Contract updated successfully",
-        "receipt": "Receipt template updated successfully",
-        "confirmationEmail": "Confirmation email updated successfully",
-        "contractEmail": "Contract email updated successfully"
-      },
-      "editor": {
-        "title": "HTML Editor",
-        "description": "You can write HTML content below. Supported tags: h1, h2, h3, p, ul, ol, li, strong, em, a, etc.",
-        "termsLabel": "Terms of Service Content",
-        "termsSubjectLabel": "Terms of Service Subject",
-        "privacyLabel": "Privacy Policy Content",
-        "privacySubjectLabel": "Privacy Policy Subject",
-        "contractLabel": "Contract Content",
-        "contractSubjectLabel": "Contract Subject",
-        "receiptLabel": "Receipt Template Content",
-        "receiptSubjectLabel": "Receipt Template Subject",
-        "confirmationEmailLabel": "Confirmation Email Template Content",
-        "confirmationEmailSubjectLabel": "Confirmation Email Subject",
-        "contractEmailLabel": "Contract Email Template Content",
-        "contractEmailSubjectLabel": "Contract Email Subject",
-        "placeholder": "Enter HTML content...",
-        "preview": "Preview",
-        "edit": "Edit",
-        "saveTerms": "Save Terms of Service",
-        "savePrivacy": "Save Privacy Policy",
-        "saveContract": "Save Contract",
-        "saveReceipt": "Save Receipt Template",
-        "saveConfirmationEmail": "Save Confirmation Email",
-        "saveContractEmail": "Save Contract Email"
-      },
-      "variables": {
-        "buttonLabel": "Template Variables",
-        "title": "Available Template Variables",
-        "helpLabel": "Help",
-        "description": "Use these variables in your templates by wrapping them with double curly braces, e.g., {{variableName}}. The variables will be replaced with actual values when generating documents.",
-        "table": {
-          "variable": "Variable",
-          "description": "Description",
-          "example": "Example"
-        },
-        "usage": {
-          "title": "Usage Example",
-          "description": "To use a variable in your template, wrap it with double curly braces:"
-        },
-        "groups": {
-          "common": {
-            "title": "Common Variables",
-            "description": "General information available in all templates"
-          },
-          "templateContent": {
-            "title": "Template Content",
-            "description": "Full content of other templates (HTML or text format)"
-          },
-          "personalInfo": {
-            "title": "Personal Information",
-            "description": "Information about the form submitter"
-          },
-          "tournamentInfo": {
-            "title": "Tournament Information",
-            "description": "Details about the tournament and prize"
-          },
-          "bankingInfo": {
-            "title": "Banking Information",
-            "description": "Bank account details for prize payment"
-          }
-        },
-        "fields": {
-          "year": {
-            "description": "Current year",
-            "example": "2025"
-          },
-          "today": {
-            "description": "Today's date (formatted)",
-            "example": "December 17, 2025"
-          },
-          "tosLink": {
-            "description": "Link to Terms of Service page",
-            "example": "https://example.com/terms"
-          },
-          "contractNumber": {
-            "description": "Contract reference number",
-            "example": "C-2025-001"
-          },
-          "receiptNumber": {
-            "description": "Receipt reference number",
-            "example": "R-2025-001"
-          },
-          "termsOfServiceHtml": {
-            "description": "Terms of Service content (HTML format)"
-          },
-          "termsOfServiceText": {
-            "description": "Terms of Service content (plain text)"
-          },
-          "contractHtml": {
-            "description": "Contract content (HTML format)"
-          },
-          "contractText": {
-            "description": "Contract content (plain text)"
-          },
-          "receiptHtml": {
-            "description": "Receipt content (HTML format)"
-          },
-          "receiptText": {
-            "description": "Receipt content (plain text)"
-          },
-          "lastNameKanji": {
-            "description": "Last name in Kanji",
-            "example": "Yamada"
-          },
-          "firstNameKanji": {
-            "description": "First name in Kanji",
-            "example": "Taro"
-          },
-          "lastNameKana": {
-            "description": "Last name in Katakana",
-            "example": "ヤマダ"
-          },
-          "firstNameKana": {
-            "description": "First name in Katakana",
-            "example": "タロウ"
-          },
-          "email": {
-            "description": "Email address",
-            "example": "user@example.com"
-          },
-          "phoneNumber": {
-            "description": "Phone number",
-            "example": "090-1234-5678"
-          },
-          "postalCode": {
-            "description": "Postal code",
-            "example": "123-4567"
-          },
-          "address": {
-            "description": "Full address",
-            "example": "Tokyo, Shibuya 1-2-3"
-          },
-          "playersId": {
-            "description": "Players+ ID or Passport number",
-            "example": "P123456"
-          },
-          "tournamentName": {
-            "description": "Tournament name",
-            "example": "1st Tournament"
-          },
-          "tournamentDate": {
-            "description": "Tournament date (formatted)",
-            "example": "December 17, 2025"
-          },
-          "rank": {
-            "description": "Prize rank/position",
-            "example": "1st"
-          },
-          "amount": {
-            "description": "Prize amount (formatted with currency)",
-            "example": "¥100,000"
-          },
-          "bankName": {
-            "description": "Bank name",
-            "example": "MUFG Bank"
-          },
-          "bankCode": {
-            "description": "Bank code",
-            "example": "0005"
-          },
-          "branchName": {
-            "description": "Branch name",
-            "example": "Shibuya Branch"
-          },
-          "branchCode": {
-            "description": "Branch code",
-            "example": "123"
-          },
-          "accountTypeJa": {
-            "description": "Account type in Japanese (普通/当座)",
-            "example": "普通"
-          },
-          "accountTypeEn": {
-            "description": "Account type in English (savings/checking)",
-            "example": "savings"
-          },
-          "accountNumber": {
-            "description": "Account number",
-            "example": "1234567"
-          },
-          "accountHolderName": {
-            "description": "Account holder name in Katakana",
-            "example": "ヤマダタロウ"
-          }
-        }
-      }
-    }
+    "loading": "Loading form data...",
+    "termsAlert": {
+      "message": "By clicking \"I Agree\" below, you confirm that all the information provided is accurate and you agree to our terms of service for prize disbursement.",
+      "title": "Terms of Service"
+    },
+    "title": "Terms of Service Agreement"
   }
 }

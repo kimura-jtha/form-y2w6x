@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useForm } from '@mantine/form';
+import { notifications } from '@mantine/notifications';
 import { useTranslation } from 'react-i18next';
 
 import { useDebounce } from '@/hooks';
@@ -365,21 +366,35 @@ export function usePrizeClaimForm() {
         const result = await submitPrizeClaimForm(values);
 
         if (result.success) {
-          alert(`Form submitted successfully! Claim ID: ${result.claimId}`);
+          notifications.show({
+            title: t('prizeClaim.notifications.submitSuccess.title'),
+            message: t('prizeClaim.notifications.submitSuccess.message'),
+            color: 'green',
+          });
           form.reset();
           setBranches([]);
           lastSearchedPostalCodeRef.current = '';
         } else {
-          alert(`Submission failed: ${result.message}`);
+          notifications.show({
+            title: t('prizeClaim.notifications.submitFailed.title'),
+            message: t('prizeClaim.notifications.submitFailed.message', {
+              message: result.message,
+            }),
+            color: 'red',
+          });
         }
       } catch (error) {
         console.error('Submit error:', error);
-        alert('An error occurred while submitting the form. Please try again.');
+        notifications.show({
+          title: t('prizeClaim.notifications.submitError.title'),
+          message: t('prizeClaim.notifications.submitError.message'),
+          color: 'red',
+        });
       } finally {
         setIsSubmitting(false);
       }
     },
-    [form],
+    [form, t],
   );
 
   // Handle form clear

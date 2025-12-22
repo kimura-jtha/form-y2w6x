@@ -7,6 +7,7 @@ import { IconFileText, IconKey, IconLogout, IconSettings, IconTrophy } from '@ta
 import { useTranslation } from 'react-i18next';
 
 import { ChangePasswordModal } from '@/components/ChangePasswordModal';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { ROUTES } from '@/constants';
 import { clearAuth } from '@/utils/auth';
 
@@ -54,6 +55,7 @@ export function AdminLayout() {
               </Tabs.List>
             </Tabs>
             <Group gap="xs">
+              <LanguageSwitcher />
               <Button
                 variant="light"
                 color="blue"
