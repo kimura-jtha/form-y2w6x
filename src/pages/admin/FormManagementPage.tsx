@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import {
+  ActionIcon,
+  Alert,
   Badge,
   Box,
   Button,
@@ -8,15 +10,17 @@ import {
   Group,
   Loader,
   Paper,
+  Popover,
   Select,
   Stack,
   Table,
   Text,
   Title,
 } from '@mantine/core';
+import { DatePickerInput } from '@mantine/dates';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
-import { IconDownload, IconRefresh, IconX } from '@tabler/icons-react';
+import { IconDownload, IconInfoCircle, IconRefresh, IconX } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
 import { FormDetailModal } from '@/components/FormDetailModal';
@@ -37,10 +41,43 @@ export function FormManagementPage() {
   const [isExporting, setIsExporting] = useState(false);
   const [selectedTournamentId, setSelectedTournamentId] = useState<string | null>(null);
   const [appliedTournamentId, setAppliedTournamentId] = useState<string | null>(null);
+  const [selectedDateRange, setSelectedDateRange] = useState<[Date | null, Date | null]>([
+    null,
+    null,
+  ]);
+  const [appliedDateRange, setAppliedDateRange] = useState<[Date | null, Date | null]>([
+    null,
+    null,
+  ]);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(false);
   const [selectedForm, setSelectedForm] = useState<PrizeClaimFormSubmission | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
+
+  const tournamentOptions = useMemo(() => {
+    const [dateFrom, dateTo] = selectedDateRange;
+    const ONE_DAY = 24 * 60 * 60 * 1000;
+    const from = (dateFrom ? new Date(dateFrom).getTime() : 0) - ONE_DAY;
+    const to = (dateTo ? new Date(dateTo).getTime() : Infinity) + ONE_DAY;
+
+    return tournaments
+      .filter((t) => {
+        const ts = new Date(t.date).getTime();
+        return ts >= from && ts <= to;
+      })
+      .map((t) => ({
+        value: t.id,
+        label: `${t.eventNameJa} - ${t.tournamentNameJa} (${new Date(t.date).toLocaleDateString()})`,
+      }));
+  }, [tournaments, selectedDateRange]);
+
+  useEffect(() => {
+    if (tournamentOptions.length === 1) {
+      setSelectedTournamentId(tournamentOptions[0].value);
+    } else {
+      setSelectedTournamentId(null);
+    }
+  }, [tournamentOptions]);
 
   const handleRowClick = (form: PrizeClaimFormSubmission) => {
     setSelectedForm(form);
@@ -63,18 +100,25 @@ export function FormManagementPage() {
     }
   };
 
-  const fetchForms = async (tournamentId?: string | null) => {
+  const fetchForms = async (
+    tournamentId?: string | null,
+    dateRange?: [Date | null, Date | null],
+  ) => {
     try {
       setIsLoading(true);
+      const [dateFrom, dateTo] = dateRange || [null, null];
       const { forms: fetchedForms, pagination } = await getForms(
         undefined,
         20,
         tournamentId || undefined,
+        dateFrom ? dateFrom.toISOString().split('T')[0] : undefined,
+        dateTo ? dateTo.toISOString().split('T')[0] : undefined,
       );
       setForms(fetchedForms);
       setNextCursor(pagination.nextCursor || null);
       setHasMore(pagination.hasMore);
       setAppliedTournamentId(tournamentId || null);
+      setAppliedDateRange(dateRange || [null, null]);
     } catch (error_) {
       console.error('Failed to fetch forms:', error_);
     } finally {
@@ -87,10 +131,13 @@ export function FormManagementPage() {
 
     try {
       setIsLoadingMore(true);
+      const [dateFrom, dateTo] = appliedDateRange;
       const { forms: moreForms, pagination } = await getForms(
         nextCursor,
         20,
         appliedTournamentId || undefined,
+        dateFrom ? dateFrom.toISOString().split('T')[0] : undefined,
+        dateTo ? dateTo.toISOString().split('T')[0] : undefined,
       );
       setForms([...forms, ...moreForms]);
       setNextCursor(pagination.nextCursor || null);
@@ -109,12 +156,13 @@ export function FormManagementPage() {
   }, []);
 
   const applyFilter = () => {
-    fetchForms(selectedTournamentId);
+    fetchForms(selectedTournamentId, selectedDateRange);
   };
 
   const handleClearFilter = () => {
     setSelectedTournamentId(null);
-    fetchForms(null);
+    setSelectedDateRange([null, null]);
+    fetchForms(null, [null, null]);
   };
 
   const handleExportCSV = async () => {
@@ -135,11 +183,15 @@ export function FormManagementPage() {
       let cursor: string | undefined;
       let hasMoreData = true;
 
+      const [dateFrom, dateTo] = appliedDateRange;
+
       while (hasMoreData) {
         const { forms: fetchedForms, pagination } = await getForms(
           cursor,
           100, // Use larger page size for export
           appliedTournamentId,
+          dateFrom ? dateFrom.toISOString().split('T')[0] : undefined,
+          dateTo ? dateTo.toISOString().split('T')[0] : undefined,
         );
 
         allForms.push(...fetchedForms);
@@ -182,22 +234,27 @@ export function FormManagementPage() {
       <Group justify="space-between">
         <Title order={2}>{t('admin.forms.title')}</Title>
         <Group gap="sm">
-          <Button
-            leftSection={<IconDownload size={16} />}
-            onClick={handleExportCSV}
-            loading={isExporting}
-            disabled={!appliedTournamentId || isLoading}
-            color="green"
-          >
-            {t('admin.forms.exportCSV')}
-          </Button>
-          <Button
-            leftSection={<IconRefresh size={16} />}
-            onClick={() => fetchForms(appliedTournamentId)}
-            variant="light"
-          >
-            {t('admin.forms.refresh')}
-          </Button>
+          <Group gap={4}>
+            <Button
+              leftSection={<IconDownload size={16} />}
+              onClick={handleExportCSV}
+              loading={isExporting}
+              disabled={!appliedTournamentId || isLoading}
+              color="green"
+            >
+              {t('admin.forms.exportCSV')}
+            </Button>
+            <Popover width={300} position="bottom" withArrow shadow="md">
+              <Popover.Target>
+                <ActionIcon variant="subtle" color="red.3" size="lg">
+                  <IconInfoCircle size={18} />
+                </ActionIcon>
+              </Popover.Target>
+              <Popover.Dropdown>
+                <Text size="sm">{t('admin.forms.exportHelper')}</Text>
+              </Popover.Dropdown>
+            </Popover>
+          </Group>
         </Group>
       </Group>
 
@@ -209,13 +266,30 @@ export function FormManagementPage() {
             placeholder={t('admin.forms.filters.tournamentNamePlaceholder')}
             value={selectedTournamentId}
             onChange={setSelectedTournamentId}
-            data={tournaments.map((t) => ({
-              value: t.id,
-              label: `${t.eventNameJa} - ${t.tournamentNameJa}`,
-            }))}
+            disabled={tournamentOptions.length === 0}
+            data={tournamentOptions}
             searchable
             clearable
             style={{ flex: 1 }}
+          />
+          <DatePickerInput
+            type="range"
+            label={t('admin.forms.filters.dateRange')}
+            placeholder={t('admin.forms.filters.dateRangePlaceholder')}
+            value={selectedDateRange}
+            onChange={(value) => {
+              if (Array.isArray(value)) {
+                const [start, end] = value;
+                setSelectedDateRange([
+                  start && typeof start === 'object' ? start : start ? new Date(start) : null,
+                  end && typeof end === 'object' ? end : end ? new Date(end) : null,
+                ]);
+              } else {
+                setSelectedDateRange([null, null]);
+              }
+            }}
+            clearable
+            style={{ minWidth: 280 }}
           />
           <Button onClick={applyFilter} disabled={!selectedTournamentId}>
             {t('admin.forms.filters.apply')}
@@ -229,6 +303,13 @@ export function FormManagementPage() {
           >
             {t('admin.forms.filters.clear')}
           </Button>
+          <Button
+            leftSection={<IconRefresh size={16} />}
+            onClick={() => fetchForms(appliedTournamentId, appliedDateRange)}
+            variant="light"
+          >
+            {t('admin.forms.refresh')}
+          </Button>
         </Group>
       </Paper>
 
@@ -240,72 +321,82 @@ export function FormManagementPage() {
           </Box>
         ) : (
           <>
-            <Text size="sm" c="dimmed" mb="md">
-              {forms.length} {t('admin.forms.table.formsFound')}
-            </Text>
-            <Table striped highlightOnHover withTableBorder>
-              <Table.Thead>
-                <Table.Tr>
-                  <Table.Th>{t('admin.forms.table.tournament')}</Table.Th>
-                  <Table.Th>{t('admin.forms.table.playerName')}</Table.Th>
-                  <Table.Th>{t('admin.forms.table.email')}</Table.Th>
-                  <Table.Th>{t('admin.forms.table.rank')}</Table.Th>
-                  <Table.Th>{t('admin.forms.table.amount')}</Table.Th>
-                  <Table.Th w="120px">{t('admin.forms.table.termsAgreed')}</Table.Th>
-                  <Table.Th>{t('admin.forms.table.createdAt')}</Table.Th>
-                </Table.Tr>
-              </Table.Thead>
-              <Table.Tbody>
-                {forms.length === 0 ? (
-                  <Table.Tr>
-                    <Table.Td colSpan={7}>
-                      <Text ta="center" c="dimmed">
-                        {t('admin.forms.table.noForms')}
-                      </Text>
-                    </Table.Td>
-                  </Table.Tr>
-                ) : (
-                  forms.map((form) => (
-                    <Table.Tr
-                      key={form.id}
-                      onClick={() => handleRowClick(form)}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <Table.Td fw="bold">{form.formContent.tournamentName}</Table.Td>
-                      <Table.Td>
-                        {form.formContent.lastNameKanji} {form.formContent.firstNameKanji}
-                      </Table.Td>
-                      <Table.Td>{maskEmail(form.formContent.email)}</Table.Td>
-                      <Table.Td>{form.formContent.rank}</Table.Td>
-                      <Table.Td>¥{form.formContent.amount.toLocaleString()}</Table.Td>
-                      <Table.Td>
-                        <Center w="100%">
-                          <Badge
-                            fz="xl"
-                            variant="transparent"
-                            color={form.formContent.termsAgreed ? 'green' : 'red'}
-                          >
-                            {form.formContent.termsAgreed ? '☑︎' : '☐'}
-                          </Badge>
-                        </Center>
-                      </Table.Td>
-                      <Table.Td>
-                        <Text size="xs">
-                          {new Date(form.createdAt).toLocaleDateString()} <br />
-                          {new Date(form.createdAt).toLocaleTimeString()}
-                        </Text>
-                      </Table.Td>
+            {/* Alert if no tournaments found */}
+            {tournamentOptions.length === 0 ? (
+              <>
+                <Alert color="red.5">{t('admin.forms.filters.noTournamentsFound')}</Alert>
+              </>
+            ) : (
+              <>
+                <Text size="sm" c="dimmed" mb="md">
+                  {forms.length} {t(appliedTournamentId ? 'admin.forms.table.formsFound' : 'admin.forms.table.latestFormsFound')}
+
+                </Text>
+                <Table striped highlightOnHover withTableBorder>
+                  <Table.Thead>
+                    <Table.Tr>
+                      <Table.Th>{t('admin.forms.table.tournament')}</Table.Th>
+                      <Table.Th>{t('admin.forms.table.playerName')}</Table.Th>
+                      <Table.Th>{t('admin.forms.table.email')}</Table.Th>
+                      <Table.Th>{t('admin.forms.table.rank')}</Table.Th>
+                      <Table.Th>{t('admin.forms.table.amount')}</Table.Th>
+                      <Table.Th w="120px">{t('admin.forms.table.termsAgreed')}</Table.Th>
+                      <Table.Th>{t('admin.forms.table.createdAt')}</Table.Th>
                     </Table.Tr>
-                  ))
+                  </Table.Thead>
+                  <Table.Tbody>
+                    {forms.length === 0 ? (
+                      <Table.Tr>
+                        <Table.Td colSpan={7}>
+                          <Text ta="center" c="dimmed">
+                            {t('admin.forms.table.noForms')}
+                          </Text>
+                        </Table.Td>
+                      </Table.Tr>
+                    ) : (
+                      forms.map((form) => (
+                        <Table.Tr
+                          key={form.id}
+                          onClick={() => handleRowClick(form)}
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <Table.Td fw="bold">{form.formContent.tournamentName}</Table.Td>
+                          <Table.Td>
+                            {form.formContent.lastNameKanji} {form.formContent.firstNameKanji}
+                          </Table.Td>
+                          <Table.Td>{maskEmail(form.formContent.email)}</Table.Td>
+                          <Table.Td>{form.formContent.rank}</Table.Td>
+                          <Table.Td>¥{form.formContent.amount.toLocaleString()}</Table.Td>
+                          <Table.Td>
+                            <Center w="100%">
+                              <Badge
+                                fz="xl"
+                                variant="transparent"
+                                color={form.formContent.termsAgreed ? 'green' : 'red'}
+                              >
+                                {form.formContent.termsAgreed ? '☑︎' : '☐'}
+                              </Badge>
+                            </Center>
+                          </Table.Td>
+                          <Table.Td>
+                            <Text size="xs">
+                              {new Date(form.createdAt).toLocaleDateString()} <br />
+                              {new Date(form.createdAt).toLocaleTimeString()}
+                            </Text>
+                          </Table.Td>
+                        </Table.Tr>
+                      ))
+                    )}
+                  </Table.Tbody>
+                </Table>
+                {hasMore && !isLoading && (
+                  <Center mt="md">
+                    <Button onClick={loadMoreForms} loading={isLoadingMore} variant="light">
+                      {t('common.loadMore')}
+                    </Button>
+                  </Center>
                 )}
-              </Table.Tbody>
-            </Table>
-            {hasMore && !isLoading && (
-              <Center mt="md">
-                <Button onClick={loadMoreForms} loading={isLoadingMore} variant="light">
-                  {t('common.loadMore')}
-                </Button>
-              </Center>
+              </>
             )}
           </>
         )}

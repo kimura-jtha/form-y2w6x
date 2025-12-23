@@ -95,12 +95,17 @@ export async function agreeTermsOfService(
  * Get forms
  * @param cursor - Cursor
  * @param limit - Limit
+ * @param tournamentId - Tournament ID filter
+ * @param dateFrom - Start date filter (ISO 8601 string)
+ * @param dateTo - End date filter (ISO 8601 string)
  * @returns Promise<{ forms: PrizeClaimFormSubmission[]; pagination: { total, hasMore, nextCursor } }> - Forms with pagination
  */
 export async function getForms(
   cursor?: string,
   limit?: number,
   tournamentId?: string,
+  dateFrom?: string,
+  dateTo?: string,
 ): Promise<{
   forms: PrizeClaimFormSubmission[];
   pagination: {
@@ -109,31 +114,40 @@ export async function getForms(
     nextCursor: string;
   };
 }> {
-  return asyncDeduplicator.call(`getForms:${cursor || ''}:${limit || 100}`, async () => {
-    let path = `admin/forms?limit=${limit || 20}`;
-    if (cursor) {
-      path += `&cursor=${cursor}`;
-    }
-    if (tournamentId) {
-      path += `&tournamentId=${tournamentId}`;
-    }
-    const response = await fetchLambda<{
-      items: PrizeClaimFormSubmission[];
-      pagination: {
-        total: number;
-        hasMore: boolean;
-        nextCursor: string;
+  return asyncDeduplicator.call(
+    `getForms:${cursor || ''}:${limit || 100}:${tournamentId || ''}:${dateFrom || ''}:${dateTo || ''}`,
+    async () => {
+      let path = `admin/forms?limit=${limit || 20}`;
+      if (cursor) {
+        path += `&cursor=${cursor}`;
+      }
+      if (tournamentId) {
+        path += `&tournamentId=${tournamentId}`;
+      }
+      if (dateFrom) {
+        path += `&dateFrom=${dateFrom}`;
+      }
+      if (dateTo) {
+        path += `&dateTo=${dateTo}`;
+      }
+      const response = await fetchLambda<{
+        items: PrizeClaimFormSubmission[];
+        pagination: {
+          total: number;
+          hasMore: boolean;
+          nextCursor: string;
+        };
+      }>({
+        path,
+        method: 'GET',
+      });
+      return {
+        forms: response.items.map((item) => ({
+          ...item,
+          formContent: item.formContent as PrizeClaimFormValues,
+        })),
+        pagination: response.pagination,
       };
-    }>({
-      path,
-      method: 'GET',
-    });
-    return {
-      forms: response.items.map((item) => ({
-        ...item,
-        formContent: item.formContent as PrizeClaimFormValues,
-      })),
-      pagination: response.pagination,
-    };
-  });
+    },
+  );
 }

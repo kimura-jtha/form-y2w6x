@@ -36,8 +36,6 @@ export function TermsAgreementPage() {
   const [alreadyAgreed, setAlreadyAgreed] = useState(false);
   const [termsOfService, setTermsOfService] = useState<string>('');
 
-
-
   // Extract form ID from URL hash
   useEffect(() => {
     const urlHash = window.location.hash;
@@ -235,8 +233,9 @@ export function TermsAgreementPage() {
                   <Text size="xs" c="dimmed">
                     {t('termsAgreement.bankInfo.accountType')}
                   </Text>
-                  <Text size="sm">{
-                    t(`prizeClaim.fields.accountType.options.${formData.accountType}`)}</Text>
+                  <Text size="sm">
+                    {t(`prizeClaim.fields.accountType.options.${formData.accountType}`)}
+                  </Text>
                 </Grid.Col>
                 <Grid.Col span={6}>
                   <Text size="xs" c="dimmed">
@@ -252,26 +251,27 @@ export function TermsAgreementPage() {
                 </Grid.Col>
               </Grid>
             </Box>
-            <Box>
-
-            </Box>
+            <Box></Box>
           </Collapse>
 
-          {alreadyAgreed ? (<Alert
-            icon={<IconCheck size={16} />}
-            title={t('termsAgreement.alreadyConfirmed.title')}
-            color="green"
-            mb="lg"
-          >
-            {t('termsAgreement.alreadyConfirmed.message')}
-          </Alert>)
-            : (<Alert
+          {alreadyAgreed ? (
+            <Alert
+              icon={<IconCheck size={16} />}
+              title={t('termsAgreement.alreadyConfirmed.title')}
+              color="green"
+              mb="lg"
+            >
+              {t('termsAgreement.alreadyConfirmed.message')}
+            </Alert>
+          ) : (
+            <Alert
               icon={<IconAlertCircle size={16} />}
               title={t('termsAgreement.termsAlert.title')}
               color="blue"
             >
               <Text size="sm">{t('termsAgreement.termsAlert.message')}</Text>
-            </Alert>)}
+            </Alert>
+          )}
 
           <Box>
             <ScrollArea h={400} type="always" offsetScrollbars>
@@ -285,12 +285,7 @@ export function TermsAgreementPage() {
             </ScrollArea>
           </Box>
 
-          <Button
-            disabled={alreadyAgreed}
-            onClick={handleAgree}
-            loading={isSubmitting}
-            size="lg"
-          >
+          <Button disabled={alreadyAgreed} onClick={handleAgree} loading={isSubmitting} size="lg">
             {t('termsAgreement.agreeButton')}
           </Button>
         </Stack>
@@ -298,7 +293,6 @@ export function TermsAgreementPage() {
     </Container>
   );
 }
-
 
 /**
  * Render template by replacing {{variableName}} placeholders with actual values
@@ -318,9 +312,7 @@ const renderTemplate = (template: string, variables: Record<string, string>): st
  * @param formContent - Prize form content data
  * @returns Object with formatted form variables
  */
-const extractFormVariables = (
-  formContent: PrizeClaimFormValues
-) => {
+const extractFormVariables = (formContent: PrizeClaimFormValues) => {
   const isSavings = formContent.accountType === 'savings';
   const accountTypeJa = isSavings ? '当座預金' : '普通預金';
   const accountTypeEn = isSavings ? 'Savings' : 'Checking';
@@ -349,7 +341,6 @@ const extractFormVariables = (
     accountHolderName: formContent.accountHolderName,
   };
 };
-
 
 const formatCurrency = (amount: number): string => {
   return `¥${amount.toLocaleString('ja-JP')}`;
