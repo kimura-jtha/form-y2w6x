@@ -1,1 +1,0 @@
-export { TournamentFormModal } from './TournamentFormModal';
