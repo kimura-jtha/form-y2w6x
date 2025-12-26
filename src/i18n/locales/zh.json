@@ -105,7 +105,8 @@
         "rank": "秩",
         "status": "地位",
         "termsAgreed": "双方同意的条款",
-        "tournament": "比赛"
+        "tournament": "比赛",
+        "eventName": "事件名称"
       },
       "title": "表单管理"
     },
@@ -217,6 +218,14 @@
           "email": {
             "description": "电子邮件",
             "example": "user@example.com"
+          },
+          "firstName": {
+            "description": "名字",
+            "example": "太郎"
+          },
+          "lastName": {
+            "description": "姓氏",
+            "example": "山田"
           },
           "firstNameKana": {
             "description": "片假名",
@@ -546,6 +555,14 @@
         "label": "名字（片假名）",
         "placeholder": "タロウ"
       },
+      "firstName": {
+        "label": "名字",
+        "placeholder": "太郎"
+      },
+      "lastName": {
+        "label": "姓氏",
+        "example": "山田"
+      },
       "firstNameKanji": {
         "label": "名字（汉字）",
         "placeholder": "太郎"
@@ -602,7 +619,7 @@
         "title": "提交错误"
       },
       "submitFailed": {
-        "message": "{{信息}}",
+        "message": "提交失败，请联系支持获取详细信息",
         "title": "提交失败"
       },
       "submitSuccess": {

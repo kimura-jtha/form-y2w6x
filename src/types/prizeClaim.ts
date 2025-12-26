@@ -123,6 +123,9 @@ export interface Tournament {
   // Prize structure
   prizes: PrizeRank[];
 
+  // Claimed ranks (for form validation)
+  claimedRanks?: string[];
+
   // Metadata
   createdAt: string; // ISO 8601 timestamp
   updatedAt: string; // ISO 8601 timestamp

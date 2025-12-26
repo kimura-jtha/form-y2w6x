@@ -50,9 +50,21 @@ interface TabState {
   success: boolean;
 }
 
+// Initialize activeTab from hash or default to 'terms'
+const getTabFromHash = (): TabValue => {
+  const hash = window.location.hash.slice(1); // Remove the '#' character
+  if (
+    hash &&
+    ['terms', 'privacy', 'contract', 'receipt', 'confirmationEmail', 'contractEmail'].includes(hash)
+  ) {
+    return hash as TabValue;
+  }
+  return 'terms';
+};
 export function ServiceManagementPage() {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<TabValue>('terms');
+
+  const [activeTab, setActiveTab] = useState<TabValue>(getTabFromHash);
   const [variablesModalOpened, setVariablesModalOpened] = useState(false);
 
   const [tabSubjects, setTabSubjects] = useState<Record<TabValue, string>>({
@@ -252,13 +264,17 @@ export function ServiceManagementPage() {
         },
       }));
 
-      // Hide success message after 3 seconds
+      // Hide success message after 1 seconds
       setTimeout(() => {
-        setTabStates((prev) => ({
-          ...prev,
-          [tab]: { ...prev[tab], success: false },
-        }));
-      }, 3000);
+        {
+          setTabStates((prev) => ({
+            ...prev,
+            [tab]: { ...prev[tab], success: false },
+          }));
+          // Reload the page
+          window.location.reload();
+        }
+      }, 1000);
     } catch (error_) {
       console.error(`Failed to update ${tab}:`, error_);
       setTabStates((prev) => ({
@@ -332,6 +348,21 @@ export function ServiceManagementPage() {
     );
   };
 
+  // Sync hash with activeTab on hash changes (browser back/forward)
+  useEffect(() => {
+    const handleHashChange = () => {
+      const newTab = getTabFromHash();
+      setActiveTab(newTab);
+    };
+
+    // Listen for hash changes (browser back/forward navigation)
+    window.addEventListener('hashchange', handleHashChange);
+
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, []);
+
   return (
     <Stack gap="lg">
       <Group justify="space-between" align="center">
@@ -353,7 +384,11 @@ export function ServiceManagementPage() {
       <Tabs
         value={activeTab}
         onChange={(value) => {
-          setActiveTab(value as TabValue);
+          if (value) {
+            const newTab = value as TabValue;
+            setActiveTab(newTab);
+            window.location.hash = newTab;
+          }
         }}
       >
         <Tabs.List>

@@ -21,20 +21,31 @@ export interface PrizeClaimSubmitResponse {
 export async function submitPrizeClaimForm(
   formData: PrizeClaimFormValues,
 ): Promise<PrizeClaimSubmitResponse> {
-  const response = await fetchLambda<{ form: { id: string } }>({
-    path: 'forms',
-    method: 'POST',
-    body: {
-      formContent: formData,
-    },
-  });
+  try {
+    const debug = true;
+    if (debug) {
+      throw new Error('Debug mode');
+    }
+    const response = await fetchLambda<{ form: { id: string } }>({
+      path: 'forms',
+      method: 'POST',
+      body: {
+        formContent: formData,
+      },
+    });
 
-  return {
-    success: true,
-    message: 'Prize claim submitted successfully',
-    claimId: response.form.id,
-    submittedAt: new Date().toISOString(),
-  };
+    return {
+      success: true,
+      message: 'Prize claim submitted successfully',
+      claimId: response.form.id,
+      submittedAt: new Date().toISOString(),
+    };
+  } catch {
+    return {
+      success: false,
+      message: 'Failed to submit prize claim',
+    };
+  }
 }
 
 /**
@@ -91,9 +102,7 @@ export async function agreeTermsOfService(
   throw new Error('Failed to agree terms of service');
 }
 
-export async function deleteForm(
-  formId: string,
-) {
+export async function deleteForm(formId: string) {
   await fetchLambda({
     path: `admin/forms/${formId}`,
     method: 'DELETE',

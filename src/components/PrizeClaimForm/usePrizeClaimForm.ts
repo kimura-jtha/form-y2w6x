@@ -51,11 +51,17 @@ export function usePrizeClaimForm() {
       lastNameKanji: (value) => (!value.trim() ? t('prizeClaim.validation.required') : null),
       firstNameKanji: (value) => (!value.trim() ? t('prizeClaim.validation.required') : null),
       lastNameKana: (value) => {
+        if (!isJapanese.current) {
+          return null;
+        }
         if (!value.trim()) return t('prizeClaim.validation.required');
         if (!KATAKANA_PATTERN.test(value)) return t('prizeClaim.validation.katakanaOnly');
         return null;
       },
       firstNameKana: (value) => {
+        if (!isJapanese.current) {
+          return null;
+        }
         if (!value.trim()) return t('prizeClaim.validation.required');
         if (!KATAKANA_PATTERN.test(value)) return t('prizeClaim.validation.katakanaOnly');
         return null;
@@ -403,10 +409,10 @@ export function usePrizeClaimForm() {
           lastSearchedPostalCodeRef.current = '';
         } else {
           notifications.show({
+            autoClose: false,
+            position: 'top-right',
             title: t('prizeClaim.notifications.submitFailed.title'),
-            message: t('prizeClaim.notifications.submitFailed.message', {
-              message: result.message,
-            }),
+            message: t('prizeClaim.notifications.submitFailed.message'),
             color: 'red',
           });
         }

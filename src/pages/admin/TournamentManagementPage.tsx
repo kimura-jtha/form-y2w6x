@@ -16,7 +16,6 @@ import {
   Stack,
   Table,
   Text,
-  TextInput,
   Title,
 } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
@@ -60,7 +59,8 @@ export function TournamentManagementPage() {
   const [togglingTournamentId, setTogglingTournamentId] = useState<string | null>(null);
 
   // Filters
-  const [searchTournamentName, setSearchTournamentName] = useState('');
+  const [selectedEventName, setSelectedEventName] = useState<string | null>(null);
+  const [selectedTournamentName, setSelectedTournamentName] = useState<string | null>(null);
   const [selectedDateRange, setSelectedDateRange] = useState<[Date | null, Date | null]>([
     null,
     null,
@@ -173,7 +173,8 @@ export function TournamentManagementPage() {
   };
 
   const handleClearFilter = () => {
-    setSearchTournamentName('');
+    setSelectedEventName(null);
+    setSelectedTournamentName(null);
     setSelectedDateRange([null, null]);
     setCurrentPage(1);
   };
@@ -226,20 +227,107 @@ export function TournamentManagementPage() {
     }
   };
 
+  // Event name options for filter
+  const eventNameOptions = useMemo(() => {
+    const [dateFrom, dateTo] = selectedDateRange;
+
+    let filtered = [...tournaments];
+
+    // Apply date range filter to get available event names
+    if (dateFrom || dateTo) {
+      filtered = filtered.filter((t) => {
+        const tournamentDate = new Date(t.date);
+        const from = dateFrom ? new Date(dateFrom.setHours(0, 0, 0, 0)) : null;
+        const to = dateTo ? new Date(dateTo.setHours(23, 59, 59, 999)) : null;
+
+        if (from && to) {
+          return tournamentDate >= from && tournamentDate <= to;
+        }
+        if (from) {
+          return tournamentDate >= from;
+        }
+        if (to) {
+          return tournamentDate <= to;
+        }
+        return true;
+      });
+    }
+
+    // Get unique event names
+    const uniqueEventNames = new Map<string, string>();
+    filtered.forEach((t) => {
+      if (!uniqueEventNames.has(t.eventNameJa)) {
+        uniqueEventNames.set(t.eventNameJa, t.eventNameJa);
+      }
+    });
+
+    return [...uniqueEventNames.entries()].map(([value, label]) => ({
+      value,
+      label,
+    }));
+  }, [tournaments, selectedDateRange]);
+
+  // Tournament name options for filter
+  const tournamentNameOptions = useMemo(() => {
+    const [dateFrom, dateTo] = selectedDateRange;
+
+    let filtered = [...tournaments];
+
+    // Apply event name filter to get available tournament names
+    if (selectedEventName) {
+      filtered = filtered.filter((t) => t.eventNameJa === selectedEventName);
+    }
+
+    // Apply date range filter
+    if (dateFrom || dateTo) {
+      filtered = filtered.filter((t) => {
+        const tournamentDate = new Date(t.date);
+        const from = dateFrom ? new Date(dateFrom.setHours(0, 0, 0, 0)) : null;
+        const to = dateTo ? new Date(dateTo.setHours(23, 59, 59, 999)) : null;
+
+        if (from && to) {
+          return tournamentDate >= from && tournamentDate <= to;
+        }
+        if (from) {
+          return tournamentDate >= from;
+        }
+        if (to) {
+          return tournamentDate <= to;
+        }
+        return true;
+      });
+    }
+
+    // Get unique tournament names with event names
+    const uniqueTournaments = new Map<string, string>();
+    filtered.forEach((t) => {
+      const key = `${t.eventNameJa} - ${t.tournamentNameJa}`;
+      if (!uniqueTournaments.has(key)) {
+        uniqueTournaments.set(key, key);
+      }
+    });
+
+    return [...uniqueTournaments.entries()].map(([value, label]) => ({
+      value,
+      label,
+    }));
+  }, [tournaments, selectedEventName, selectedDateRange]);
+
   // Filtered and sorted tournaments
   const filteredAndSortedTournaments = useMemo(() => {
     let filtered = [...tournaments];
 
-    // Apply search filter
-    if (searchTournamentName.trim()) {
-      const searchLower = searchTournamentName.toLowerCase();
-      filtered = filtered.filter(
-        (t) =>
-          t.eventNameJa.toLowerCase().includes(searchLower) ||
-          t.eventName?.toLowerCase().includes(searchLower) ||
-          t.tournamentNameJa.toLowerCase().includes(searchLower) ||
-          t.tournamentName?.toLowerCase().includes(searchLower),
-      );
+    // Apply event name filter
+    if (selectedEventName) {
+      filtered = filtered.filter((t) => t.eventNameJa === selectedEventName);
+    }
+
+    // Apply tournament name filter
+    if (selectedTournamentName) {
+      filtered = filtered.filter((t) => {
+        const tournamentKey = `${t.eventNameJa} - ${t.tournamentNameJa}`;
+        return tournamentKey === selectedTournamentName;
+      });
     }
 
     // Apply date range filter
@@ -304,7 +392,14 @@ export function TournamentManagementPage() {
     });
 
     return filtered;
-  }, [tournaments, searchTournamentName, selectedDateRange, sortField, sortDirection]);
+  }, [
+    tournaments,
+    selectedEventName,
+    selectedTournamentName,
+    selectedDateRange,
+    sortField,
+    sortDirection,
+  ]);
 
   // Pagination
   const totalPages = Math.ceil(filteredAndSortedTournaments.length / itemsPerPage);
@@ -314,10 +409,15 @@ export function TournamentManagementPage() {
     return filteredAndSortedTournaments.slice(startIndex, endIndex);
   }, [filteredAndSortedTournaments, currentPage, itemsPerPage]);
 
+  // Clear tournament name when event name or date range changes
+  useEffect(() => {
+    setSelectedTournamentName(null);
+  }, [selectedEventName, selectedDateRange]);
+
   // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTournamentName, selectedDateRange]);
+  }, [selectedEventName, selectedTournamentName, selectedDateRange]);
 
   const renderSortIcon = (field: SortField) => {
     if (sortField !== field) return null;
@@ -363,11 +463,24 @@ export function TournamentManagementPage() {
       {/* Filters */}
       <Paper shadow="xs" p="md">
         <Group align="flex-end">
-          <TextInput
+          <Select
+            label={t('admin.tournaments.filters.eventName')}
+            placeholder={t('admin.tournaments.filters.eventNamePlaceholder')}
+            value={selectedEventName}
+            onChange={setSelectedEventName}
+            data={eventNameOptions}
+            searchable
+            clearable
+            style={{ flex: 1 }}
+          />
+          <Select
             label={t('admin.tournaments.filters.tournamentName')}
             placeholder={t('admin.tournaments.filters.tournamentNamePlaceholder')}
-            value={searchTournamentName}
-            onChange={(event) => setSearchTournamentName(event.currentTarget.value)}
+            value={selectedTournamentName}
+            onChange={setSelectedTournamentName}
+            data={tournamentNameOptions}
+            searchable
+            clearable
             style={{ flex: 1 }}
           />
           <DatePickerInput
@@ -394,7 +507,12 @@ export function TournamentManagementPage() {
             onClick={handleClearFilter}
             variant="light"
             color="gray"
-            disabled={!searchTournamentName && !selectedDateRange[0] && !selectedDateRange[1]}
+            disabled={
+              !selectedEventName &&
+              !selectedTournamentName &&
+              !selectedDateRange[0] &&
+              !selectedDateRange[1]
+            }
           >
             {t('admin.tournaments.filters.clear')}
           </Button>
@@ -411,7 +529,8 @@ export function TournamentManagementPage() {
           <>
             <Group justify="space-between" mb="md">
               <Text size="sm" c="dimmed">
-                {filteredAndSortedTournaments.length} {t('admin.tournaments.table.tournamentsFound')}
+                {filteredAndSortedTournaments.length}{' '}
+                {t('admin.tournaments.table.tournamentsFound')}
               </Text>
               <Group gap="xs">
                 <Text size="sm" c="dimmed">
@@ -474,12 +593,8 @@ export function TournamentManagementPage() {
                       {renderSortIcon('status')}
                     </Group>
                   </Table.Th>
-                  <Table.Th
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
-                  >
-                    <Group gap={4}>
-                      {t('admin.tournaments.table.prizes')}
-                    </Group>
+                  <Table.Th style={{ cursor: 'pointer', userSelect: 'none' }}>
+                    <Group gap={4}>{t('admin.tournaments.table.prizes')}</Group>
                   </Table.Th>
                   <Table.Th w="180px">{t('admin.tournaments.table.actions')}</Table.Th>
                 </Table.Tr>
@@ -578,9 +693,7 @@ export function TournamentManagementPage() {
 
                   {/* Page number input */}
                   <Group gap={4}>
-                    <Text size="sm">
-                      {t('admin.tournaments.pagination.page')}
-                    </Text>
+                    <Text size="sm">{t('admin.tournaments.pagination.page')}</Text>
                     <NumberInput
                       value={currentPage}
                       onChange={(value) => {

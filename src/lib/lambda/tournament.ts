@@ -14,6 +14,7 @@ type ApiTournament = {
   date: string;
   status: TournamentStatus;
   prizes: PrizeRank[];
+  claimedRanks?: string[];
   createdAt: string;
   updatedAt: string;
 };
@@ -209,6 +210,7 @@ function convertApiTournamentToTournament(apiTournament: ApiTournament): Tournam
     date: apiTournament.date,
     status: apiTournament.status,
     prizes: apiTournament.prizes,
+    claimedRanks: apiTournament.claimedRanks || [],
     createdAt: apiTournament.createdAt,
     updatedAt: apiTournament.updatedAt,
   };

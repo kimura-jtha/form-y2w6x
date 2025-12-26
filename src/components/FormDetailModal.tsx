@@ -31,9 +31,15 @@ export function FormDetailModal({ opened, onClose, form }: FormDetailModalProps)
   //   }
   // };
 
-  const DetailRow = ({ label, value, blank }: {
+  const DetailRow = ({
+    label,
+    value,
+    blank,
+  }: {
     blank?: boolean;
-    label: string; value: string | number | boolean }) => (
+    label: string;
+    value: string | number | boolean;
+  }) => (
     <Grid gutter="xs">
       <Grid.Col span={5}>
         <Text size="sm" fw={600} c="dimmed">
@@ -42,7 +48,7 @@ export function FormDetailModal({ opened, onClose, form }: FormDetailModalProps)
       </Grid.Col>
       <Grid.Col span={7}>
         <Text size="sm" fw={600}>
-          {blank ? '-' : (value || '-')}
+          {blank ? '-' : value || '-'}
         </Text>
       </Grid.Col>
     </Grid>
@@ -158,8 +164,10 @@ export function FormDetailModal({ opened, onClose, form }: FormDetailModalProps)
             blank={!form.formContent.accountType}
             label={t('prizeClaim.fields.accountType.label')}
             value={
-              form.formContent.accountType ?
-              t(`prizeClaim.fields.accountType.options.${form.formContent.accountType}`) : '-'}
+              form.formContent.accountType
+                ? t(`prizeClaim.fields.accountType.options.${form.formContent.accountType}`)
+                : '-'
+            }
           />
           <DetailRow
             blank={!form.formContent.accountNumber}
@@ -167,7 +175,6 @@ export function FormDetailModal({ opened, onClose, form }: FormDetailModalProps)
             value={form.formContent.accountNumber}
           />
           <DetailRow
-
             label={t('prizeClaim.fields.accountHolderName.label')}
             value={form.formContent.accountHolderName}
           />

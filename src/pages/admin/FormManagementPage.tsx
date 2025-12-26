@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { type MouseEvent, useEffect, useMemo, useState } from 'react';
 
 import {
   ActionIcon,
@@ -7,11 +7,13 @@ import {
   Box,
   Button,
   Center,
+  Checkbox,
   Group,
   Loader,
   Modal,
   Paper,
   Popover,
+  Radio,
   Select,
   Stack,
   Table,
@@ -21,13 +23,13 @@ import {
 import { DatePickerInput } from '@mantine/dates';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
-import { IconInfoCircle, IconDownload, IconRefresh, IconTrash, IconX } from '@tabler/icons-react';
+import { IconDownload, IconInfoCircle, IconRefresh, IconTrash, IconX } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { FormDetailModal } from '@/components/FormDetailModal';
 import { deleteForm, getForms } from '@/lib/lambda/form';
 import { fetchAllTournaments } from '@/lib/lambda/tournament';
 import { useAppStore } from '@/stores';
-import type { PrizeClaimFormSubmission } from '@/types';
+import type { PrizeClaimFormSubmission, Tournament } from '@/types';
 import { exportFormsToPayPayCSV, maskEmail } from '@/utils';
 
 export function FormManagementPage() {
@@ -40,6 +42,7 @@ export function FormManagementPage() {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [deletingFormId, setDeletingFormId] = useState<string | null>(null);
+  const [selectedEventName, setSelectedEventName] = useState<string | null>(null);
   const [selectedTournamentId, setSelectedTournamentId] = useState<string | null>(null);
   const [appliedTournamentId, setAppliedTournamentId] = useState<string | null>(null);
   const [selectedDateRange, setSelectedDateRange] = useState<[Date | null, Date | null]>([
@@ -55,6 +58,41 @@ export function FormManagementPage() {
   const [selectedForm, setSelectedForm] = useState<PrizeClaimFormSubmission | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
 
+  const tournamentMap = useMemo(() => {
+    return tournaments.reduce(
+      (acc, t) => {
+        acc[t.id] = t;
+        return acc;
+      },
+      {} as Record<string, Tournament>,
+    );
+  }, [tournaments]);
+
+  const eventNameOptions = useMemo(() => {
+    const [dateFrom, dateTo] = selectedDateRange;
+    const ONE_DAY = 24 * 60 * 60 * 1000;
+    const from = (dateFrom ? new Date(dateFrom).getTime() : 0) - ONE_DAY;
+    const to = (dateTo ? new Date(dateTo).getTime() : Infinity) + ONE_DAY;
+
+    // Get unique event names from tournaments filtered by date range
+    const uniqueEventNames = new Map<string, string>();
+    tournaments
+      .filter((t) => {
+        const ts = new Date(t.date).getTime();
+        return ts >= from && ts <= to;
+      })
+      .forEach((t) => {
+        if (!uniqueEventNames.has(t.eventNameJa)) {
+          uniqueEventNames.set(t.eventNameJa, t.eventNameJa);
+        }
+      });
+
+    return [...uniqueEventNames.entries()].map(([value, label]) => ({
+      value,
+      label,
+    }));
+  }, [tournaments, selectedDateRange]);
+
   const tournamentOptions = useMemo(() => {
     const [dateFrom, dateTo] = selectedDateRange;
     const ONE_DAY = 24 * 60 * 60 * 1000;
@@ -64,13 +102,15 @@ export function FormManagementPage() {
     return tournaments
       .filter((t) => {
         const ts = new Date(t.date).getTime();
-        return ts >= from && ts <= to;
+        const dateInRange = ts >= from && ts <= to;
+        const eventNameMatches = !selectedEventName || t.eventNameJa === selectedEventName;
+        return dateInRange && eventNameMatches;
       })
       .map((t) => ({
         value: t.id,
         label: `${t.eventNameJa} - ${t.tournamentNameJa} (${new Date(t.date).toLocaleDateString()})`,
       }));
-  }, [tournaments, selectedDateRange]);
+  }, [tournaments, selectedDateRange, selectedEventName]);
 
   useEffect(() => {
     if (tournamentOptions.length === 1) {
@@ -82,6 +122,10 @@ export function FormManagementPage() {
   const [deleteModalOpened, { open: openDeleteModal, close: closeDeleteModal }] =
     useDisclosure(false);
   const [formToDelete, setFormToDelete] = useState<PrizeClaimFormSubmission | null>(null);
+  const [exportModalOpened, { open: openExportModal, close: closeExportModal }] =
+    useDisclosure(false);
+  const [exportType, setExportType] = useState<'all' | 'japanese'>('all');
+  const [exportOnlyTermsAgreed, setExportOnlyTermsAgreed] = useState(false);
 
   const handleRowClick = (form: PrizeClaimFormSubmission) => {
     setSelectedForm(form);
@@ -164,12 +208,13 @@ export function FormManagementPage() {
   };
 
   const handleClearFilter = () => {
+    setSelectedEventName(null);
     setSelectedTournamentId(null);
     setSelectedDateRange([null, null]);
     fetchForms(null, [null, null]);
   };
 
-  const handleExportCSV = async () => {
+  const handleExportCSV = () => {
     if (!appliedTournamentId) {
       notifications.show({
         title: t('admin.forms.notifications.noTournamentSelected.title'),
@@ -179,8 +224,14 @@ export function FormManagementPage() {
       return;
     }
 
+    // Open export options modal
+    openExportModal();
+  };
+
+  const confirmExport = async () => {
     try {
       setIsExporting(true);
+      closeExportModal();
 
       // Fetch all forms for the selected tournament with pagination
       const allForms: PrizeClaimFormSubmission[] = [];
@@ -193,7 +244,7 @@ export function FormManagementPage() {
         const { forms: fetchedForms, pagination } = await getForms(
           cursor,
           100, // Use larger page size for export
-          appliedTournamentId,
+          appliedTournamentId || undefined,
           dateFrom ? dateFrom.toISOString().split('T')[0] : undefined,
           dateTo ? dateTo.toISOString().split('T')[0] : undefined,
         );
@@ -212,24 +263,69 @@ export function FormManagementPage() {
         });
         return;
       }
+
+      // Filter forms based on export type
+      let filteredForms = allForms;
+      const filterSuffixes: string[] = [];
+
+      // First, filter by user type (all or japanese)
+      if (exportType === 'japanese') {
+        // Filter for Japanese users (has Katakana name)
+        filteredForms = filteredForms.filter(
+          (form) =>
+            form.formContent.lastNameKana &&
+            form.formContent.lastNameKana.trim() !== '' &&
+            form.formContent.firstNameKana &&
+            form.formContent.firstNameKana.trim() !== '',
+        );
+        filterSuffixes.push('japanese');
+      }
+
+      // Then, optionally filter by terms agreed
+      if (exportOnlyTermsAgreed) {
+        filteredForms = filteredForms.filter((form) => form.formContent.termsAgreed);
+        filterSuffixes.push('terms_agreed');
+      }
+
+      const filterSuffix = filterSuffixes.length > 0 ? `_${filterSuffixes.join('_')}` : '';
+
+      if (filteredForms.length === 0) {
+        notifications.show({
+          title: t('admin.forms.notifications.noData.title'),
+          message: t('admin.forms.notifications.noData.message'),
+          color: 'orange',
+        });
+        return;
+      }
+
       // Generate filename with tournament name and timestamp
       const timestamp = new Date()
         .toISOString()
         .slice(0, -8)
         .replaceAll(/[:TZ-]/g, '_');
       // cspell:disable-next-line
-      const filename = `paypay_${timestamp}`;
+      const filename = `paypay_${timestamp}${filterSuffix}`;
       // Export to CSV
-      exportFormsToPayPayCSV(allForms, filename);
+      exportFormsToPayPayCSV(filteredForms, filename);
+
+      notifications.show({
+        title: t('admin.forms.export.success'),
+        message: t('admin.forms.export.successMessage', { count: filteredForms.length }),
+        color: 'green',
+      });
     } catch (error) {
       console.error('Failed to export forms:', error);
-      alert(t('admin.forms.export.error'));
+      notifications.show({
+        title: t('admin.forms.export.error'),
+        message: t('admin.forms.export.errorMessage'),
+        color: 'red',
+      });
     } finally {
       setIsExporting(false);
     }
   };
 
-  const handleDelete = (formId: string, event: React.MouseEvent) => {
+  const handleDelete = (formId: string, event: MouseEvent) => {
     // Prevent row click event from firing
     event.stopPropagation();
 
@@ -301,6 +397,17 @@ export function FormManagementPage() {
       <Paper shadow="xs" p="md">
         <Group align="flex-end">
           <Select
+            label={t('admin.forms.filters.eventName')}
+            placeholder={t('admin.forms.filters.eventNamePlaceholder')}
+            value={selectedEventName}
+            onChange={setSelectedEventName}
+            disabled={eventNameOptions.length === 0}
+            data={eventNameOptions}
+            searchable
+            clearable
+            style={{ flex: 1 }}
+          />
+          <Select
             label={t('admin.forms.filters.tournamentName')}
             placeholder={t('admin.forms.filters.tournamentNamePlaceholder')}
             value={selectedTournamentId}
@@ -338,7 +445,12 @@ export function FormManagementPage() {
             onClick={handleClearFilter}
             variant="light"
             color="gray"
-            disabled={!selectedTournamentId}
+            disabled={
+              !selectedEventName &&
+              !selectedTournamentId &&
+              selectedDateRange[0] === null &&
+              selectedDateRange[1] === null
+            }
           >
             {t('admin.forms.filters.clear')}
           </Button>
@@ -368,12 +480,17 @@ export function FormManagementPage() {
             ) : (
               <>
                 <Text size="sm" c="dimmed" mb="md">
-                  {forms.length} {t(appliedTournamentId ? 'admin.forms.table.formsFound' : 'admin.forms.table.latestFormsFound')}
-
+                  {forms.length}{' '}
+                  {t(
+                    appliedTournamentId
+                      ? 'admin.forms.table.formsFound'
+                      : 'admin.forms.table.latestFormsFound',
+                  )}
                 </Text>
                 <Table striped highlightOnHover withTableBorder>
                   <Table.Thead>
                     <Table.Tr>
+                      <Table.Th>{t('admin.forms.table.eventName')}</Table.Th>
                       <Table.Th>{t('admin.forms.table.tournament')}</Table.Th>
                       <Table.Th>{t('admin.forms.table.playerName')}</Table.Th>
                       <Table.Th>{t('admin.forms.table.email')}</Table.Th>
@@ -400,6 +517,9 @@ export function FormManagementPage() {
                           onClick={() => handleRowClick(form)}
                           style={{ cursor: 'pointer' }}
                         >
+                          <Table.Td fw="bold">
+                            {tournamentMap[form.formContent.tournamentId]?.eventNameJa || '-'}
+                          </Table.Td>
                           <Table.Td fw="bold">{form.formContent.tournamentName}</Table.Td>
                           <Table.Td>
                             {form.formContent.lastNameKanji} {form.formContent.firstNameKanji}
@@ -454,6 +574,55 @@ export function FormManagementPage() {
         )}
       </Paper>
 
+      {/* Export Options Modal */}
+      <Modal
+        opened={exportModalOpened}
+        onClose={closeExportModal}
+        title={t('admin.forms.export.selectType')}
+        centered
+      >
+        <Stack gap="md">
+          <Text size="sm" c="dimmed">
+            {t('admin.forms.export.selectTypeDescription')}
+          </Text>
+
+          <Radio.Group
+            value={exportType}
+            onChange={(value) => setExportType(value as 'all' | 'japanese')}
+          >
+            <Stack gap="sm">
+              <Radio
+                value="all"
+                label={t('admin.forms.export.options.all')}
+                description={t('admin.forms.export.options.allDescription')}
+              />
+              <Radio
+                value="japanese"
+                label={t('admin.forms.export.options.japanese')}
+                description={t('admin.forms.export.options.japaneseDescription')}
+              />
+            </Stack>
+          </Radio.Group>
+
+          <Checkbox
+            checked={exportOnlyTermsAgreed}
+            onChange={(event) => setExportOnlyTermsAgreed(event.currentTarget.checked)}
+            label={t('admin.forms.export.options.terms')}
+            description={t('admin.forms.export.options.termsDescription')}
+            mt="md"
+          />
+
+          <Group justify="flex-end" gap="sm">
+            <Button variant="light" onClick={closeExportModal}>
+              {t('common.cancel')}
+            </Button>
+            <Button color="green" onClick={confirmExport} leftSection={<IconDownload size={16} />}>
+              {t('admin.forms.export.confirm')}
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
+
       {/* Delete Confirmation Modal */}
       <Modal
         opened={deleteModalOpened}
@@ -485,11 +654,7 @@ export function FormManagementPage() {
             <Button variant="light" onClick={closeDeleteModal} disabled={deletingFormId !== null}>
               {t('common.cancel')}
             </Button>
-            <Button
-              color="red"
-              onClick={confirmDelete}
-              loading={deletingFormId !== null}
-            >
+            <Button color="red" onClick={confirmDelete} loading={deletingFormId !== null}>
               {t('admin.forms.delete.confirm')}
             </Button>
           </Group>

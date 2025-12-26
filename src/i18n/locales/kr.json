@@ -105,7 +105,8 @@
         "rank": "계급",
         "status": "상태",
         "termsAgreed": "약관 동의",
-        "tournament": "토너먼트"
+        "tournament": "토너먼트",
+        "eventName": "이벤트 이름"
       },
       "title": "양식 관리"
     },
@@ -217,6 +218,14 @@
           "email": {
             "description": "이메일 주소",
             "example": "user@example.com"
+          },
+          "firstName": {
+            "description": "이름",
+            "example": "타로우"
+          },
+          "lastName": {
+            "description": "성",
+            "example": "야마다"
           },
           "firstNameKana": {
             "description": "가타카나로 이름",
@@ -546,6 +555,14 @@
         "label": "이름 (가타카나)",
         "placeholder": "타로우"
       },
+      "firstName": {
+        "label": "이름",
+        "placeholder": "타로우"
+      },
+      "lastName": {
+        "label": "성",
+        "example": "야마다"
+      },
       "firstNameKanji": {
         "label": "이름 (한자)",
         "placeholder": "타로우"
@@ -602,7 +619,7 @@
         "title": "제출 오류"
       },
       "submitFailed": {
-        "message": "{{메시지}}",
+        "message": "제출에 실패했습니다. 자세한 내용은 지원에 문의해 주세요.",
         "title": "제출 실패"
       },
       "submitSuccess": {

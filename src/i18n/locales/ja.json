@@ -39,9 +39,23 @@
         "tournamentInfo": "トーナメント情報"
       },
       "export": {
-        "error": "データのエクスポートに失敗しました。もう一度お試しください。",
+        "confirm": "CSVダウンロード",
+        "error": "エクスポート失敗",
+        "errorMessage": "データのエクスポートに失敗しました。もう一度お試しください。",
         "noData": "選択したトーナメントにエクスポートするデータがありません",
-        "noTournamentSelected": "エクスポートするトーナメントを選択してください"
+        "noTournamentSelected": "エクスポートするトーナメントを選択してください",
+        "options": {
+          "all": "全てのユーザー",
+          "allDescription": "全てのフォーム送信をダウンロード",
+          "japanese": "日本人ユーザーのみ",
+          "japaneseDescription": "カタカナ名のフォームのみダウンロード",
+          "terms": "利用規約同意ユーザーのみ",
+          "termsDescription": "利用規約に同意したユーザーのみを含める"
+        },
+        "selectType": "エクスポートタイプを選択",
+        "selectTypeDescription": "ユーザータイプと追加フィルターを選択：",
+        "success": "エクスポート成功",
+        "successMessage": "{{count}}件のフォームを正常にエクスポートしました"
       },
       "exportCSV": "CSVエクスポート",
       "exportHelper": "CSVデータをエクスポートするには、下記のフィルターでトーナメントを選択してください。",
@@ -55,6 +69,8 @@
         "dateToPlaceholder": "終了日を選択",
         "dateRange": "トーナメント開催日",
         "dateRangePlaceholder": "期間を選択",
+        "eventName": "イベント名",
+        "eventNamePlaceholder": "イベント名で検索",
         "status": "ステータス",
         "statusPlaceholder": "全てのステータス",
         "termsAgreed": "利用規約同意",
@@ -105,7 +121,8 @@
         "rank": "順位",
         "status": "ステータス",
         "termsAgreed": "利用規約同意",
-        "tournament": "トーナメント"
+        "tournament": "トーナメント",
+        "eventName": "イベント名"
       },
       "title": "フォーム管理"
     },
@@ -213,6 +230,14 @@
           "email": {
             "description": "メールアドレス",
             "example": "user@example.com"
+          },
+          "firstName": {
+            "description": "名",
+            "example": "太郎"
+          },
+          "lastName": {
+            "description": "姓",
+            "example": "山田"
           },
           "firstNameKana": {
             "description": "名（カタカナ）",
@@ -337,6 +362,8 @@
         "tournamentInfo": "トーナメント情報"
       },
       "filters": {
+        "eventName": "イベント名",
+        "eventNamePlaceholder": "イベント名で検索",
         "tournamentName": "トーナメント名",
         "tournamentNamePlaceholder": "イベント名またはトーナメント名で検索",
         "dateRange": "開催日",
@@ -542,6 +569,14 @@
         "label": "名（カナ）",
         "placeholder": "タロウ"
       },
+      "firstName": {
+        "label": "名",
+        "placeholder": "太郎"
+      },
+      "lastName": {
+        "label": "姓",
+        "example": "山田"
+      },
       "firstNameKanji": {
         "label": "名（漢字）",
         "placeholder": "太郎"
@@ -598,7 +633,7 @@
         "title": "送信エラー"
       },
       "submitFailed": {
-        "message": "{{message}}",
+        "message": "送信に失敗しました。サポートにお問い合わせください。",
         "title": "送信失敗"
       },
       "submitSuccess": {

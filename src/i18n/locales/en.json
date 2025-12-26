@@ -39,9 +39,23 @@
         "tournamentInfo": "Tournament Information"
       },
       "export": {
-        "error": "Failed to export data. Please try again.",
+        "confirm": "Download CSV",
+        "error": "Export Failed",
+        "errorMessage": "Failed to export data. Please try again.",
         "noData": "No data to export for selected tournament",
-        "noTournamentSelected": "Please select a tournament to export"
+        "noTournamentSelected": "Please select a tournament to export",
+        "options": {
+          "all": "All Users",
+          "allDescription": "Download all form submissions",
+          "japanese": "Japanese Users Only",
+          "japaneseDescription": "Download only forms with Katakana names",
+          "terms": "Only Terms Agreed Users",
+          "termsDescription": "Filter to include only users who agreed to terms of service"
+        },
+        "selectType": "Select Export Type",
+        "selectTypeDescription": "Select user type and optional filters:",
+        "success": "Export Successful",
+        "successMessage": "Successfully exported {{count}} form(s)"
       },
       "exportCSV": "Export CSV",
       "exportHelper": "Please select a tournament using the filter below to export CSV data for that specific tournament.",
@@ -55,6 +69,8 @@
         "dateToPlaceholder": "Select end date",
         "dateRange": "Tournament Date",
         "dateRangePlaceholder": "Select date range",
+        "eventName": "Event Name",
+        "eventNamePlaceholder": "Search by event name",
         "status": "Status",
         "statusPlaceholder": "All statuses",
         "termsAgreed": "Terms Agreed",
@@ -105,7 +121,8 @@
         "rank": "Rank",
         "status": "Status",
         "termsAgreed": "Terms Agreed",
-        "tournament": "Tournament"
+        "tournament": "Tournament",
+        "eventName": "Event Name"
       },
       "title": "Form Management"
     },
@@ -217,6 +234,14 @@
           "email": {
             "description": "Email address",
             "example": "user@example.com"
+          },
+          "firstName": {
+            "description": "First name",
+            "example": "Taro"
+          },
+          "lastName": {
+            "description": "Last name",
+            "example": "Yamada"
           },
           "firstNameKana": {
             "description": "First name in Katakana",
@@ -341,6 +366,8 @@
         "tournamentInfo": "Tournament Information"
       },
       "filters": {
+        "eventName": "Event Name",
+        "eventNamePlaceholder": "Search by event name",
         "tournamentName": "Tournament Name",
         "tournamentNamePlaceholder": "Search by event or tournament name",
         "dateRange": "Tournament Date",
@@ -546,6 +573,14 @@
         "label": "First Name (Katakana)",
         "placeholder": "タロウ"
       },
+      "firstName": {
+        "label": "First Name",
+        "placeholder": "Taro"
+      },
+      "lastName": {
+        "label": "Last Name",
+        "placeholder": "Yamada"
+      },
       "firstNameKanji": {
         "label": "First Name (Kanji)",
         "placeholder": "Tarou"
@@ -602,7 +637,7 @@
         "title": "Submission Error"
       },
       "submitFailed": {
-        "message": "{{message}}",
+        "message": "Submission failed, please contact support for details",
         "title": "Submission Failed"
       },
       "submitSuccess": {

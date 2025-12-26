@@ -195,8 +195,6 @@ export function PrizeClaimForm() {
     return Boolean(
       formValues.lastNameKanji &&
       formValues.firstNameKanji &&
-      formValues.lastNameKana &&
-      formValues.firstNameKana &&
       formValues.playersId &&
       formValues.address &&
       formValues.phoneNumber &&
@@ -251,11 +249,23 @@ export function PrizeClaimForm() {
   const rankOptions = useMemo(() => {
     if (!formValues.tournamentId) return [];
     const availableRanks = getAvailableRanks(formValues.tournamentId);
+
+    // Get the selected tournament to check claimed ranks
+    const filteredTournaments = getFilteredTournaments(formValues.tournamentDate);
+    const selectedTournament = filteredTournaments.find((t) => t.id === formValues.tournamentId);
+    const claimedRanks = selectedTournament?.claimedRanks || [];
+
     return availableRanks.map((prize) => ({
       value: String(prize.rank),
       label: prize.rank,
+      disabled: claimedRanks.includes(String(prize.rank)),
     }));
-  }, [formValues.tournamentId, getAvailableRanks]);
+  }, [
+    formValues.tournamentId,
+    formValues.tournamentDate,
+    getAvailableRanks,
+    getFilteredTournaments,
+  ]);
 
   // Account type options
   const accountTypeOptions = useMemo(
@@ -270,6 +280,8 @@ export function PrizeClaimForm() {
   const onSubmit = form.onSubmit(() => {
     if (!isJapanese) {
       form.setValues({
+        lastNameKana: '',
+        firstNameKana: '',
         postalCode: '',
         bankName: '',
         bankCode: '',
@@ -327,67 +339,103 @@ export function PrizeClaimForm() {
 
       <form onSubmit={onSubmit}>
         <Stack gap="xl">
+          {/* Name (Not Japanese) Section */}
+          {!isJapanese && (
+            <Paper shadow="xs" p="md" withBorder>
+              <Title order={4} mb="md">
+                {t('prizeClaim.sections.name')}
+              </Title>
+              <Grid>
+                <Grid.Col span={{ base: 12, sm: 6 }}>
+                  <TextInput
+                    label={t('prizeClaim.fields.lastName.label')}
+                    placeholder={t('prizeClaim.fields.lastName.placeholder')}
+                    description={'\u00A0'}
+                    withAsterisk
+                    disabled={isFormDisabled}
+                    key={form.key('lastNameKanji')}
+                    {...form.getInputProps('lastNameKanji')}
+                  />
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, sm: 6 }}>
+                  <TextInput
+                    label={t('prizeClaim.fields.firstName.label')}
+                    placeholder={t('prizeClaim.fields.firstName.placeholder')}
+                    description={'\u00A0'}
+                    withAsterisk
+                    disabled={isFormDisabled}
+                    key={form.key('firstNameKanji')}
+                    {...form.getInputProps('firstNameKanji')}
+                  />
+                </Grid.Col>
+              </Grid>
+            </Paper>
+          )}
           {/* Name (Kanji) Section */}
-          <Paper shadow="xs" p="md" withBorder>
-            <Title order={4} mb="md">
-              {t('prizeClaim.sections.name')}
-            </Title>
-            <Grid>
-              <Grid.Col span={{ base: 12, sm: 6 }}>
-                <TextInput
-                  label={t('prizeClaim.fields.lastNameKanji.label')}
-                  placeholder={t('prizeClaim.fields.lastNameKanji.placeholder')}
-                  description={t('prizeClaim.fields.lastNameKanji.description')}
-                  withAsterisk
-                  disabled={isFormDisabled}
-                  key={form.key('lastNameKanji')}
-                  {...form.getInputProps('lastNameKanji')}
-                />
-              </Grid.Col>
-              <Grid.Col span={{ base: 12, sm: 6 }}>
-                <TextInput
-                  label={t('prizeClaim.fields.firstNameKanji.label')}
-                  placeholder={t('prizeClaim.fields.firstNameKanji.placeholder')}
-                  description={'\u00A0'}
-                  withAsterisk
-                  disabled={isFormDisabled}
-                  key={form.key('firstNameKanji')}
-                  {...form.getInputProps('firstNameKanji')}
-                />
-              </Grid.Col>
-            </Grid>
-          </Paper>
+          {isJapanese && (
+            <Paper shadow="xs" p="md" withBorder>
+              <Title order={4} mb="md">
+                {t('prizeClaim.sections.name')}
+              </Title>
+              <Grid>
+                <Grid.Col span={{ base: 12, sm: 6 }}>
+                  <TextInput
+                    label={t('prizeClaim.fields.lastNameKanji.label')}
+                    placeholder={t('prizeClaim.fields.lastNameKanji.placeholder')}
+                    description={t('prizeClaim.fields.lastNameKanji.description')}
+                    withAsterisk
+                    disabled={isFormDisabled}
+                    key={form.key('lastNameKanji')}
+                    {...form.getInputProps('lastNameKanji')}
+                  />
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, sm: 6 }}>
+                  <TextInput
+                    label={t('prizeClaim.fields.firstNameKanji.label')}
+                    placeholder={t('prizeClaim.fields.firstNameKanji.placeholder')}
+                    description={'\u00A0'}
+                    withAsterisk
+                    disabled={isFormDisabled}
+                    key={form.key('firstNameKanji')}
+                    {...form.getInputProps('firstNameKanji')}
+                  />
+                </Grid.Col>
+              </Grid>
+            </Paper>
+          )}
 
           {/* Name (Kana) Section */}
-          <Paper shadow="xs" p="md" withBorder>
-            <Title order={4} mb="md">
-              {t('prizeClaim.sections.nameKana')}
-            </Title>
-            <Grid>
-              <Grid.Col span={{ base: 12, sm: 6 }}>
-                <TextInput
-                  label={t('prizeClaim.fields.lastNameKana.label')}
-                  placeholder={t('prizeClaim.fields.lastNameKana.placeholder')}
-                  description={t('prizeClaim.fields.lastNameKana.description')}
-                  withAsterisk
-                  disabled={isFormDisabled}
-                  key={form.key('lastNameKana')}
-                  {...form.getInputProps('lastNameKana')}
-                />
-              </Grid.Col>
-              <Grid.Col span={{ base: 12, sm: 6 }}>
-                <TextInput
-                  label={t('prizeClaim.fields.firstNameKana.label')}
-                  placeholder={t('prizeClaim.fields.firstNameKana.placeholder')}
-                  description={'\u00A0'}
-                  withAsterisk
-                  disabled={isFormDisabled}
-                  key={form.key('firstNameKana')}
-                  {...form.getInputProps('firstNameKana')}
-                />
-              </Grid.Col>
-            </Grid>
-          </Paper>
+          {isJapanese && (
+            <Paper shadow="xs" p="md" withBorder>
+              <Title order={4} mb="md">
+                {t('prizeClaim.sections.nameKana')}
+              </Title>
+              <Grid>
+                <Grid.Col span={{ base: 12, sm: 6 }}>
+                  <TextInput
+                    label={t('prizeClaim.fields.lastNameKana.label')}
+                    placeholder={t('prizeClaim.fields.lastNameKana.placeholder')}
+                    description={t('prizeClaim.fields.lastNameKana.description')}
+                    withAsterisk
+                    disabled={isFormDisabled}
+                    key={form.key('lastNameKana')}
+                    {...form.getInputProps('lastNameKana')}
+                  />
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, sm: 6 }}>
+                  <TextInput
+                    label={t('prizeClaim.fields.firstNameKana.label')}
+                    placeholder={t('prizeClaim.fields.firstNameKana.placeholder')}
+                    description={'\u00A0'}
+                    withAsterisk
+                    disabled={isFormDisabled}
+                    key={form.key('firstNameKana')}
+                    {...form.getInputProps('firstNameKana')}
+                  />
+                </Grid.Col>
+              </Grid>
+            </Paper>
+          )}
 
           {/* Players+ ID / Passport Number Section */}
           <Paper shadow="xs" p="md" withBorder>
@@ -678,9 +726,7 @@ export function PrizeClaimForm() {
             <Button
               type="submit"
               loading={isSubmitting}
-              disabled={
-                isFormDisabled || !isFormComplete || isSubmitting
-              }
+              disabled={isFormDisabled || !isFormComplete || isSubmitting}
             >
               {t('prizeClaim.buttons.submit')}
             </Button>
