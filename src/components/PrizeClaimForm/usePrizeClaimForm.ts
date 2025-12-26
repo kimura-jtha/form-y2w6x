@@ -81,9 +81,18 @@ export function usePrizeClaimForm() {
         if (!PHONE_PATTERN.test(value)) return t('prizeClaim.validation.invalidPhoneNumber');
         return null;
       },
-      email: (value) => {
+      email: (value, values) => {
         if (!value.trim()) return t('prizeClaim.validation.required');
         if (!EMAIL_PATTERN.test(value)) return t('prizeClaim.validation.invalidEmail');
+
+        // Check if email is already claimed in the selected tournament
+        if (values.tournamentId) {
+          const tournament = tournaments.find((t) => t.id === values.tournamentId);
+          if (tournament?.claimedEmails?.includes(value.trim())) {
+            return t('prizeClaim.validation.emailAlreadyClaimed');
+          }
+        }
+
         return null;
       },
       tournamentDate: (value) => (!value ? t('prizeClaim.validation.required') : null),

@@ -52,6 +52,8 @@ export interface PrizeClaimFormValues {
 
   // Terms of Service Agreement (optional, added after form submission)
   termsAgreed?: boolean;
+
+  createdAt?: string;
 }
 
 export type AccountType = 'savings' | 'checking';
@@ -123,8 +125,9 @@ export interface Tournament {
   // Prize structure
   prizes: PrizeRank[];
 
-  // Claimed ranks (for form validation)
+  // Claimed ranks and emails (for form validation)
   claimedRanks?: string[];
+  claimedEmails?: string[];
 
   // Metadata
   createdAt: string; // ISO 8601 timestamp

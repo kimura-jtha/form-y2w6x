@@ -22,6 +22,7 @@
     "@tiptap/starter-kit": "^3.13.0",
     "dayjs": "^1.11.19",
     "encoding-japanese": "^2.2.0",
+    "html2pdf.js": "^0.12.1",
     "i18next": "^25.7.2",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "@types/encoding-japanese": "^2",
+    "@types/html2pdf.js": "^0.10.0",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",

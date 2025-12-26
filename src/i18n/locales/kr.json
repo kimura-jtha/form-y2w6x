@@ -28,6 +28,15 @@
       "title": "비밀번호 변경"
     },
     "forms": {
+      "delete": {
+        "confirm": "삭제",
+        "confirmMessage": "이 양식을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+        "confirmTitle": "양식 삭제",
+        "error": "오류",
+        "errorMessage": "양식 삭제에 실패했습니다. 다시 시도해 주세요.",
+        "success": "성공",
+        "successMessage": "양식이 성공적으로 삭제되었습니다."
+      },
       "detail": {
         "agreements": "계약",
         "bankInfo": "은행 정보",
@@ -39,22 +48,38 @@
         "tournamentInfo": "토너먼트 정보"
       },
       "export": {
+        "confirm": "TODO: translate me!!!",
         "error": "데이터 내보내기에 실패했습니다. 다시 시도해 주세요.",
+        "errorMessage": "TODO: translate me!!!",
         "noData": "선택한 토너먼트에 내보낼 데이터가 없습니다.",
-        "noTournamentSelected": "내보낼 토너먼트를 선택하세요."
+        "noTournamentSelected": "내보낼 토너먼트를 선택하세요.",
+        "options": {
+          "all": "TODO: translate me!!!",
+          "allDescription": "TODO: translate me!!!",
+          "japanese": "TODO: translate me!!!",
+          "japaneseDescription": "TODO: translate me!!!",
+          "terms": "TODO: translate me!!!",
+          "termsDescription": "TODO: translate me!!!"
+        },
+        "selectType": "TODO: translate me!!!",
+        "selectTypeDescription": "TODO: translate me!!!",
+        "success": "TODO: translate me!!!",
+        "successMessage": "TODO: translate me!!!"
       },
       "exportCSV": "CSV 내보내기",
       "exportHelper": "CSV 데이터를 내보내려면 아래 필터를 사용하여 토너먼트를 선택하세요.",
       "filters": {
-        "noTournamentsFound": "토너먼트를 찾을 수 없습니다.",
         "apply": "적용하다",
         "clear": "분명한",
         "dateFrom": "시작일",
         "dateFromPlaceholder": "시작일을 선택하세요",
-        "dateTo": "날짜",
-        "dateToPlaceholder": "종료일을 선택하세요",
         "dateRange": "토너먼트 날짜",
         "dateRangePlaceholder": "날짜 범위 선택",
+        "dateTo": "날짜",
+        "dateToPlaceholder": "종료일을 선택하세요",
+        "eventName": "TODO: translate me!!!",
+        "eventNamePlaceholder": "TODO: translate me!!!",
+        "noTournamentsFound": "토너먼트를 찾을 수 없습니다.",
         "status": "상태",
         "statusPlaceholder": "모든 상태",
         "termsAgreed": "약관 동의",
@@ -78,15 +103,6 @@
         }
       },
       "refresh": "새로 고치다",
-      "delete": {
-        "confirmTitle": "양식 삭제",
-        "confirmMessage": "이 양식을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
-        "confirm": "삭제",
-        "success": "성공",
-        "successMessage": "양식이 성공적으로 삭제되었습니다.",
-        "error": "오류",
-        "errorMessage": "양식 삭제에 실패했습니다. 다시 시도해 주세요."
-      },
       "status": {
         "approved": "승인됨",
         "pending": "보류 중",
@@ -97,16 +113,16 @@
         "amount": "양",
         "createdAt": "제작일:",
         "email": "이메일",
+        "eventName": "이벤트 이름",
         "formsFound": "발견된 양식(들)",
-        "latestFormsFound": "최근 양식(들)",
         "id": "ID",
+        "latestFormsFound": "최근 양식(들)",
         "noForms": "양식을 찾을 수 없습니다.",
         "playerName": "선수 이름",
         "rank": "계급",
         "status": "상태",
         "termsAgreed": "약관 동의",
-        "tournament": "토너먼트",
-        "eventName": "이벤트 이름"
+        "tournament": "토너먼트"
       },
       "title": "양식 관리"
     },
@@ -223,10 +239,6 @@
             "description": "이름",
             "example": "타로우"
           },
-          "lastName": {
-            "description": "성",
-            "example": "야마다"
-          },
           "firstNameKana": {
             "description": "가타카나로 이름",
             "example": "타로우"
@@ -234,6 +246,10 @@
           "firstNameKanji": {
             "description": "한자로 쓴 이름",
             "example": "타로"
+          },
+          "lastName": {
+            "description": "성",
+            "example": "야마다"
           },
           "lastNameKana": {
             "description": "가타카나로 표기한 성",
@@ -350,11 +366,13 @@
         "tournamentInfo": "토너먼트 정보"
       },
       "filters": {
-        "tournamentName": "토너먼트 이름",
-        "tournamentNamePlaceholder": "이벤트 이름 또는 토너먼트 이름으로 검색",
+        "clear": "지우다",
         "dateRange": "토너먼트 날짜",
         "dateRangePlaceholder": "날짜 범위를 선택하세요",
-        "clear": "지우다"
+        "eventName": "TODO: translate me!!!",
+        "eventNamePlaceholder": "TODO: translate me!!!",
+        "tournamentName": "토너먼트 이름",
+        "tournamentNamePlaceholder": "이벤트 이름 또는 토너먼트 이름으로 검색"
       },
       "import": {
         "button": "CSV 가져오기",
@@ -412,10 +430,10 @@
       },
       "morePrizes": "더 많은 상품",
       "pagination": {
-        "previous": "이전",
         "next": "다음",
+        "of": "의",
         "page": "페이지",
-        "of": "의"
+        "previous": "이전"
       },
       "participants": "참가자들",
       "prizes": "상품",
@@ -429,15 +447,15 @@
         "upcoming": "다가오는"
       },
       "table": {
-        "eventName": "이벤트 이름",
-        "tournamentName": "토너먼트 이름",
-        "date": "날짜",
-        "status": "상태",
-        "prizes": "상품",
         "actions": "행위",
+        "date": "날짜",
+        "eventName": "이벤트 이름",
+        "itemsPerPage": "페이지당 아이템",
         "noTournaments": "토너먼트를 찾을 수 없습니다.",
-        "tournamentsFound": "토너먼트를 찾았습니다.",
-        "itemsPerPage": "페이지당 아이템"
+        "prizes": "상품",
+        "status": "상태",
+        "tournamentName": "토너먼트 이름",
+        "tournamentsFound": "토너먼트를 찾았습니다."
       },
       "title": "토너먼트 관리",
       "viewDetails": "상세 정보 보기"
@@ -551,21 +569,21 @@
         "label": "이메일 주소",
         "placeholder": "example@example.com"
       },
-      "firstNameKana": {
-        "label": "이름 (가타카나)",
-        "placeholder": "타로우"
-      },
       "firstName": {
         "label": "이름",
         "placeholder": "타로우"
       },
-      "lastName": {
-        "label": "성",
-        "example": "야마다"
+      "firstNameKana": {
+        "label": "이름 (가타카나)",
+        "placeholder": "타로우"
       },
       "firstNameKanji": {
         "label": "이름 (한자)",
         "placeholder": "타로우"
+      },
+      "lastName": {
+        "label": "성",
+        "placeholder": "TODO: translate me!!!"
       },
       "lastNameKana": {
         "description": "전체 너비의 가타카나로 입력해 주세요.",
@@ -671,6 +689,7 @@
       "branch": "나뭇가지",
       "title": "은행 정보"
     },
+    "downloadReceiptButton": "영수증 다운로드",
     "error": {
       "agreeFailed": "조건에 동의하지 못했습니다",
       "formIdNotFound": "URL에서 폼 ID를 찾을 수 없습니다.",
@@ -689,6 +708,7 @@
       "tournament": "토너먼트"
     },
     "loading": "폼 데이터를 불러오는 중...",
+    "receiptTitle": "영수증",
     "termsAlert": {
       "message": "아래 동의합니다를 클릭하시면 제공하신 모든 정보가 정확하며 경품 지급에 관한 서비스 약관에 동의하시는 것으로 간주됩니다.",
       "title": "서비스 약관"

@@ -6,6 +6,7 @@ import {
   Alert,
   Box,
   Button,
+  Center,
   Collapse,
   Container,
   Divider,
@@ -18,9 +19,16 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import { IconAlertCircle, IconCheck, IconChevronDown, IconChevronUp } from '@tabler/icons-react';
+import {
+  IconAlertCircle,
+  IconCheck,
+  IconChevronDown,
+  IconChevronUp,
+  IconDownload,
+} from '@tabler/icons-react';
+import html2pdf from 'html2pdf.js';
 import { useTranslation } from 'react-i18next';
-import { getTermsOfServiceTemplate } from '@/lib/lambda/template';
+import { getReceiptTemplate, getTermsOfServiceTemplate } from '@/lib/lambda/template';
 import { agreeTermsOfService, getFormById } from '@/lib/lambda/form';
 import type { PrizeClaimFormValues } from '@/types';
 
@@ -29,12 +37,14 @@ export function TermsAgreementPage() {
   const [opened, { toggle }] = useDisclosure(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState<PrizeClaimFormValues | null>(null);
   const [formId, setFormId] = useState<string | null>(null);
   const [hash, setHash] = useState<string | null>(null);
   const [alreadyAgreed, setAlreadyAgreed] = useState(false);
   const [termsOfService, setTermsOfService] = useState<string>('');
+  const [receipt, setReceipt] = useState<string>('');
 
   // Extract form ID from URL hash
   useEffect(() => {
@@ -64,10 +74,22 @@ export function TermsAgreementPage() {
   useEffect(() => {
     if (formData) {
       getTermsOfServiceTemplate().then((template) => {
-        setTermsOfService(renderTemplate(template.content, extractFormVariables(formData)));
+        setTermsOfService(
+          renderTemplate(template.content, extractFormVariables(formData, formData.createdAt)),
+        );
       });
     }
   }, [formData]);
+
+  useEffect(() => {
+    if (alreadyAgreed && formData) {
+      getReceiptTemplate().then((template) => {
+        setReceipt(
+          renderTemplate(template.content, extractFormVariables(formData, formData.createdAt)),
+        );
+      });
+    }
+  }, [formData, alreadyAgreed]);
 
   // Fetch form data when formId is available
   useEffect(() => {
@@ -106,6 +128,76 @@ export function TermsAgreementPage() {
       setError(error_ instanceof Error ? error_.message : t('termsAgreement.error.agreeFailed'));
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleDownloadReceipt = async () => {
+    if (!receipt) return;
+
+    try {
+      setIsDownloading(true);
+      setError(null);
+
+      // Create a temporary container with styled receipt content
+      const element = document.createElement('div');
+      element.innerHTML = `
+        <div style="
+          font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+          padding: 8mm;
+          line-height: 1.4;
+          font-size: 10pt;
+        ">
+          ${receipt}
+        </div>
+      `;
+
+      // Apply additional styles to ensure proper rendering
+      const styles = `
+        h1 { font-size: 14pt; margin: 0 0 0.5em 0; }
+        h2 { font-size: 12pt; margin: 0.8em 0 0.4em 0; }
+        h3, h4, h5, h6 { font-size: 11pt; margin: 0.6em 0 0.3em 0; }
+        p { margin: 0.3em 0; font-size: 10pt; }
+        table { border-collapse: collapse; width: 100%; margin: 0.5em 0; font-size: 9pt; }
+        th, td { border: 1px solid #ddd; padding: 4px 6px; text-align: left; }
+        th { background-color: #f5f5f5; font-weight: 600; }
+      `;
+
+      const styleElement = document.createElement('style');
+      styleElement.textContent = styles;
+      element.append(styleElement);
+
+      // Configure html2pdf options for 18.9cm x 10.9cm page
+      const options = {
+        margin: [8, 8, 8, 8] as [number, number, number, number], // 8mm margin on all sides
+        filename: `receipt_${formId}_${new Date().toLocaleString('ja-JP', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+          second: 'numeric',
+          timeZone: 'Asia/Tokyo', // Essential for Japan Standard Time
+        })}.pdf`,
+        image: { type: 'jpeg' as const, quality: 0.98 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          letterRendering: true,
+        },
+        jsPDF: {
+          unit: 'mm' as const,
+          format: [189, 109] as [number, number], // 18.9cm x 10.9cm in mm
+          orientation: 'landscape' as const,
+        },
+      };
+
+      // Generate and download PDF
+      await html2pdf().set(options).from(element).save();
+    } catch (error_) {
+      console.error('PDF generation error:', error_);
+      setError(error_ instanceof Error ? error_.message : t('termsAgreement.error.downloadFailed'));
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -150,6 +242,22 @@ export function TermsAgreementPage() {
 
   return (
     <Container size="md" py="xl">
+      {isDownloading && (
+        <Center
+          style={{
+            position: 'fixed',
+            top: 0,
+            opacity: 0.9,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'white',
+            zIndex: 1000,
+          }}
+        >
+          <Loader size="lg" />
+        </Center>
+      )}
       <Paper shadow="sm" p="xl" radius="md">
         <Stack gap="lg">
           <Title order={2}>{t('termsAgreement.title')}</Title>
@@ -254,25 +362,6 @@ export function TermsAgreementPage() {
             <Box></Box>
           </Collapse>
 
-          {alreadyAgreed ? (
-            <Alert
-              icon={<IconCheck size={16} />}
-              title={t('termsAgreement.alreadyConfirmed.title')}
-              color="green"
-              mb="lg"
-            >
-              {t('termsAgreement.alreadyConfirmed.message')}
-            </Alert>
-          ) : (
-            <Alert
-              icon={<IconAlertCircle size={16} />}
-              title={t('termsAgreement.termsAlert.title')}
-              color="blue"
-            >
-              <Text size="sm">{t('termsAgreement.termsAlert.message')}</Text>
-            </Alert>
-          )}
-
           <Box>
             <ScrollArea h={400} type="always" offsetScrollbars>
               <Box
@@ -283,11 +372,56 @@ export function TermsAgreementPage() {
                 dangerouslySetInnerHTML={{ __html: termsOfService }}
               />
             </ScrollArea>
+            {alreadyAgreed ? (
+              <Alert
+                icon={<IconCheck size={16} />}
+                title={t('termsAgreement.alreadyConfirmed.title')}
+                color="green"
+                mb="lg"
+              >
+                {t('termsAgreement.alreadyConfirmed.message')}
+              </Alert>
+            ) : (
+              <Alert
+                icon={<IconAlertCircle size={16} />}
+                title={t('termsAgreement.termsAlert.title')}
+                color="blue"
+              >
+                <Text size="sm">{t('termsAgreement.termsAlert.message')}</Text>
+              </Alert>
+            )}
           </Box>
 
-          <Button disabled={alreadyAgreed} onClick={handleAgree} loading={isSubmitting} size="lg">
-            {t('termsAgreement.agreeButton')}
-          </Button>
+          {!alreadyAgreed && (
+            <Button onClick={handleAgree} loading={isSubmitting} size="lg">
+              {t('termsAgreement.agreeButton')}
+            </Button>
+          )}
+
+          {alreadyAgreed && (
+            <>
+              <Title order={2}>{t('termsAgreement.receiptTitle')}</Title>
+              <Box style={{ opacity: isDownloading ? 0 : 1 }}>
+                <ScrollArea h={400} type="always" offsetScrollbars>
+                  <Box
+                    p="md"
+                    style={{
+                      borderRadius: 'var(--mantine-radius-sm)',
+                    }}
+                    dangerouslySetInnerHTML={{ __html: receipt }}
+                  />
+                </ScrollArea>
+              </Box>
+              <Button
+                onClick={handleDownloadReceipt}
+                loading={isDownloading}
+                size="lg"
+                leftSection={<IconDownload size={18} />}
+              >
+                {t('termsAgreement.downloadReceiptButton')}
+              </Button>
+            </>
+          )}
         </Stack>
       </Paper>
     </Container>
@@ -312,11 +446,19 @@ const renderTemplate = (template: string, variables: Record<string, string>): st
  * @param formContent - Prize form content data
  * @returns Object with formatted form variables
  */
-const extractFormVariables = (formContent: PrizeClaimFormValues) => {
+const extractFormVariables = (formContent: PrizeClaimFormValues, createdAt?: string) => {
   const isSavings = formContent.accountType === 'savings';
   const accountTypeJa = isSavings ? '当座預金' : '普通預金';
   const accountTypeEn = isSavings ? 'Savings' : 'Checking';
   return {
+    today: createdAt
+      ? new Date(createdAt).toLocaleDateString('ja-JP', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          timeZone: 'Asia/Tokyo', // Essential for JST
+        })
+      : '-',
     year: new Date().getFullYear().toString(),
     lastNameKanji: formContent.lastNameKanji,
     firstNameKanji: formContent.firstNameKanji,

@@ -15,6 +15,7 @@ type ApiTournament = {
   status: TournamentStatus;
   prizes: PrizeRank[];
   claimedRanks?: string[];
+  claimedEmails?: string[];
   createdAt: string;
   updatedAt: string;
 };

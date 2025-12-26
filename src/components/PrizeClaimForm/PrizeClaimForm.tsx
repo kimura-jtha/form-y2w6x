@@ -106,6 +106,7 @@ export function PrizeClaimForm() {
         postalCode: '1000001',
         address: '東京都千代田区千代田1-1',
         phoneNumber: '090-1234-5678',
+        // cspell:disable-next-line
         email: `check-${Math.random().toString(36).slice(2, 8)}@jtha.info`,
         tournamentDate: availableDates[0] || '',
         accountType: 'savings',
@@ -204,7 +205,7 @@ export function PrizeClaimForm() {
       formValues.rank &&
       formValues.privacyAgreed,
     );
-  }, [formValues]);
+  }, [formValues, isJapanese]);
 
   // Bank options for select
   const bankOptions = useMemo(

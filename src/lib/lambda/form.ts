@@ -61,6 +61,7 @@ export async function getFormById(
     form: {
       id: string;
       formContent: PrizeClaimFormValues;
+      createdAt?: string;
     };
   }>({
     path: `forms/${formId}?hash=${hash}`,
@@ -68,7 +69,10 @@ export async function getFormById(
   });
   return {
     formId: response.form.id,
-    formData: response.form.formContent,
+    formData: {
+      ...response.form.formContent,
+      createdAt: response.form.createdAt,
+    },
   };
 }
 

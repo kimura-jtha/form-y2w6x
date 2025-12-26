@@ -28,6 +28,15 @@
       "title": "更改密码"
     },
     "forms": {
+      "delete": {
+        "confirm": "删除",
+        "confirmMessage": "你确定要删除这个表格吗？这个操作无法撤销。",
+        "confirmTitle": "删除表格",
+        "error": "错误",
+        "errorMessage": "删除表格失败。请重试。",
+        "success": "成功",
+        "successMessage": "表格已成功删除"
+      },
       "detail": {
         "agreements": "协议",
         "bankInfo": "银行信息",
@@ -39,22 +48,38 @@
         "tournamentInfo": "赛事信息"
       },
       "export": {
+        "confirm": "TODO: translate me!!!",
         "error": "数据导出失败，请重试。",
+        "errorMessage": "TODO: translate me!!!",
         "noData": "所选赛事没有可导出的数据",
-        "noTournamentSelected": "请选择要导出的赛事"
+        "noTournamentSelected": "请选择要导出的赛事",
+        "options": {
+          "all": "TODO: translate me!!!",
+          "allDescription": "TODO: translate me!!!",
+          "japanese": "TODO: translate me!!!",
+          "japaneseDescription": "TODO: translate me!!!",
+          "terms": "TODO: translate me!!!",
+          "termsDescription": "TODO: translate me!!!"
+        },
+        "selectType": "TODO: translate me!!!",
+        "selectTypeDescription": "TODO: translate me!!!",
+        "success": "TODO: translate me!!!",
+        "successMessage": "TODO: translate me!!!"
       },
       "exportCSV": "导出 CSV 文件",
       "exportHelper": "请使用下方的筛选器选择赛事以导出该赛事的 CSV 数据。",
       "filters": {
-        "noTournamentsFound": "未找到赛事",
         "apply": "申请",
         "clear": "清除",
         "dateFrom": "日期从",
         "dateFromPlaceholder": "选择开始日期",
-        "dateTo": "日期",
-        "dateToPlaceholder": "选择结束日期",
         "dateRange": "锦标赛日期",
         "dateRangePlaceholder": "选择日期范围",
+        "dateTo": "日期",
+        "dateToPlaceholder": "选择结束日期",
+        "eventName": "TODO: translate me!!!",
+        "eventNamePlaceholder": "TODO: translate me!!!",
+        "noTournamentsFound": "未找到赛事",
         "status": "地位",
         "statusPlaceholder": "所有状态",
         "termsAgreed": "双方同意的条款",
@@ -78,15 +103,6 @@
         }
       },
       "refresh": "刷新",
-      "delete": {
-        "confirmTitle": "删除表格",
-        "confirmMessage": "你确定要删除这个表格吗？这个操作无法撤销。",
-        "confirm": "删除",
-        "success": "成功",
-        "successMessage": "表格已成功删除",
-        "error": "错误",
-        "errorMessage": "删除表格失败。请重试。"
-      },
       "status": {
         "approved": "得到正式认可的",
         "pending": "待办的",
@@ -97,16 +113,16 @@
         "amount": "数量",
         "createdAt": "创建于",
         "email": "电子邮件",
+        "eventName": "事件名称",
         "formsFound": "找到表格",
-        "latestFormsFound": "最新找到的表格",
         "id": "ID",
+        "latestFormsFound": "最新找到的表格",
         "noForms": "未找到表格",
         "playerName": "玩家姓名",
         "rank": "秩",
         "status": "地位",
         "termsAgreed": "双方同意的条款",
-        "tournament": "比赛",
-        "eventName": "事件名称"
+        "tournament": "比赛"
       },
       "title": "表单管理"
     },
@@ -223,10 +239,6 @@
             "description": "名字",
             "example": "太郎"
           },
-          "lastName": {
-            "description": "姓氏",
-            "example": "山田"
-          },
           "firstNameKana": {
             "description": "片假名",
             "example": "タロウ"
@@ -234,6 +246,10 @@
           "firstNameKanji": {
             "description": "名字的汉字写法",
             "example": "芋头"
+          },
+          "lastName": {
+            "description": "姓氏",
+            "example": "山田"
           },
           "lastNameKana": {
             "description": "片假名姓氏",
@@ -350,11 +366,13 @@
         "tournamentInfo": "赛事信息"
       },
       "filters": {
-        "tournamentName": "赛事名称",
-        "tournamentNamePlaceholder": "按赛事名称搜索",
+        "clear": "清除",
         "dateRange": "锦标赛日期",
         "dateRangePlaceholder": "选择日期范围",
-        "clear": "清除"
+        "eventName": "TODO: translate me!!!",
+        "eventNamePlaceholder": "TODO: translate me!!!",
+        "tournamentName": "赛事名称",
+        "tournamentNamePlaceholder": "按赛事名称搜索"
       },
       "import": {
         "button": "导入 CSV 文件",
@@ -412,10 +430,10 @@
       },
       "morePrizes": "更多奖品",
       "pagination": {
-        "previous": "上一页",
         "next": "下一页",
+        "of": "的",
         "page": "页",
-        "of": "的"
+        "previous": "上一页"
       },
       "participants": "参与者",
       "prizes": "奖品",
@@ -429,15 +447,15 @@
         "upcoming": "即将推出"
       },
       "table": {
-        "eventName": "赛事名称",
-        "tournamentName": "锦标赛名称",
-        "date": "日期",
-        "status": "状态",
-        "prizes": "奖品",
         "actions": "行动",
+        "date": "日期",
+        "eventName": "赛事名称",
+        "itemsPerPage": "每页项目",
         "noTournaments": "未找到锦标赛",
-        "tournamentsFound": "找到锦标赛",
-        "itemsPerPage": "每页项目"
+        "prizes": "奖品",
+        "status": "状态",
+        "tournamentName": "锦标赛名称",
+        "tournamentsFound": "找到锦标赛"
       },
       "title": "赛事管理",
       "viewDetails": "查看详情"
@@ -551,21 +569,21 @@
         "label": "电子邮件",
         "placeholder": "example@example.com"
       },
-      "firstNameKana": {
-        "label": "名字（片假名）",
-        "placeholder": "タロウ"
-      },
       "firstName": {
         "label": "名字",
         "placeholder": "太郎"
       },
-      "lastName": {
-        "label": "姓氏",
-        "example": "山田"
+      "firstNameKana": {
+        "label": "名字（片假名）",
+        "placeholder": "タロウ"
       },
       "firstNameKanji": {
         "label": "名字（汉字）",
         "placeholder": "太郎"
+      },
+      "lastName": {
+        "label": "姓氏",
+        "placeholder": "山田"
       },
       "lastNameKana": {
         "description": "请用全角片假名输入。",
@@ -671,6 +689,7 @@
       "branch": "分支",
       "title": "银行信息"
     },
+    "downloadReceiptButton": "下载收据",
     "error": {
       "agreeFailed": "未能就条款达成一致",
       "formIdNotFound": "URL 中未找到表单 ID",
@@ -689,6 +708,7 @@
       "tournament": "比赛"
     },
     "loading": "正在加载表单数据...",
+    "receiptTitle": "收据",
     "termsAlert": {
       "message": "点击下方的“我同意”按钮，即表示您确认所提供的所有信息均准确无误，并同意我们的奖金发放服务条款。에 관한 서비스 약관에 동의하시는 것으로 간주됩니다.",
       "title": "服务条款"

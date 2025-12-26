@@ -28,6 +28,15 @@
       "title": "パスワード変更"
     },
     "forms": {
+      "delete": {
+        "confirm": "削除",
+        "confirmMessage": "このフォームを削除してもよろしいですか？この操作は元に戻せません。",
+        "confirmTitle": "フォームを削除",
+        "error": "エラー",
+        "errorMessage": "フォームの削除に失敗しました。もう一度お試しください。",
+        "success": "成功",
+        "successMessage": "フォームが正常に削除されました"
+      },
       "detail": {
         "agreements": "同意事項",
         "bankInfo": "銀行情報",
@@ -60,17 +69,17 @@
       "exportCSV": "CSVエクスポート",
       "exportHelper": "CSVデータをエクスポートするには、下記のフィルターでトーナメントを選択してください。",
       "filters": {
-        "noTournamentsFound": "トーナメントが見つかりません",
         "apply": "適用",
         "clear": "クリア",
         "dateFrom": "開始日",
         "dateFromPlaceholder": "開始日を選択",
-        "dateTo": "終了日",
-        "dateToPlaceholder": "終了日を選択",
         "dateRange": "トーナメント開催日",
         "dateRangePlaceholder": "期間を選択",
+        "dateTo": "終了日",
+        "dateToPlaceholder": "終了日を選択",
         "eventName": "イベント名",
         "eventNamePlaceholder": "イベント名で検索",
+        "noTournamentsFound": "トーナメントが見つかりません",
         "status": "ステータス",
         "statusPlaceholder": "全てのステータス",
         "termsAgreed": "利用規約同意",
@@ -94,15 +103,6 @@
         }
       },
       "refresh": "更新",
-      "delete": {
-        "confirmTitle": "フォームを削除",
-        "confirmMessage": "このフォームを削除してもよろしいですか？この操作は元に戻せません。",
-        "confirm": "削除",
-        "success": "成功",
-        "successMessage": "フォームが正常に削除されました",
-        "error": "エラー",
-        "errorMessage": "フォームの削除に失敗しました。もう一度お試しください。"
-      },
       "status": {
         "approved": "承認済み",
         "pending": "保留中",
@@ -113,16 +113,16 @@
         "amount": "金額",
         "createdAt": "作成日時",
         "email": "メールアドレス",
+        "eventName": "イベント名",
         "formsFound": "件のフォーム",
-        "latestFormsFound": "最新のフォーム",
         "id": "ID",
+        "latestFormsFound": "最新のフォーム",
         "noForms": "フォームが見つかりません",
         "playerName": "プレイヤー名",
         "rank": "順位",
         "status": "ステータス",
         "termsAgreed": "利用規約同意",
-        "tournament": "トーナメント",
-        "eventName": "イベント名"
+        "tournament": "トーナメント"
       },
       "title": "フォーム管理"
     },
@@ -147,7 +147,11 @@
         "privacySubjectLabel": "プライバシーポリシーサブジェクト",
         "receiptLabel": "領収書テンプレートコンテンツ",
         "receiptSubjectLabel": "領収書テンプレートサブジェクト",
+        "saveConfirmationEmail": "TODO: translate me!!!",
+        "saveContract": "TODO: translate me!!!",
+        "saveContractEmail": "TODO: translate me!!!",
         "savePrivacy": "プライバシーポリシーを保存",
+        "saveReceipt": "TODO: translate me!!!",
         "saveTerms": "利用規約を保存",
         "termsLabel": "利用規約コンテンツ",
         "termsSubjectLabel": "利用規約サブジェクト",
@@ -235,10 +239,6 @@
             "description": "名",
             "example": "太郎"
           },
-          "lastName": {
-            "description": "姓",
-            "example": "山田"
-          },
           "firstNameKana": {
             "description": "名（カタカナ）",
             "example": "タロウ"
@@ -246,6 +246,10 @@
           "firstNameKanji": {
             "description": "名（漢字）",
             "example": "太郎"
+          },
+          "lastName": {
+            "description": "姓",
+            "example": "山田"
           },
           "lastNameKana": {
             "description": "姓（カタカナ）",
@@ -362,13 +366,13 @@
         "tournamentInfo": "トーナメント情報"
       },
       "filters": {
+        "clear": "クリア",
+        "dateRange": "開催日",
+        "dateRangePlaceholder": "日付範囲を選択",
         "eventName": "イベント名",
         "eventNamePlaceholder": "イベント名で検索",
         "tournamentName": "トーナメント名",
-        "tournamentNamePlaceholder": "イベント名またはトーナメント名で検索",
-        "dateRange": "開催日",
-        "dateRangePlaceholder": "日付範囲を選択",
-        "clear": "クリア"
+        "tournamentNamePlaceholder": "イベント名またはトーナメント名で検索"
       },
       "import": {
         "button": "CSVインポート",
@@ -426,10 +430,10 @@
       },
       "morePrizes": "その他の賞金",
       "pagination": {
-        "previous": "前へ",
         "next": "次へ",
+        "of": "の",
         "page": "ページ",
-        "of": "の"
+        "previous": "前へ"
       },
       "participants": "名参加",
       "prizes": "賞金",
@@ -443,15 +447,15 @@
         "upcoming": "開催予定"
       },
       "table": {
-        "eventName": "大会名",
-        "tournamentName": "トーナメント名",
-        "date": "日付",
-        "status": "ステータス",
-        "prizes": "賞金",
         "actions": "アクション",
+        "date": "日付",
+        "eventName": "大会名",
+        "itemsPerPage": "ページあたりのアイテム",
         "noTournaments": "トーナメントが見つかりません",
-        "tournamentsFound": "トーナメントが見つかりました",
-        "itemsPerPage": "ページあたりのアイテム"
+        "prizes": "賞金",
+        "status": "ステータス",
+        "tournamentName": "トーナメント名",
+        "tournamentsFound": "トーナメントが見つかりました"
       },
       "title": "トーナメント管理",
       "viewDetails": "詳細を見る"
@@ -565,21 +569,21 @@
         "label": "メールアドレス",
         "placeholder": "example@example.com"
       },
-      "firstNameKana": {
-        "label": "名（カナ）",
-        "placeholder": "タロウ"
-      },
       "firstName": {
         "label": "名",
         "placeholder": "太郎"
       },
-      "lastName": {
-        "label": "姓",
-        "example": "山田"
+      "firstNameKana": {
+        "label": "名（カナ）",
+        "placeholder": "タロウ"
       },
       "firstNameKanji": {
         "label": "名（漢字）",
         "placeholder": "太郎"
+      },
+      "lastName": {
+        "label": "姓",
+        "placeholder": "TODO: translate me!!!"
       },
       "lastNameKana": {
         "description": "全角カタカナで入力してください",
@@ -662,6 +666,7 @@
     },
     "title": "賞金請求フォーム",
     "validation": {
+      "emailAlreadyClaimed": "このメールアドレスは既にこのトーナメントで賞金請求に使用されています",
       "invalidAccountNumber": "7桁の口座番号を入力してください",
       "invalidEmail": "有効なメールアドレスを入力してください",
       "invalidPhoneNumber": "有効な電話番号を入力してください（例: 03-1234-5678）",
@@ -685,8 +690,10 @@
       "branch": "支店",
       "title": "銀行情報"
     },
+    "downloadReceiptButton": "領収書をダウンロード",
     "error": {
       "agreeFailed": "利用規約への同意に失敗しました",
+      "downloadFailed": "ダウンロードウィンドウを開けませんでした。ポップアップブロッカーの設定を確認してください。",
       "formIdNotFound": "URLにフォームIDが見つかりません",
       "formNotFound": "フォームデータが見つかりません",
       "hashNotFound": "URLにハッシュが見つかりません",
@@ -703,6 +710,7 @@
       "tournament": "トーナメント"
     },
     "loading": "フォームデータを読み込み中...",
+    "receiptTitle": "領収書",
     "termsAlert": {
       "message": "以下の「同意する」をクリックすることで、提供されたすべての情報が正確であることを確認し、賞金支払いに関する利用規約に同意したことになります。",
       "title": "利用規約"
