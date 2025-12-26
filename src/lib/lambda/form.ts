@@ -22,10 +22,6 @@ export async function submitPrizeClaimForm(
   formData: PrizeClaimFormValues,
 ): Promise<PrizeClaimSubmitResponse> {
   try {
-    const debug = true;
-    if (debug) {
-      throw new Error('Debug mode');
-    }
     const response = await fetchLambda<{ form: { id: string } }>({
       path: 'forms',
       method: 'POST',
