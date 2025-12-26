@@ -30,6 +30,8 @@ export async function submitPrizeClaimForm(
       },
     });
 
+    localStorage.removeItem('__tournaments__');
+
     return {
       success: true,
       message: 'Prize claim submitted successfully',

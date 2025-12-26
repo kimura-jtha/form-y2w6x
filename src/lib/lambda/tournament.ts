@@ -212,6 +212,7 @@ function convertApiTournamentToTournament(apiTournament: ApiTournament): Tournam
     status: apiTournament.status,
     prizes: apiTournament.prizes,
     claimedRanks: apiTournament.claimedRanks || [],
+    claimedEmails: apiTournament.claimedEmails || [],
     createdAt: apiTournament.createdAt,
     updatedAt: apiTournament.updatedAt,
   };
