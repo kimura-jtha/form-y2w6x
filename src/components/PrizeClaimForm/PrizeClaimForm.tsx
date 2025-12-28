@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
+import { alive } from '@/lib/lambda/health';
+import { getPrivacyPolicyTemplate } from '@/lib/lambda/template';
+import type { AccountType } from '@/types';
 import {
   Alert,
   Box,
@@ -22,10 +25,7 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { IconAlertCircle } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
-import { alive } from '@/lib/lambda/health';
-import { getPrivacyPolicyTemplate } from '@/lib/lambda/template';
 import { usePrizeClaimForm } from './usePrizeClaimForm';
-import type { AccountType } from '@/types';
 
 export function PrizeClaimForm() {
   const { t, i18n } = useTranslation();
@@ -108,7 +108,7 @@ export function PrizeClaimForm() {
         address: '東京都千代田区千代田1-1',
         phoneNumber: '090-1234-5678',
         // cspell:disable-next-line
-        email: `check-${Math.random().toString(36).slice(2, 8)}@jtha.info`,
+        email: `check-${Math.random().toString(36).slice(2, 8)}@jppa.jp`,
         tournamentDate: availableDates[0] || '',
         accountType: 'savings',
         accountNumber: '1234567',

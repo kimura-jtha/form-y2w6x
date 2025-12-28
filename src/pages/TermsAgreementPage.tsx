@@ -216,6 +216,7 @@ export function TermsAgreementPage() {
 
       // Save receipt URL to backend
       await saveReceiptUrl(formId, s3Url, hash);
+      setReceiptUrl(s3Url);
 
       // Download file locally for user
       const link = document.createElement('a');
