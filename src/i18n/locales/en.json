@@ -690,7 +690,7 @@
       "branch": "Branch",
       "title": "Bank Information"
     },
-    "downloadReceiptButton": "Download Receipt",
+    "issueReceiptButton": "Issue Receipt",
     "error": {
       "agreeFailed": "Failed to agree to terms",
       "downloadFailed": "Failed to open download window. Please check your popup blocker settings.",
@@ -715,6 +715,6 @@
       "message": "By clicking \"I Agree\" below, you confirm that all the information provided is accurate and you agree to our terms of service for prize disbursement.",
       "title": "Terms of Service"
     },
-    "title": "Terms of Service Agreement"
+    "title": "About Pro Contact Form"
   }
 }

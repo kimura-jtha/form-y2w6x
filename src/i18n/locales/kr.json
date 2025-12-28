@@ -689,7 +689,7 @@
       "branch": "나뭇가지",
       "title": "은행 정보"
     },
-    "downloadReceiptButton": "영수증 다운로드",
+    "issueReceiptButton": "영수증 발행",
     "error": {
       "agreeFailed": "조건에 동의하지 못했습니다",
       "formIdNotFound": "URL에서 폼 ID를 찾을 수 없습니다.",
@@ -713,6 +713,6 @@
       "message": "아래 동의합니다를 클릭하시면 제공하신 모든 정보가 정확하며 경품 지급에 관한 서비스 약관에 동의하시는 것으로 간주됩니다.",
       "title": "서비스 약관"
     },
-    "title": "서비스 이용약관"
+    "title": "프로 연락처 양식에 대하여"
   }
 }

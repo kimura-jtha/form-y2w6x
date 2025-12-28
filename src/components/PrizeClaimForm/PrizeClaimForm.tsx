@@ -294,6 +294,8 @@ export function PrizeClaimForm() {
         accountHolderName: '',
       });
     }
+    form.validate();
+    console.log(form.errors);
     openConfirm();
   });
 

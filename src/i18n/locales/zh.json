@@ -689,7 +689,7 @@
       "branch": "分支",
       "title": "银行信息"
     },
-    "downloadReceiptButton": "下载收据",
+    "issueReceiptButton": "发放收据",
     "error": {
       "agreeFailed": "未能就条款达成一致",
       "formIdNotFound": "URL 中未找到表单 ID",
@@ -713,6 +713,6 @@
       "message": "点击下方的“我同意”按钮，即表示您确认所提供的所有信息均准确无误，并同意我们的奖金发放服务条款。에 관한 서비스 약관에 동의하시는 것으로 간주됩니다.",
       "title": "服务条款"
     },
-    "title": "服务条款协议"
+    "title": "关于 Pro 联系表单"
   }
 }

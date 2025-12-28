@@ -34,7 +34,7 @@ import type { PrizeClaimFormValues } from '@/types';
 
 export function TermsAgreementPage() {
   const { t } = useTranslation();
-  const [opened, { toggle }] = useDisclosure(false);
+  const [opened, { toggle }] = useDisclosure(true);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
@@ -315,49 +315,52 @@ export function TermsAgreementPage() {
                   <Text size="sm">{formData.playersId}</Text>
                 </Grid.Col>
               </Grid>
+              {formData.bankName && (<>
+                <Divider my="lg" />
+                <Text fw={600} size="lg" mb="xs">
+                  {t('termsAgreement.bankInfo.title')}
+                </Text>
+                <Grid>
+                  <Grid.Col span={6}>
+                    <Text size="xs" c="dimmed">
+                      {t('termsAgreement.bankInfo.bank')}
+                    </Text>
+                    <Text size="sm">
+                      {formData.bankName ? `${formData.bankName} (${formData.bankCode})` : '-'}
+                    </Text>
+                  </Grid.Col>
+                  <Grid.Col span={6}>
+                    <Text size="xs" c="dimmed">
+                      {t('termsAgreement.bankInfo.branch')}
+                    </Text>
+                    <Text size="sm">
+                      {formData.branchName} ({formData.branchCode})
+                    </Text>
+                  </Grid.Col>
+                  <Grid.Col span={6}>
+                    <Text size="xs" c="dimmed">
+                      {t('termsAgreement.bankInfo.accountType')}
+                    </Text>
+                    <Text size="sm">
+                      {formData.accountType
+                        ? t(`prizeClaim.fields.accountType.options.${formData.accountType}`) : '-s'}
+                    </Text>
+                  </Grid.Col>
+                  <Grid.Col span={6}>
+                    <Text size="xs" c="dimmed">
+                      {t('termsAgreement.bankInfo.accountNumber')}
+                    </Text>
+                    <Text size="sm">{formData.accountNumber}</Text>
+                  </Grid.Col>
+                  <Grid.Col span={12}>
+                    <Text size="xs" c="dimmed">
+                      {t('termsAgreement.bankInfo.accountHolder')}
+                    </Text>
+                    <Text size="sm">{formData.accountHolderName}</Text>
+                  </Grid.Col>
+                </Grid>
+              </>)}
 
-              <Divider my="lg" />
-              <Text fw={600} size="lg" mb="xs">
-                {t('termsAgreement.bankInfo.title')}
-              </Text>
-              <Grid>
-                <Grid.Col span={6}>
-                  <Text size="xs" c="dimmed">
-                    {t('termsAgreement.bankInfo.bank')}
-                  </Text>
-                  <Text size="sm">
-                    {formData.bankName} ({formData.bankCode})
-                  </Text>
-                </Grid.Col>
-                <Grid.Col span={6}>
-                  <Text size="xs" c="dimmed">
-                    {t('termsAgreement.bankInfo.branch')}
-                  </Text>
-                  <Text size="sm">
-                    {formData.branchName} ({formData.branchCode})
-                  </Text>
-                </Grid.Col>
-                <Grid.Col span={6}>
-                  <Text size="xs" c="dimmed">
-                    {t('termsAgreement.bankInfo.accountType')}
-                  </Text>
-                  <Text size="sm">
-                    {t(`prizeClaim.fields.accountType.options.${formData.accountType}`)}
-                  </Text>
-                </Grid.Col>
-                <Grid.Col span={6}>
-                  <Text size="xs" c="dimmed">
-                    {t('termsAgreement.bankInfo.accountNumber')}
-                  </Text>
-                  <Text size="sm">{formData.accountNumber}</Text>
-                </Grid.Col>
-                <Grid.Col span={12}>
-                  <Text size="xs" c="dimmed">
-                    {t('termsAgreement.bankInfo.accountHolder')}
-                  </Text>
-                  <Text size="sm">{formData.accountHolderName}</Text>
-                </Grid.Col>
-              </Grid>
             </Box>
             <Box></Box>
           </Collapse>
@@ -418,7 +421,7 @@ export function TermsAgreementPage() {
                 size="lg"
                 leftSection={<IconDownload size={18} />}
               >
-                {t('termsAgreement.downloadReceiptButton')}
+                {t('termsAgreement.issueReceiptButton')}
               </Button>
             </>
           )}
@@ -453,11 +456,11 @@ const extractFormVariables = (formContent: PrizeClaimFormValues, createdAt?: str
   return {
     today: createdAt
       ? new Date(createdAt).toLocaleDateString('ja-JP', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          timeZone: 'Asia/Tokyo', // Essential for JST
-        })
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        timeZone: 'Asia/Tokyo', // Essential for JST
+      })
       : '-',
     year: new Date().getFullYear().toString(),
     lastNameKanji: formContent.lastNameKanji,
