@@ -4,6 +4,7 @@ import {
   Alert,
   Box,
   Button,
+  Center,
   Checkbox,
   Divider,
   Grid,
@@ -307,15 +308,13 @@ export function PrizeClaimForm() {
   // Show loading state while checking health
   if (isCheckingHealth) {
     return (
-      <Box maw={900} mx="auto" p="md">
+      <Box maw={900} mx="auto" p="md" h="100vh">
         <Title order={2} mb="lg">
           {t('prizeClaim.title')}
-          <Text>language: {i18n.language}</Text>
         </Title>
-        <Stack align="center" py="xl">
+        <Center h="70vh">
           <Loader size="lg" />
-          <Text c="dimmed">{t('common.loading')}</Text>
-        </Stack>
+        </Center>
       </Box>
     );
   }

@@ -18,7 +18,7 @@ import i18n from '@/i18n';
 
 // Validation patterns
 const POSTAL_CODE_PATTERN = /^\d{7}$/;
-const PHONE_PATTERN = /^0(?:\d{1,4}-?){2}\d{4}$/;
+// const PHONE_PATTERN = /^0(?:\d{1,4}-?){2}\d{4}$/;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const KATAKANA_PATTERN = /^[\u3000-\u303F\u30A0-\u30FF]+$/;
 const ACCOUNT_NUMBER_PATTERN = /^\d{6,7}$/;
@@ -78,7 +78,7 @@ export function usePrizeClaimForm() {
       address: (value) => (!value.trim() ? t('prizeClaim.validation.required') : null),
       phoneNumber: (value) => {
         if (!value.trim()) return t('prizeClaim.validation.required');
-        if (!PHONE_PATTERN.test(value)) return t('prizeClaim.validation.invalidPhoneNumber');
+        // if (!PHONE_PATTERN.test(value)) return t('prizeClaim.validation.invalidPhoneNumber');
         return null;
       },
       email: (value, values) => {
