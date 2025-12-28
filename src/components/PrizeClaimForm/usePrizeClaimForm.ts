@@ -81,17 +81,19 @@ export function usePrizeClaimForm() {
         // if (!PHONE_PATTERN.test(value)) return t('prizeClaim.validation.invalidPhoneNumber');
         return null;
       },
-      email: (value, values) => {
+      email: (value, _values) => {
         if (!value.trim()) return t('prizeClaim.validation.required');
         if (!EMAIL_PATTERN.test(value)) return t('prizeClaim.validation.invalidEmail');
 
+        // https://enjoy-7ly4631.slack.com/archives/D07MQ4VQYTC/p1766799449576569?thread_ts=1766799360.073049&cid=D07MQ4VQYTC
+        // 同じプレイヤーが複数入賞することはあるのでemailのバリデはいりません
         // Check if email is already claimed in the selected tournament
-        if (values.tournamentId) {
-          const tournament = tournaments.find((t) => t.id === values.tournamentId);
-          if (tournament?.claimedEmails?.includes(value.trim())) {
-            return t('prizeClaim.validation.emailAlreadyClaimed');
-          }
-        }
+        // if (values.tournamentId) {
+        //   const tournament = tournaments.find((t) => t.id === values.tournamentId);
+        //   if (tournament?.claimedEmails?.includes(value.trim())) {
+        //     return t('prizeClaim.validation.emailAlreadyClaimed');
+        //   }
+        // }
 
         return null;
       },
