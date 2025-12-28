@@ -1,5 +1,11 @@
 import { type MouseEvent, useEffect, useMemo, useState } from 'react';
 
+import { FormDetailModal } from '@/components/FormDetailModal';
+import { deleteForm, getForms } from '@/lib/lambda/form';
+import { fetchAllTournaments } from '@/lib/lambda/tournament';
+import { useAppStore } from '@/stores';
+import type { PrizeClaimFormSubmission, Tournament } from '@/types';
+import { exportFormsToPayPayCSV, maskEmail } from '@/utils';
 import {
   ActionIcon,
   Alert,
@@ -25,12 +31,6 @@ import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import { IconDownload, IconInfoCircle, IconRefresh, IconTrash, IconX } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
-import { FormDetailModal } from '@/components/FormDetailModal';
-import { deleteForm, getForms } from '@/lib/lambda/form';
-import { fetchAllTournaments } from '@/lib/lambda/tournament';
-import { useAppStore } from '@/stores';
-import type { PrizeClaimFormSubmission, Tournament } from '@/types';
-import { exportFormsToPayPayCSV, maskEmail } from '@/utils';
 
 export function FormManagementPage() {
   const { t } = useTranslation();
@@ -545,16 +545,30 @@ export function FormManagementPage() {
                             </Text>
                           </Table.Td>
                           <Table.Td>
-                            <Button
-                              size="xs"
-                              color="red"
-                              variant="light"
-                              onClick={(e) => handleDelete(form.id, e)}
-                              loading={deletingFormId === form.id}
-                              disabled={deletingFormId !== null}
-                            >
-                              <IconTrash size={16} />
-                            </Button>
+                            <Group gap="xs">
+                              <Button
+                                size="xs"
+                                color="green"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  e.preventDefault();
+                                  window.open(form.receipt?.url, '_blank');
+                                }}
+                                disabled={!form.receipt?.url}
+                              >
+                                <IconDownload size={16} />
+                              </Button>
+                              <Button
+                                size="xs"
+                                color="red"
+                                variant="light"
+                                onClick={(e) => handleDelete(form.id, e)}
+                                loading={deletingFormId === form.id}
+                                disabled={deletingFormId !== null}
+                              >
+                                <IconTrash size={16} />
+                              </Button>
+                            </Group>
                           </Table.Td>
                         </Table.Tr>
                       ))

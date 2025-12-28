@@ -691,6 +691,7 @@
       "title": "銀行情報"
     },
     "issueReceiptButton": "領収書発行",
+    "downloadReceiptButton": "領収書をダウンロード",
     "error": {
       "agreeFailed": "利用規約への同意に失敗しました",
       "downloadFailed": "ダウンロードウィンドウを開けませんでした。ポップアップブロッカーの設定を確認してください。",

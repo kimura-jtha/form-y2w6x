@@ -690,6 +690,7 @@
       "title": "은행 정보"
     },
     "issueReceiptButton": "영수증 발행",
+    "downloadReceiptButton": "영수증 다운로드",
     "error": {
       "agreeFailed": "조건에 동의하지 못했습니다",
       "formIdNotFound": "URL에서 폼 ID를 찾을 수 없습니다.",

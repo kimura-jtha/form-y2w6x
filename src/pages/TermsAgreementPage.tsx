@@ -1,6 +1,11 @@
-import { useDisclosure } from '@mantine/hooks';
-import { useEffect, useState } from 'react';
-
+import {
+  agreeTermsOfService,
+  getFormById,
+  getReceiptUploadUrl,
+  saveReceiptUrl,
+} from '@/lib/lambda/form';
+import { getReceiptTemplate, getTermsOfServiceTemplate } from '@/lib/lambda/template';
+import type { PrizeClaimFormValues } from '@/types';
 import {
   ActionIcon,
   Alert,
@@ -19,25 +24,18 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import {
-  IconAlertCircle,
-  IconCheck,
-  IconChevronDown,
-  IconChevronUp,
-  IconDownload,
-} from '@tabler/icons-react';
+import { useDisclosure } from '@mantine/hooks';
+import { IconAlertCircle, IconCheck, IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import html2pdf from 'html2pdf.js';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getReceiptTemplate, getTermsOfServiceTemplate } from '@/lib/lambda/template';
-import { agreeTermsOfService, getFormById } from '@/lib/lambda/form';
-import type { PrizeClaimFormValues } from '@/types';
 
 export function TermsAgreementPage() {
   const { t } = useTranslation();
   const [opened, { toggle }] = useDisclosure(true);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isDownloading, setIsDownloading] = useState(false);
+  const [isProcessingReceipt, setIsProcessingReceipt] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState<PrizeClaimFormValues | null>(null);
   const [formId, setFormId] = useState<string | null>(null);
@@ -45,6 +43,8 @@ export function TermsAgreementPage() {
   const [alreadyAgreed, setAlreadyAgreed] = useState(false);
   const [termsOfService, setTermsOfService] = useState<string>('');
   const [receipt, setReceipt] = useState<string>('');
+  const [receiptUrl, setReceiptUrl] = useState<string | null>(null);
+  const [receiptIssuedAt, setReceiptIssuedAt] = useState<number>(Date.now());
 
   // Extract form ID from URL hash
   useEffect(() => {
@@ -75,21 +75,21 @@ export function TermsAgreementPage() {
     if (formData) {
       getTermsOfServiceTemplate().then((template) => {
         setTermsOfService(
-          renderTemplate(template.content, extractFormVariables(formData, formData.createdAt)),
+          renderTemplate(template.content, extractFormVariables(formData, receiptIssuedAt)),
         );
       });
     }
-  }, [formData]);
+  }, [receiptIssuedAt, formData]);
 
   useEffect(() => {
     if (alreadyAgreed && formData) {
       getReceiptTemplate().then((template) => {
         setReceipt(
-          renderTemplate(template.content, extractFormVariables(formData, formData.createdAt)),
+          renderTemplate(template.content, extractFormVariables(formData, receiptIssuedAt)),
         );
       });
     }
-  }, [formData, alreadyAgreed]);
+  }, [formData, alreadyAgreed, receiptIssuedAt]);
 
   // Fetch form data when formId is available
   useEffect(() => {
@@ -100,6 +100,8 @@ export function TermsAgreementPage() {
         setIsLoading(true);
         setError(null);
         const response = await getFormById(formId, hash);
+        setReceiptUrl(response.receipt?.url ?? null);
+        setReceiptIssuedAt(response.receipt?.issuedAt ?? Date.now());
         setFormData(response.formData);
 
         // Check if terms are already agreed
@@ -131,11 +133,11 @@ export function TermsAgreementPage() {
     }
   };
 
-  const handleDownloadReceipt = async () => {
-    if (!receipt) return;
+  const handleIssueReceipt = async () => {
+    if (!receipt || !formId || !hash) return;
 
     try {
-      setIsDownloading(true);
+      setIsProcessingReceipt(true);
       setError(null);
 
       // Create a temporary container with styled receipt content
@@ -167,17 +169,19 @@ export function TermsAgreementPage() {
       element.append(styleElement);
 
       // Configure html2pdf options for 18.9cm x 10.9cm page
+      const filename = `receipt_${formId}_${new Date().toLocaleString('ja-JP', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        timeZone: 'Asia/Tokyo', // Essential for Japan Standard Time
+      })}.pdf`;
+
       const options = {
         margin: [8, 8, 8, 8] as [number, number, number, number], // 8mm margin on all sides
-        filename: `receipt_${formId}_${new Date().toLocaleString('ja-JP', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          hour: 'numeric',
-          minute: 'numeric',
-          second: 'numeric',
-          timeZone: 'Asia/Tokyo', // Essential for Japan Standard Time
-        })}.pdf`,
+        filename,
         image: { type: 'jpeg' as const, quality: 0.98 },
         html2canvas: {
           scale: 2,
@@ -191,13 +195,39 @@ export function TermsAgreementPage() {
         },
       };
 
-      // Generate and download PDF
-      await html2pdf().set(options).from(element).save();
+      // Generate PDF as blob
+      const pdfBlob = await html2pdf().set(options).from(element).outputPdf('blob');
+
+      // Get upload URL from backend
+      const { uploadUrl, s3Url } = await getReceiptUploadUrl(formId, hash);
+
+      // Upload PDF to S3
+      const uploadResponse = await fetch(uploadUrl, {
+        method: 'PUT',
+        body: pdfBlob,
+        headers: {
+          'Content-Type': 'application/pdf',
+        },
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error('Failed to upload receipt to S3');
+      }
+
+      // Save receipt URL to backend
+      await saveReceiptUrl(formId, s3Url, hash);
+
+      // Download file locally for user
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(pdfBlob);
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(link.href);
     } catch (error_) {
-      console.error('PDF generation error:', error_);
+      console.error('PDF generation/upload error:', error_);
       setError(error_ instanceof Error ? error_.message : t('termsAgreement.error.downloadFailed'));
     } finally {
-      setIsDownloading(false);
+      setIsProcessingReceipt(false);
     }
   };
 
@@ -242,7 +272,7 @@ export function TermsAgreementPage() {
 
   return (
     <Container size="md" py="xl">
-      {isDownloading && (
+      {isProcessingReceipt && (
         <Center
           style={{
             position: 'fixed',
@@ -315,52 +345,54 @@ export function TermsAgreementPage() {
                   <Text size="sm">{formData.playersId}</Text>
                 </Grid.Col>
               </Grid>
-              {formData.bankName && (<>
-                <Divider my="lg" />
-                <Text fw={600} size="lg" mb="xs">
-                  {t('termsAgreement.bankInfo.title')}
-                </Text>
-                <Grid>
-                  <Grid.Col span={6}>
-                    <Text size="xs" c="dimmed">
-                      {t('termsAgreement.bankInfo.bank')}
-                    </Text>
-                    <Text size="sm">
-                      {formData.bankName ? `${formData.bankName} (${formData.bankCode})` : '-'}
-                    </Text>
-                  </Grid.Col>
-                  <Grid.Col span={6}>
-                    <Text size="xs" c="dimmed">
-                      {t('termsAgreement.bankInfo.branch')}
-                    </Text>
-                    <Text size="sm">
-                      {formData.branchName} ({formData.branchCode})
-                    </Text>
-                  </Grid.Col>
-                  <Grid.Col span={6}>
-                    <Text size="xs" c="dimmed">
-                      {t('termsAgreement.bankInfo.accountType')}
-                    </Text>
-                    <Text size="sm">
-                      {formData.accountType
-                        ? t(`prizeClaim.fields.accountType.options.${formData.accountType}`) : '-s'}
-                    </Text>
-                  </Grid.Col>
-                  <Grid.Col span={6}>
-                    <Text size="xs" c="dimmed">
-                      {t('termsAgreement.bankInfo.accountNumber')}
-                    </Text>
-                    <Text size="sm">{formData.accountNumber}</Text>
-                  </Grid.Col>
-                  <Grid.Col span={12}>
-                    <Text size="xs" c="dimmed">
-                      {t('termsAgreement.bankInfo.accountHolder')}
-                    </Text>
-                    <Text size="sm">{formData.accountHolderName}</Text>
-                  </Grid.Col>
-                </Grid>
-              </>)}
-
+              {formData.bankName && (
+                <>
+                  <Divider my="lg" />
+                  <Text fw={600} size="lg" mb="xs">
+                    {t('termsAgreement.bankInfo.title')}
+                  </Text>
+                  <Grid>
+                    <Grid.Col span={6}>
+                      <Text size="xs" c="dimmed">
+                        {t('termsAgreement.bankInfo.bank')}
+                      </Text>
+                      <Text size="sm">
+                        {formData.bankName ? `${formData.bankName} (${formData.bankCode})` : '-'}
+                      </Text>
+                    </Grid.Col>
+                    <Grid.Col span={6}>
+                      <Text size="xs" c="dimmed">
+                        {t('termsAgreement.bankInfo.branch')}
+                      </Text>
+                      <Text size="sm">
+                        {formData.branchName} ({formData.branchCode})
+                      </Text>
+                    </Grid.Col>
+                    <Grid.Col span={6}>
+                      <Text size="xs" c="dimmed">
+                        {t('termsAgreement.bankInfo.accountType')}
+                      </Text>
+                      <Text size="sm">
+                        {formData.accountType
+                          ? t(`prizeClaim.fields.accountType.options.${formData.accountType}`)
+                          : '-s'}
+                      </Text>
+                    </Grid.Col>
+                    <Grid.Col span={6}>
+                      <Text size="xs" c="dimmed">
+                        {t('termsAgreement.bankInfo.accountNumber')}
+                      </Text>
+                      <Text size="sm">{formData.accountNumber}</Text>
+                    </Grid.Col>
+                    <Grid.Col span={12}>
+                      <Text size="xs" c="dimmed">
+                        {t('termsAgreement.bankInfo.accountHolder')}
+                      </Text>
+                      <Text size="sm">{formData.accountHolderName}</Text>
+                    </Grid.Col>
+                  </Grid>
+                </>
+              )}
             </Box>
             <Box></Box>
           </Collapse>
@@ -404,25 +436,34 @@ export function TermsAgreementPage() {
           {alreadyAgreed && (
             <>
               <Title order={2}>{t('termsAgreement.receiptTitle')}</Title>
-              <Box style={{ opacity: isDownloading ? 0 : 1 }}>
-                <ScrollArea h={400} type="always" offsetScrollbars>
-                  <Box
-                    p="md"
-                    style={{
-                      borderRadius: 'var(--mantine-radius-sm)',
-                    }}
-                    dangerouslySetInnerHTML={{ __html: receipt }}
-                  />
-                </ScrollArea>
+              <Box style={{ opacity: isProcessingReceipt ? 0 : 1 }}>
+                {!receiptUrl && (
+                  <ScrollArea h={400} type="always" offsetScrollbars>
+                    <Box
+                      p="md"
+                      style={{
+                        borderRadius: 'var(--mantine-radius-sm)',
+                      }}
+                      dangerouslySetInnerHTML={{ __html: receipt }}
+                    />
+                  </ScrollArea>
+                )}
               </Box>
-              <Button
-                onClick={handleDownloadReceipt}
-                loading={isDownloading}
-                size="lg"
-                leftSection={<IconDownload size={18} />}
-              >
-                {t('termsAgreement.issueReceiptButton')}
-              </Button>
+              {receiptUrl ? (
+                <Button
+                  onClick={() => {
+                    window.open(receiptUrl, '_blank');
+                  }}
+                  loading={isProcessingReceipt}
+                  size="lg"
+                >
+                  {t('termsAgreement.downloadReceiptButton')}
+                </Button>
+              ) : (
+                <Button onClick={handleIssueReceipt} loading={isProcessingReceipt} size="lg">
+                  {t('termsAgreement.issueReceiptButton')}
+                </Button>
+              )}
             </>
           )}
         </Stack>
@@ -449,19 +490,17 @@ const renderTemplate = (template: string, variables: Record<string, string>): st
  * @param formContent - Prize form content data
  * @returns Object with formatted form variables
  */
-const extractFormVariables = (formContent: PrizeClaimFormValues, createdAt?: string) => {
+const extractFormVariables = (formContent: PrizeClaimFormValues, issuedAt: number) => {
   const isSavings = formContent.accountType === 'savings';
   const accountTypeJa = isSavings ? '当座預金' : '普通預金';
   const accountTypeEn = isSavings ? 'Savings' : 'Checking';
   return {
-    today: createdAt
-      ? new Date(createdAt).toLocaleDateString('ja-JP', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        timeZone: 'Asia/Tokyo', // Essential for JST
-      })
-      : '-',
+    today: new Date(issuedAt).toLocaleDateString('ja-JP', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      timeZone: 'Asia/Tokyo', // Essential for JST
+    }),
     year: new Date().getFullYear().toString(),
     lastNameKanji: formContent.lastNameKanji,
     firstNameKanji: formContent.firstNameKanji,

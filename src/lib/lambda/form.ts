@@ -58,11 +58,21 @@ export async function getFormById(
 ): Promise<{
   formId: string;
   formData: PrizeClaimFormValues;
+  receipt?: {
+    valid: boolean;
+    issuedAt: number;
+    url: string;
+  };
 }> {
   const response = await fetchLambda<{
     form: {
       id: string;
       formContent: PrizeClaimFormValues;
+      receipt?: {
+        valid: boolean;
+        issuedAt: number;
+        url: string;
+      };
       createdAt?: string;
     };
   }>({
@@ -71,11 +81,46 @@ export async function getFormById(
   });
   return {
     formId: response.form.id,
+    receipt: response.form.receipt,
     formData: {
       ...response.form.formContent,
       createdAt: response.form.createdAt,
     },
   };
+}
+
+type ReceiptUploadUrlResponse = {
+  uploadUrl: string;
+  s3Url: string;
+  formId: string;
+  expiresIn: number;
+};
+
+export async function getReceiptUploadUrl(
+  formId: string,
+  hash: string,
+): Promise<ReceiptUploadUrlResponse> {
+  const response = await fetchLambda<ReceiptUploadUrlResponse>({
+    path: `forms/${formId}/receipt/upload-url?hash=${hash}&ext=pdf`,
+    method: 'GET',
+  });
+  return {
+    uploadUrl: response.uploadUrl,
+    s3Url: response.s3Url,
+    formId: response.formId,
+    expiresIn: response.expiresIn,
+  };
+}
+
+export async function saveReceiptUrl(formId: string, receiptUrl: string, hash: string) {
+  await fetchLambda({
+    path: `forms/${formId}/receipt`,
+    method: 'POST',
+    body: {
+      hash,
+      receiptUrl,
+    },
+  });
 }
 
 /**
@@ -89,9 +134,10 @@ export async function agreeTermsOfService(
   hash: string,
 ): Promise<{ success: boolean; message: string }> {
   const response = await fetchLambda<{ form: { id: string } }>({
-    path: `forms/${formId}/terms-agreement?hash=${hash}`,
+    path: `forms/${formId}/terms-agreement`,
     method: 'PATCH',
     body: {
+      hash,
       termsAgreed: true,
     },
   });

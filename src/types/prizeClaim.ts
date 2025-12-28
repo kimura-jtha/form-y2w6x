@@ -9,6 +9,11 @@
 export interface PrizeClaimFormSubmission {
   id: string;
   formContent: PrizeClaimFormValues;
+  receipt?: {
+    valid: boolean;
+    issuedAt: number;
+    url: string;
+  };
   createdAt: string;
   status: 'pending' | 'approved' | 'rejected';
 }

@@ -690,6 +690,7 @@
       "title": "银行信息"
     },
     "issueReceiptButton": "发放收据",
+    "downloadReceiptButton": "下载收据",
     "error": {
       "agreeFailed": "未能就条款达成一致",
       "formIdNotFound": "URL 中未找到表单 ID",

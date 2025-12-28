@@ -691,6 +691,7 @@
       "title": "Bank Information"
     },
     "issueReceiptButton": "Issue Receipt",
+    "downloadReceiptButton": "Download Receipt",
     "error": {
       "agreeFailed": "Failed to agree to terms",
       "downloadFailed": "Failed to open download window. Please check your popup blocker settings.",
