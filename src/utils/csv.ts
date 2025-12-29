@@ -310,7 +310,7 @@ export function parseTournamentCSV(csvText: string): CSVImportResult {
         }
 
         // Create tournament key
-        const tournamentKey = `${row['eventName']}|${row['tournamentName']}|${row['date']}`;
+        const tournamentKey = `${row['eventNameJa']}|${row['tournamentNameJa']}|${row['date']}`;
 
         // Get or create tournament entry
         if (!tournamentMap.has(tournamentKey)) {
