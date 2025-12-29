@@ -254,10 +254,8 @@ export function parseTournamentCSV(csvText: string): CSVImportResult {
     // Parse header
     const header = parseCSVLine(lines[0]);
     const requiredFields = [
-      'eventNameEn',
-      'eventName',
-      'tournamentNameEn',
-      'tournamentName',
+      'eventNameJa',
+      'tournamentNameJa',
       'date',
       'status',
       'prize',
@@ -318,10 +316,10 @@ export function parseTournamentCSV(csvText: string): CSVImportResult {
         if (!tournamentMap.has(tournamentKey)) {
           tournamentMap.set(tournamentKey, {
             tournament: {
-              eventName: row['eventNameEn'],
-              eventNameJa: row['eventName'],
-              tournamentName: row['tournamentNameEn'],
-              tournamentNameJa: row['tournamentName'],
+              eventName: row['eventNameEn'] || row['eventNameJa'],
+              eventNameJa: row['eventNameJa'],
+              tournamentName: row['tournamentNameEn'] || row['tournamentNameJa'],
+              tournamentNameJa: row['tournamentNameJa'],
               date: row['date'],
               status: row['status'] as TournamentStatus,
             },
@@ -435,21 +433,11 @@ function validateTournamentRow(row: Record<string, string>, rowNumber: number): 
   const rowErrors: CSVImportError[] = [];
 
   // Validate required fields
-  if (!row['eventName']) {
-    rowErrors.push({ row: rowNumber, field: 'eventName', message: 'Event name is required' });
-  }
   if (!row['eventNameJa']) {
     rowErrors.push({
       row: rowNumber,
       field: 'eventNameJa',
       message: 'Event name (Japanese) is required',
-    });
-  }
-  if (!row['tournamentName']) {
-    rowErrors.push({
-      row: rowNumber,
-      field: 'tournamentName',
-      message: 'Tournament name is required',
     });
   }
   if (!row['tournamentNameJa']) {
