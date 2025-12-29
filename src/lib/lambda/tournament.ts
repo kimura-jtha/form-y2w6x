@@ -1,4 +1,3 @@
-import { env } from '@/config/env';
 import type { PrizeClaimFormSubmission, PrizeRank, Tournament, TournamentStatus } from '@/types';
 
 import { asyncDeduplicator } from '../../utils/dedupe';
@@ -25,17 +24,17 @@ type ApiTournament = {
  * @returns Promise<Tournament[]> - List of all active tournaments
  */
 export async function fetchActiveTournaments(): Promise<Tournament[]> {
-  const rawData = localStorage.getItem('__tournaments__');
-  if (rawData) {
-    const { tournaments, expiresAt } = JSON.parse(rawData) as {
-      tournaments: Tournament[];
-      expiresAt: number;
-    };
-    if (expiresAt > Date.now()) {
-      return tournaments;
-    }
-    localStorage.removeItem('__tournaments__');
-  }
+  // const rawData = localStorage.getItem('__tournaments__');
+  // if (rawData) {
+  //   const { tournaments, expiresAt } = JSON.parse(rawData) as {
+  //     tournaments: Tournament[];
+  //     expiresAt: number;
+  //   };
+  //   if (expiresAt > Date.now()) {
+  //     return tournaments;
+  //   }
+  //   localStorage.removeItem('__tournaments__');
+  // }
   const tournaments = await asyncDeduplicator.call('fetchActiveTournaments', async () => {
     const response = await fetchLambda<{
       tournaments: ApiTournament[];
@@ -49,15 +48,15 @@ export async function fetchActiveTournaments(): Promise<Tournament[]> {
   });
 
   // Cache for 1 hours in production, 10 seconds in development
-  const DURATION_IN_MS = env.IS_PROD ? 1000 * 60 * 60 : 1000 * 10;
-  localStorage.setItem(
-    '__tournaments__',
-    JSON.stringify({
-      tournaments,
-      // Cache for 1 hours
-      expiresAt: Date.now() + DURATION_IN_MS,
-    }),
-  );
+  // const DURATION_IN_MS = env.IS_PROD ? 1000 * 60 * 60 : 1000 * 10;
+  // localStorage.setItem(
+  //   '__tournaments__',
+  //   JSON.stringify({
+  //     tournaments,
+  //     // Cache for 1 hours
+  //     expiresAt: Date.now() + DURATION_IN_MS,
+  //   }),
+  // );
   return tournaments;
 }
 
