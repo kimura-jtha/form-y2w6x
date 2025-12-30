@@ -21,6 +21,7 @@ export const ROUTES = {
     FORMS: '/admin/forms',
     TOURNAMENTS: '/admin/tournaments',
     SERVICES: '/admin/services',
+    USERS: '/admin/users',
   },
 
   // Add more routes as needed

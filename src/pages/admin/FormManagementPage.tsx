@@ -36,6 +36,13 @@ export function FormManagementPage() {
   const { t } = useTranslation();
   const tournaments = useAppStore((state) => state.tournaments);
   const setTournaments = useAppStore((state) => state.setTournaments);
+  const [deleteModalOpened, { open: openDeleteModal, close: closeDeleteModal }] =
+    useDisclosure(false);
+  const [formToDelete, setFormToDelete] = useState<PrizeClaimFormSubmission | null>(null);
+  const [exportModalOpened, { open: openExportModal, close: closeExportModal }] =
+    useDisclosure(false);
+  const [exportType, setExportType] = useState<'all' | 'japanese'>('all');
+  const [exportOnlyTermsAgreed, setExportOnlyTermsAgreed] = useState(false);
 
   const [forms, setForms] = useState<PrizeClaimFormSubmission[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -111,21 +118,6 @@ export function FormManagementPage() {
         label: `${t.eventNameJa} - ${t.tournamentNameJa} (${new Date(t.date).toLocaleDateString()})`,
       }));
   }, [tournaments, selectedDateRange, selectedEventName]);
-
-  useEffect(() => {
-    if (tournamentOptions.length === 1) {
-      setSelectedTournamentId(tournamentOptions[0].value);
-    } else {
-      setSelectedTournamentId(null);
-    }
-  }, [tournamentOptions]);
-  const [deleteModalOpened, { open: openDeleteModal, close: closeDeleteModal }] =
-    useDisclosure(false);
-  const [formToDelete, setFormToDelete] = useState<PrizeClaimFormSubmission | null>(null);
-  const [exportModalOpened, { open: openExportModal, close: closeExportModal }] =
-    useDisclosure(false);
-  const [exportType, setExportType] = useState<'all' | 'japanese'>('all');
-  const [exportOnlyTermsAgreed, setExportOnlyTermsAgreed] = useState(false);
 
   const handleRowClick = (form: PrizeClaimFormSubmission) => {
     setSelectedForm(form);
@@ -364,6 +356,14 @@ export function FormManagementPage() {
     }
   };
 
+  useEffect(() => {
+    if (tournamentOptions.length === 1) {
+      setSelectedTournamentId(tournamentOptions[0].value);
+    } else {
+      setSelectedTournamentId(null);
+    }
+  }, [tournamentOptions]);
+
   return (
     <Stack gap="lg">
       <Group justify="space-between">
@@ -444,7 +444,7 @@ export function FormManagementPage() {
             leftSection={<IconX size={16} />}
             onClick={handleClearFilter}
             variant="light"
-            color="gray"
+            color="red"
             disabled={
               !selectedEventName &&
               !selectedTournamentId &&

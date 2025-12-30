@@ -46,6 +46,12 @@ const AdminServiceManagementPage = lazy(() =>
   })),
 );
 
+const AdminUserManagementPage = lazy(() =>
+  import('./pages/admin/UserManagementPage').then((module) => ({
+    default: module.UserManagementPage,
+  })),
+);
+
 const router = createBrowserRouter([
   {
     element: <FormManagementLayout />,
@@ -85,6 +91,10 @@ const router = createBrowserRouter([
           {
             path: ROUTES.ADMIN.SERVICES,
             element: <AdminServiceManagementPage />,
+          },
+          {
+            path: ROUTES.ADMIN.USERS,
+            element: <AdminUserManagementPage />,
           },
         ],
       },

@@ -253,14 +253,7 @@ export function parseTournamentCSV(csvText: string): CSVImportResult {
 
     // Parse header
     const header = parseCSVLine(lines[0]);
-    const requiredFields = [
-      'eventNameJa',
-      'tournamentNameJa',
-      'date',
-      'status',
-      'prize',
-      'amount',
-    ];
+    const requiredFields = ['eventNameJa', 'tournamentNameJa', 'date', 'status', 'prize', 'amount'];
 
     // Validate header
     const missingFields = requiredFields.filter((field) => !header.includes(field));

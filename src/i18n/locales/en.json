@@ -129,7 +129,8 @@
     "navigation": {
       "forms": "Forms Management",
       "services": "Services",
-      "tournaments": "Tournaments"
+      "tournaments": "Tournaments",
+      "users": "Users"
     },
     "services": {
       "editor": {
@@ -347,6 +348,42 @@
         }
       },
       "version": "Version"
+    },
+    "users": {
+      "addButton": "Add User",
+      "modal": {
+        "addTitle": "Add New User",
+        "emailLabel": "Email",
+        "emailPlaceholder": "user@example.com",
+        "nameLabel": "Name",
+        "namePlaceholder": "John Doe",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "Enter password"
+      },
+      "notifications": {
+        "addError": {
+          "message": "Failed to add user",
+          "title": "Error"
+        },
+        "addSuccess": {
+          "message": "User added successfully",
+          "title": "Success"
+        },
+        "loadError": {
+          "message": "Failed to load users",
+          "title": "Error"
+        }
+      },
+      "refresh": "Refresh",
+      "table": {
+        "createdAt": "Created At",
+        "email": "Email",
+        "name": "Name",
+        "noUsers": "No users found",
+        "updatedAt": "Updated At",
+        "usersFound": "user(s) found"
+      },
+      "title": "User Management"
     },
     "tournaments": {
       "amount": "Amount",

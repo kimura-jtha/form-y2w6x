@@ -129,7 +129,8 @@
     "navigation": {
       "forms": "表单管理",
       "services": "服务",
-      "tournaments": "锦标赛"
+      "tournaments": "锦标赛",
+      "users": "用户管理"
     },
     "services": {
       "editor": {
@@ -347,6 +348,42 @@
         }
       },
       "version": "版本"
+    },
+    "users": {
+      "addButton": "添加用户",
+      "modal": {
+        "addTitle": "添加新用户",
+        "emailLabel": "电子邮件",
+        "emailPlaceholder": "user@example.com",
+        "nameLabel": "姓名",
+        "namePlaceholder": "张三",
+        "passwordLabel": "密码",
+        "passwordPlaceholder": "输入密码"
+      },
+      "notifications": {
+        "addError": {
+          "message": "添加用户失败",
+          "title": "错误"
+        },
+        "addSuccess": {
+          "message": "用户添加成功",
+          "title": "成功"
+        },
+        "loadError": {
+          "message": "加载用户失败",
+          "title": "错误"
+        }
+      },
+      "refresh": "刷新",
+      "table": {
+        "createdAt": "创建时间",
+        "email": "电子邮件",
+        "name": "姓名",
+        "noUsers": "未找到用户",
+        "updatedAt": "更新时间",
+        "usersFound": "位用户"
+      },
+      "title": "用户管理"
     },
     "tournaments": {
       "amount": "数量",

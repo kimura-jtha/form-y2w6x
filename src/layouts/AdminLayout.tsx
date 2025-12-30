@@ -3,7 +3,14 @@ import { useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router';
 
 import { AppShell, Button, Container, Group, Tabs } from '@mantine/core';
-import { IconFileText, IconKey, IconLogout, IconSettings, IconTrophy } from '@tabler/icons-react';
+import {
+  IconFileText,
+  IconKey,
+  IconLogout,
+  IconSettings,
+  IconTrophy,
+  IconUsers,
+} from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
 import { ChangePasswordModal } from '@/components/ChangePasswordModal';
@@ -51,6 +58,9 @@ export function AdminLayout() {
                   leftSection={<IconSettings size={16} />}
                 >
                   {t('admin.navigation.services')}
+                </Tabs.Tab>
+                <Tabs.Tab fw="600" value={ROUTES.ADMIN.USERS} leftSection={<IconUsers size={16} />}>
+                  {t('admin.navigation.users')}
                 </Tabs.Tab>
               </Tabs.List>
             </Tabs>
