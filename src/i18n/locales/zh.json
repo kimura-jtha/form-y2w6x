@@ -349,42 +349,6 @@
       },
       "version": "版本"
     },
-    "users": {
-      "addButton": "添加用户",
-      "modal": {
-        "addTitle": "添加新用户",
-        "emailLabel": "电子邮件",
-        "emailPlaceholder": "user@example.com",
-        "nameLabel": "姓名",
-        "namePlaceholder": "张三",
-        "passwordLabel": "密码",
-        "passwordPlaceholder": "输入密码"
-      },
-      "notifications": {
-        "addError": {
-          "message": "添加用户失败",
-          "title": "错误"
-        },
-        "addSuccess": {
-          "message": "用户添加成功",
-          "title": "成功"
-        },
-        "loadError": {
-          "message": "加载用户失败",
-          "title": "错误"
-        }
-      },
-      "refresh": "刷新",
-      "table": {
-        "createdAt": "创建时间",
-        "email": "电子邮件",
-        "name": "姓名",
-        "noUsers": "未找到用户",
-        "updatedAt": "更新时间",
-        "usersFound": "位用户"
-      },
-      "title": "用户管理"
-    },
     "tournaments": {
       "amount": "数量",
       "claimed": "声称",
@@ -496,6 +460,42 @@
       },
       "title": "赛事管理",
       "viewDetails": "查看详情"
+    },
+    "users": {
+      "addButton": "添加用户",
+      "modal": {
+        "addTitle": "添加新用户",
+        "emailLabel": "电子邮件",
+        "emailPlaceholder": "user@example.com",
+        "nameLabel": "姓名",
+        "namePlaceholder": "张三",
+        "passwordLabel": "密码",
+        "passwordPlaceholder": "输入密码"
+      },
+      "notifications": {
+        "addError": {
+          "message": "添加用户失败",
+          "title": "错误"
+        },
+        "addSuccess": {
+          "message": "用户添加成功",
+          "title": "成功"
+        },
+        "loadError": {
+          "message": "加载用户失败",
+          "title": "错误"
+        }
+      },
+      "refresh": "刷新",
+      "table": {
+        "createdAt": "创建时间",
+        "email": "电子邮件",
+        "name": "姓名",
+        "noUsers": "未找到用户",
+        "updatedAt": "更新时间",
+        "usersFound": "位用户"
+      },
+      "title": "用户管理"
     }
   },
   "auth": {
@@ -703,6 +703,7 @@
     },
     "title": "奖金领取表",
     "validation": {
+      "emailAlreadyClaimed": "TODO: translate me!!!",
       "invalidAccountNumber": "请输入7位数的账号",
       "invalidEmail": "请输入有效的电子邮件地址",
       "invalidPhoneNumber": "请输入有效的电话号码（例如：03-1234-5678）",
@@ -726,10 +727,10 @@
       "branch": "分支",
       "title": "银行信息"
     },
-    "issueReceiptButton": "发放收据",
     "downloadReceiptButton": "下载收据",
     "error": {
       "agreeFailed": "未能就条款达成一致",
+      "downloadFailed": "TODO: translate me!!!",
       "formIdNotFound": "URL 中未找到表单 ID",
       "formNotFound": "未找到表单数据",
       "hashNotFound": "URL 中未找到哈希值",
@@ -745,6 +746,7 @@
       "title": "表格信息",
       "tournament": "比赛"
     },
+    "issueReceiptButton": "发放收据",
     "loading": "正在加载表单数据...",
     "receiptTitle": "收据",
     "termsAlert": {

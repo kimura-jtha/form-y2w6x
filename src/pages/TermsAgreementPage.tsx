@@ -8,6 +8,7 @@ import {
 } from '@/lib/lambda/form';
 import { getReceiptTemplate, getTermsOfServiceTemplate } from '@/lib/lambda/template';
 import type { PrizeClaimFormValues } from '@/types';
+import { formatDate } from '@/utils/string';
 import {
   ActionIcon,
   Alert,
@@ -162,15 +163,7 @@ export function TermsAgreementPage() {
       element.append(styleElement);
 
       // Configure html2pdf options for A4 page
-      const filename = `terms_of_service_${formId}_${new Date().toLocaleString('ja-JP', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-        timeZone: 'Asia/Tokyo', // Essential for Japan Standard Time
-      })}.pdf`;
+      const filename = `terms_of_service_${formId}_${formatDate(Date.now(), true)}.pdf`;
 
       const options = {
         margin: [10, 10, 10, 10] as [number, number, number, number],
@@ -270,15 +263,7 @@ export function TermsAgreementPage() {
 
       // Configure html2pdf options
       const documentType = isTerms ? 'terms_of_service' : 'receipt';
-      const filename = `${documentType}_${formId}_${new Date().toLocaleString('ja-JP', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-        timeZone: 'Asia/Tokyo', // Essential for Japan Standard Time
-      })}.pdf`;
+      const filename = `${documentType}_${formId}_${formatDate(Date.now(), true)}.pdf`;
 
       const options = isTerms
         ? {
@@ -647,12 +632,7 @@ const extractFormVariables = (formContent: PrizeClaimFormValues, issuedAt: numbe
   const accountTypeJa = isSavings ? '当座預金' : '普通預金';
   const accountTypeEn = isSavings ? 'Savings' : 'Checking';
   return {
-    today: new Date(issuedAt).toLocaleDateString('ja-JP', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      timeZone: 'Asia/Tokyo', // Essential for JST
-    }),
+    today: formatDate(issuedAt, false),
     year: new Date().getFullYear().toString(),
     lastNameKanji: formContent.lastNameKanji,
     firstNameKanji: formContent.firstNameKanji,

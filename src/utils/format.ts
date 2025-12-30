@@ -1,41 +1,6 @@
 /**
  * Formatting utilities
  */
-
-/**
- * Format a date to a localized string
- */
-export function formatDate(
-  date: Date | string | number,
-  options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  },
-  locale = 'en-US',
-): string {
-  const d = date instanceof Date ? date : new Date(date);
-  return d.toLocaleDateString(locale, options);
-}
-
-/**
- * Format a date to a localized date-time string
- */
-export function formatDateTime(
-  date: Date | string | number,
-  options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  },
-  locale = 'en-US',
-): string {
-  const d = date instanceof Date ? date : new Date(date);
-  return d.toLocaleString(locale, options);
-}
-
 /**
  * Format a number with locale-specific formatting
  */

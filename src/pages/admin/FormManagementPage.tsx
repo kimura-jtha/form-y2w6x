@@ -5,7 +5,7 @@ import { deleteForm, getForms } from '@/lib/lambda/form';
 import { fetchAllTournaments } from '@/lib/lambda/tournament';
 import { useAppStore } from '@/stores';
 import type { PrizeClaimFormSubmission, Tournament } from '@/types';
-import { exportFormsToPayPayCSV, maskEmail } from '@/utils';
+import { exportFormsToPayPayCSV, formatDate, maskEmail } from '@/utils';
 import {
   ActionIcon,
   Alert,
@@ -30,12 +30,15 @@ import { DatePickerInput } from '@mantine/dates';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import {
+  IconArrowDown,
+  IconArrowsUpDown,
+  IconArrowUp,
   IconDownload,
   IconFileText,
   IconInfoCircle,
   IconRefresh,
   IconTrash,
-  IconX,
+  IconX
 } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
@@ -71,6 +74,7 @@ export function FormManagementPage() {
   const [hasMore, setHasMore] = useState(false);
   const [selectedForm, setSelectedForm] = useState<PrizeClaimFormSubmission | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
+  const [sortByCreatedAt, setSortByCreatedAt] = useState<'asc' | 'desc' | null>(null);
 
   const tournamentMap = useMemo(() => {
     return tournaments.reduce(
@@ -122,9 +126,24 @@ export function FormManagementPage() {
       })
       .map((t) => ({
         value: t.id,
-        label: `${t.eventNameJa} - ${t.tournamentNameJa} (${new Date(t.date).toLocaleDateString()})`,
+        label: `${t.eventNameJa} - ${t.tournamentNameJa} (${formatDate(t.date, false)})`,
       }));
   }, [tournaments, selectedDateRange, selectedEventName]);
+
+  const sortedForms = useMemo(() => {
+    if (!sortByCreatedAt) return forms;
+
+    return [...forms].sort((a, b) => {
+      const dateA = new Date(a.createdAt).getTime();
+      const dateB = new Date(b.createdAt).getTime();
+
+      if (sortByCreatedAt === 'asc') {
+        return dateA - dateB;
+      } else {
+        return dateB - dateA;
+      }
+    });
+  }, [forms, sortByCreatedAt]);
 
   const handleRowClick = (form: PrizeClaimFormSubmission) => {
     setSelectedForm(form);
@@ -134,6 +153,16 @@ export function FormManagementPage() {
   const handleModalClose = () => {
     close();
     setSelectedForm(null);
+  };
+
+  const handleSortByCreatedAt = () => {
+    if (sortByCreatedAt === null) {
+      setSortByCreatedAt('desc');
+    } else if (sortByCreatedAt === 'desc') {
+      setSortByCreatedAt('asc');
+    } else {
+      setSortByCreatedAt(null);
+    }
   };
 
   const fetchTournaments = async () => {
@@ -503,13 +532,29 @@ export function FormManagementPage() {
                       <Table.Th>{t('admin.forms.table.email')}</Table.Th>
                       <Table.Th>{t('admin.forms.table.rank')}</Table.Th>
                       <Table.Th>{t('admin.forms.table.amount')}</Table.Th>
-                      <Table.Th w="120px">{t('admin.forms.table.termsAgreed')}</Table.Th>
-                      <Table.Th>{t('admin.forms.table.createdAt')}</Table.Th>
+                      <Table.Th w="50">{t('admin.forms.table.termsAgreed')}</Table.Th>
+                      <Table.Th onClick={handleSortByCreatedAt} style={{ cursor: 'pointer', userSelect: 'none' }}>
+                        {t('admin.forms.table.createdAt')}
+                        {' '}
+                        {sortByCreatedAt === null && <IconArrowsUpDown size={10} />}
+                        {sortByCreatedAt === 'asc' && <IconArrowUp size={10} />}
+                        {sortByCreatedAt === 'desc' && <IconArrowDown size={10} />}
+                      </Table.Th>
+                      {/* <Table.Th
+                        onClick={handleSortByCreatedAt}
+                        style={{ cursor: 'pointer', userSelect: 'none' }}
+                      >
+                        <Group gap={4} wrap="nowrap">
+                          <Text>{t('admin.forms.table.createdAt')}</Text>
+                          {sortByCreatedAt === 'asc' && <IconArrowUp size={16} />}
+                          {sortByCreatedAt === 'desc' && <IconArrowDown size={16} />}
+                        </Group>
+                      </Table.Th> */}
                       <Table.Th w="180px">{t('admin.forms.table.actions')}</Table.Th>
                     </Table.Tr>
                   </Table.Thead>
                   <Table.Tbody>
-                    {forms.length === 0 ? (
+                    {sortedForms.length === 0 ? (
                       <Table.Tr>
                         <Table.Td colSpan={8}>
                           <Text ta="center" c="dimmed">
@@ -518,7 +563,7 @@ export function FormManagementPage() {
                         </Table.Td>
                       </Table.Tr>
                     ) : (
-                      forms.map((form) => (
+                      sortedForms.map((form) => (
                         <Table.Tr
                           key={form.id}
                           onClick={() => handleRowClick(form)}
@@ -547,8 +592,7 @@ export function FormManagementPage() {
                           </Table.Td>
                           <Table.Td>
                             <Text size="xs">
-                              {new Date(form.createdAt).toLocaleDateString()} <br />
-                              {new Date(form.createdAt).toLocaleTimeString()}
+                              {formatDate(form.createdAt, true)}
                             </Text>
                           </Table.Td>
                           <Table.Td>

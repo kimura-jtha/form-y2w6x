@@ -349,42 +349,6 @@
       },
       "version": "Version"
     },
-    "users": {
-      "addButton": "Add User",
-      "modal": {
-        "addTitle": "Add New User",
-        "emailLabel": "Email",
-        "emailPlaceholder": "user@example.com",
-        "nameLabel": "Name",
-        "namePlaceholder": "John Doe",
-        "passwordLabel": "Password",
-        "passwordPlaceholder": "Enter password"
-      },
-      "notifications": {
-        "addError": {
-          "message": "Failed to add user",
-          "title": "Error"
-        },
-        "addSuccess": {
-          "message": "User added successfully",
-          "title": "Success"
-        },
-        "loadError": {
-          "message": "Failed to load users",
-          "title": "Error"
-        }
-      },
-      "refresh": "Refresh",
-      "table": {
-        "createdAt": "Created At",
-        "email": "Email",
-        "name": "Name",
-        "noUsers": "No users found",
-        "updatedAt": "Updated At",
-        "usersFound": "user(s) found"
-      },
-      "title": "User Management"
-    },
     "tournaments": {
       "amount": "Amount",
       "claimed": "Claimed",
@@ -496,6 +460,42 @@
       },
       "title": "Tournament Management",
       "viewDetails": "View Details"
+    },
+    "users": {
+      "addButton": "Add User",
+      "modal": {
+        "addTitle": "Add New User",
+        "emailLabel": "Email",
+        "emailPlaceholder": "user@example.com",
+        "nameLabel": "Name",
+        "namePlaceholder": "John Doe",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "Enter password"
+      },
+      "notifications": {
+        "addError": {
+          "message": "Failed to add user",
+          "title": "Error"
+        },
+        "addSuccess": {
+          "message": "User added successfully",
+          "title": "Success"
+        },
+        "loadError": {
+          "message": "Failed to load users",
+          "title": "Error"
+        }
+      },
+      "refresh": "Refresh",
+      "table": {
+        "createdAt": "Created At",
+        "email": "Email",
+        "name": "Name",
+        "noUsers": "No users found",
+        "updatedAt": "Updated At",
+        "usersFound": "user(s) found"
+      },
+      "title": "User Management"
     }
   },
   "auth": {
@@ -727,7 +727,6 @@
       "branch": "Branch",
       "title": "Bank Information"
     },
-    "issueReceiptButton": "Issue Receipt",
     "downloadReceiptButton": "Download Receipt",
     "error": {
       "agreeFailed": "Failed to agree to terms",
@@ -747,6 +746,7 @@
       "title": "Form Information",
       "tournament": "Tournament"
     },
+    "issueReceiptButton": "Issue Receipt",
     "loading": "Loading form data...",
     "receiptTitle": "Receipt",
     "termsAlert": {

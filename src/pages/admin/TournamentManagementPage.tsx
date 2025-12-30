@@ -42,6 +42,7 @@ import {
   updateTournament as updateTournamentApi,
 } from '@/lib/lambda/tournament';
 import type { Tournament } from '@/types';
+import { formatDate } from '@/utils/string';
 
 type SortField = 'eventNameJa' | 'tournamentNameJa' | 'date' | 'status';
 type SortDirection = 'asc' | 'desc';
@@ -627,7 +628,7 @@ export function TournamentManagementPage() {
                           </Text>
                         </Stack>
                       </Table.Td>
-                      <Table.Td>{new Date(tournament.date).toLocaleDateString()}</Table.Td>
+                      <Table.Td>{formatDate(tournament.date, false)}</Table.Td>
                       <Table.Td>
                         <Badge color={getStatusColor(tournament.status)} size="sm">
                           {t(`admin.tournaments.status.${tournament.status}`)}

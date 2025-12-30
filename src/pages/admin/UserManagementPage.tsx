@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { addUser, fetchUsers } from '@/lib/lambda/user';
+import { formatDate } from '@/utils/string';
 import {
   Box,
   Button,
@@ -159,14 +160,12 @@ export function UserManagementPage() {
                       <Table.Td>{user.email}</Table.Td>
                       <Table.Td>
                         <Text size="xs">
-                          {new Date(user.createdAt).toLocaleDateString()} <br />
-                          {new Date(user.createdAt).toLocaleTimeString()}
+                          {formatDate(user.createdAt, false)}
                         </Text>
                       </Table.Td>
                       <Table.Td>
                         <Text size="xs">
-                          {new Date(user.updatedAt).toLocaleDateString()} <br />
-                          {new Date(user.updatedAt).toLocaleTimeString()}
+                          {formatDate(user.updatedAt, false)}
                         </Text>
                       </Table.Td>
                     </Table.Tr>

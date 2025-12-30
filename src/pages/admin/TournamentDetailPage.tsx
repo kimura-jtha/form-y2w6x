@@ -37,6 +37,7 @@ import {
   updateTournament as updateTournamentApi,
 } from '@/lib/lambda/tournament';
 import type { PrizeClaimFormSubmission, Tournament } from '@/types';
+import { formatDate } from '@/utils/string';
 
 export function TournamentDetailPage() {
   const { t } = useTranslation();
@@ -272,7 +273,7 @@ export function TournamentDetailPage() {
                 <Text size="sm" c="dimmed" fw={500} style={{ minWidth: 164 }}>
                   {t('admin.tournaments.detail.date')}:
                 </Text>
-                <Text size="sm">{new Date(tournament.date).toLocaleDateString()}</Text>
+                <Text size="sm">{formatDate(tournament.date, false)}</Text>
               </Group>
 
               {/* Status with Toggle */}
@@ -391,8 +392,7 @@ export function TournamentDetailPage() {
                         </Table.Td>
                         <Table.Td>
                           <Text size="xs">
-                            {new Date(form.createdAt).toLocaleDateString()} <br />
-                            {new Date(form.createdAt).toLocaleTimeString()}
+                            {formatDate(form.createdAt, true)}
                           </Text>
                         </Table.Td>
                       </Table.Tr>

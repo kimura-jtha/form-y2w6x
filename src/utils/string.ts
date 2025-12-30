@@ -56,3 +56,26 @@ export function maskEmail(email: string): string {
   const [username, domain] = email.split('@');
   return `${username[0]}*****${username.at(-1)}@${domain}`;
 }
+
+/**
+ * Format a date to a localized string
+ */
+export function formatDate(datetime: number | string, withTime = false): string {
+  if (withTime) {
+    return new Date(datetime).toLocaleDateString('ja-JP', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      timeZone: 'Asia/Tokyo', // Essential for JST
+    });
+  }
+  return new Date(datetime).toLocaleDateString('ja-JP', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'Asia/Tokyo', // Essential for JST
+  });
+}

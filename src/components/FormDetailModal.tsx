@@ -2,6 +2,7 @@ import { Badge, Divider, Grid, Group, Modal, Stack, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 
 import type { PrizeClaimFormSubmission } from '@/types';
+import { formatDate } from '@/utils/string';
 
 interface FormDetailModalProps {
   opened: boolean;
@@ -77,7 +78,7 @@ export function FormDetailModal({ opened, onClose, form }: FormDetailModalProps)
           {/* <DetailRow label={t('admin.forms.detail.formId')} value={form.id} /> */}
           <DetailRow
             label={t('admin.forms.detail.submittedAt')}
-            value={`${new Date(form.createdAt).toLocaleDateString()} ${new Date(form.createdAt).toLocaleTimeString()}`}
+            value={formatDate(form.createdAt, true)}
           />
         </Stack>
 
@@ -137,7 +138,7 @@ export function FormDetailModal({ opened, onClose, form }: FormDetailModalProps)
           />
           <DetailRow
             label={t('prizeClaim.fields.tournamentDate.label')}
-            value={new Date(form.formContent.tournamentDate).toLocaleDateString()}
+            value={formatDate(form.formContent.tournamentDate, false)}
           />
           <DetailRow label={t('prizeClaim.fields.rank.label')} value={form.formContent.rank} />
           <DetailRow
