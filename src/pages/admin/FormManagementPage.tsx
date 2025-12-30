@@ -29,7 +29,14 @@ import {
 import { DatePickerInput } from '@mantine/dates';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
-import { IconDownload, IconInfoCircle, IconRefresh, IconTrash, IconX } from '@tabler/icons-react';
+import {
+  IconDownload,
+  IconFileText,
+  IconInfoCircle,
+  IconRefresh,
+  IconTrash,
+  IconX,
+} from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
 export function FormManagementPage() {
@@ -498,7 +505,7 @@ export function FormManagementPage() {
                       <Table.Th>{t('admin.forms.table.amount')}</Table.Th>
                       <Table.Th w="120px">{t('admin.forms.table.termsAgreed')}</Table.Th>
                       <Table.Th>{t('admin.forms.table.createdAt')}</Table.Th>
-                      <Table.Th w="120px">{t('admin.forms.table.actions')}</Table.Th>
+                      <Table.Th w="180px">{t('admin.forms.table.actions')}</Table.Th>
                     </Table.Tr>
                   </Table.Thead>
                   <Table.Tbody>
@@ -548,6 +555,19 @@ export function FormManagementPage() {
                             <Group gap="xs">
                               <Button
                                 size="xs"
+                                color="blue"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  e.preventDefault();
+                                  window.open(form.termsOfService?.url, '_blank');
+                                }}
+                                disabled={!form.termsOfService?.url}
+                                title={t('admin.forms.table.downloadTerms', 'Download Terms')}
+                              >
+                                <IconFileText size={16} />
+                              </Button>
+                              <Button
+                                size="xs"
                                 color="green"
                                 onClick={(e) => {
                                   e.stopPropagation();
@@ -555,6 +575,7 @@ export function FormManagementPage() {
                                   window.open(form.receipt?.url, '_blank');
                                 }}
                                 disabled={!form.receipt?.url}
+                                title={t('admin.forms.table.downloadReceipt', 'Download Receipt')}
                               >
                                 <IconDownload size={16} />
                               </Button>

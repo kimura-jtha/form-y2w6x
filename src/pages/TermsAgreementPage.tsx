@@ -22,6 +22,7 @@ import {
   Loader,
   Paper,
   ScrollArea,
+  Select,
   Stack,
   Text,
   Title,
@@ -49,6 +50,7 @@ export function TermsAgreementPage() {
   const [receiptIssuedAt, setReceiptIssuedAt] = useState<number>(Date.now());
   const [termsOfServiceUrl, setTermsOfServiceUrl] = useState<string | null>(null);
   const [termsOfServiceIssuedAt, setTermsOfServiceIssuedAt] = useState<number>(Date.now());
+  const [selectedDocumentType, setSelectedDocumentType] = useState<'terms' | 'receipt'>('receipt');
 
   // Extract form ID from URL hash
   useEffect(() => {
@@ -219,14 +221,26 @@ export function TermsAgreementPage() {
     }
   };
 
-  const handleIssueReceipt = async () => {
-    if (!receipt || !formId || !hash) return;
+  const handleDownloadDocument = async () => {
+    if (!formId || !hash) return;
+
+    const isTerms = selectedDocumentType === 'terms';
+    const content = isTerms ? termsOfService : receipt;
+    const existingUrl = isTerms ? termsOfServiceUrl : receiptUrl;
+
+    // If document already exists, just open it
+    if (existingUrl) {
+      window.open(existingUrl, '_blank');
+      return;
+    }
+
+    if (!content) return;
 
     try {
       setIsProcessingReceipt(true);
       setError(null);
 
-      // Create a temporary container with styled receipt content
+      // Create a temporary container with styled content
       const element = document.createElement('div');
       element.innerHTML = `
         <div style="
@@ -235,7 +249,7 @@ export function TermsAgreementPage() {
           line-height: 1.4;
           font-size: 10pt;
         ">
-          ${receipt}
+          ${content}
         </div>
       `;
 
@@ -254,8 +268,9 @@ export function TermsAgreementPage() {
       styleElement.textContent = styles;
       element.append(styleElement);
 
-      // Configure html2pdf options for 18.9cm x 10.9cm page
-      const filename = `receipt_${formId}_${new Date().toLocaleString('ja-JP', {
+      // Configure html2pdf options
+      const documentType = isTerms ? 'terms_of_service' : 'receipt';
+      const filename = `${documentType}_${formId}_${new Date().toLocaleString('ja-JP', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
@@ -265,27 +280,45 @@ export function TermsAgreementPage() {
         timeZone: 'Asia/Tokyo', // Essential for Japan Standard Time
       })}.pdf`;
 
-      const options = {
-        margin: [8, 8, 8, 8] as [number, number, number, number], // 8mm margin on all sides
-        filename,
-        image: { type: 'jpeg' as const, quality: 0.98 },
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          letterRendering: true,
-        },
-        jsPDF: {
-          unit: 'mm' as const,
-          format: [189, 109] as [number, number], // 18.9cm x 10.9cm in mm
-          orientation: 'landscape' as const,
-        },
-      };
+      const options = isTerms
+        ? {
+            margin: [10, 10, 10, 10] as [number, number, number, number],
+            filename,
+            image: { type: 'jpeg' as const, quality: 0.98 },
+            html2canvas: {
+              scale: 2,
+              useCORS: true,
+              letterRendering: true,
+            },
+            jsPDF: {
+              unit: 'mm' as const,
+              format: 'a4' as const,
+              orientation: 'portrait' as const,
+            },
+          }
+        : {
+            margin: [8, 8, 8, 8] as [number, number, number, number], // 8mm margin on all sides
+            filename,
+            image: { type: 'jpeg' as const, quality: 0.98 },
+            html2canvas: {
+              scale: 2,
+              useCORS: true,
+              letterRendering: true,
+            },
+            jsPDF: {
+              unit: 'mm' as const,
+              format: [189, 109] as [number, number], // 18.9cm x 10.9cm in mm
+              orientation: 'landscape' as const,
+            },
+          };
 
       // Generate PDF as blob
       const pdfBlob = await html2pdf().set(options).from(element).outputPdf('blob');
 
       // Get upload URL from backend
-      const { uploadUrl, s3Url } = await getReceiptUploadUrl(formId, hash);
+      const { uploadUrl, s3Url } = isTerms
+        ? await getTermsOfServiceUploadUrl(formId, hash)
+        : await getReceiptUploadUrl(formId, hash);
 
       // Upload PDF to S3
       const uploadResponse = await fetch(uploadUrl, {
@@ -297,12 +330,17 @@ export function TermsAgreementPage() {
       });
 
       if (!uploadResponse.ok) {
-        throw new Error('Failed to upload receipt to S3');
+        throw new Error(`Failed to upload ${documentType} to S3`);
       }
 
-      // Save receipt URL to backend
-      await saveReceiptUrl(formId, s3Url, hash);
-      setReceiptUrl(s3Url);
+      // Save URL to backend
+      if (isTerms) {
+        await saveTermsOfServiceUrl(formId, s3Url, hash);
+        setTermsOfServiceUrl(s3Url);
+      } else {
+        await saveReceiptUrl(formId, s3Url, hash);
+        setReceiptUrl(s3Url);
+      }
 
       // Download file locally for user
       const link = document.createElement('a');
@@ -520,49 +558,64 @@ export function TermsAgreementPage() {
             </Button>
           )}
 
-          {alreadyAgreed && termsOfServiceUrl && (
-            <Button
-              onClick={() => {
-                window.open(termsOfServiceUrl, '_blank');
-              }}
-              variant="outline"
-              size="lg"
-            >
-              {t('termsAgreement.viewTermsOfServiceButton', 'View Terms of Service PDF')}
-            </Button>
-          )}
-
           {alreadyAgreed && (
             <>
-              <Title order={2}>{t('termsAgreement.receiptTitle')}</Title>
+              <Title order={2}>{t('termsAgreement.documentsTitle', 'Documents')}</Title>
+
+              <Select
+                label={t('termsAgreement.selectDocumentType', 'Select Document Type')}
+                value={selectedDocumentType}
+                onChange={(value) => setSelectedDocumentType(value as 'terms' | 'receipt')}
+                data={[
+                  {
+                    value: 'terms',
+                    label: t('termsAgreement.documentTypes.terms', 'Terms of Service'),
+                  },
+                  {
+                    value: 'receipt',
+                    label: t('termsAgreement.documentTypes.receipt', 'Receipt'),
+                  },
+                ]}
+                size="md"
+              />
+
               <Box style={{ opacity: isProcessingReceipt ? 0 : 1 }}>
-                {!receiptUrl && (
-                  <ScrollArea h={400} type="always" offsetScrollbars>
-                    <Box
-                      p="md"
-                      style={{
-                        borderRadius: 'var(--mantine-radius-sm)',
-                      }}
-                      dangerouslySetInnerHTML={{ __html: receipt }}
-                    />
-                  </ScrollArea>
+                {selectedDocumentType === 'terms' ? (
+                  !termsOfServiceUrl && (
+                    <ScrollArea h={400} type="always" offsetScrollbars>
+                      <Box
+                        p="md"
+                        style={{
+                          borderRadius: 'var(--mantine-radius-sm)',
+                        }}
+                        dangerouslySetInnerHTML={{ __html: termsOfService }}
+                      />
+                    </ScrollArea>
+                  )
+                ) : (
+                  !receiptUrl && (
+                    <ScrollArea h={400} type="always" offsetScrollbars>
+                      <Box
+                        p="md"
+                        style={{
+                          borderRadius: 'var(--mantine-radius-sm)',
+                        }}
+                        dangerouslySetInnerHTML={{ __html: receipt }}
+                      />
+                    </ScrollArea>
+                  )
                 )}
               </Box>
-              {receiptUrl ? (
-                <Button
-                  onClick={() => {
-                    window.open(receiptUrl, '_blank');
-                  }}
-                  loading={isProcessingReceipt}
-                  size="lg"
-                >
-                  {t('termsAgreement.downloadReceiptButton')}
-                </Button>
-              ) : (
-                <Button onClick={handleIssueReceipt} loading={isProcessingReceipt} size="lg">
-                  {t('termsAgreement.issueReceiptButton')}
-                </Button>
-              )}
+
+              <Button onClick={handleDownloadDocument} loading={isProcessingReceipt} size="lg">
+                {selectedDocumentType === 'terms'
+                  ? termsOfServiceUrl
+                    ? t('termsAgreement.viewTermsButton', 'View Terms of Service')
+                    : t('termsAgreement.downloadTermsButton', 'Download Terms of Service')
+                  : receiptUrl
+                    ? t('termsAgreement.viewReceiptButton', 'View Receipt')
+                    : t('termsAgreement.downloadReceiptButton', 'Download Receipt')}
+              </Button>
             </>
           )}
         </Stack>

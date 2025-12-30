@@ -14,6 +14,11 @@ export interface PrizeClaimFormSubmission {
     issuedAt: number;
     url: string;
   };
+  termsOfService?: {
+    valid: boolean;
+    issuedAt: number;
+    url: string;
+  };
   createdAt: string;
   status: 'pending' | 'approved' | 'rejected';
 }
