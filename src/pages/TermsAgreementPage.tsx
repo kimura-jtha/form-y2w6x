@@ -2,7 +2,9 @@ import {
   agreeTermsOfService,
   getFormById,
   getReceiptUploadUrl,
+  getTermsOfServiceUploadUrl,
   saveReceiptUrl,
+  saveTermsOfServiceUrl,
 } from '@/lib/lambda/form';
 import { getReceiptTemplate, getTermsOfServiceTemplate } from '@/lib/lambda/template';
 import type { PrizeClaimFormValues } from '@/types';
@@ -45,6 +47,8 @@ export function TermsAgreementPage() {
   const [receipt, setReceipt] = useState<string>('');
   const [receiptUrl, setReceiptUrl] = useState<string | null>(null);
   const [receiptIssuedAt, setReceiptIssuedAt] = useState<number>(Date.now());
+  const [termsOfServiceUrl, setTermsOfServiceUrl] = useState<string | null>(null);
+  const [termsOfServiceIssuedAt, setTermsOfServiceIssuedAt] = useState<number>(Date.now());
 
   // Extract form ID from URL hash
   useEffect(() => {
@@ -75,11 +79,11 @@ export function TermsAgreementPage() {
     if (formData) {
       getTermsOfServiceTemplate().then((template) => {
         setTermsOfService(
-          renderTemplate(template.content, extractFormVariables(formData, receiptIssuedAt)),
+          renderTemplate(template.content, extractFormVariables(formData, termsOfServiceIssuedAt)),
         );
       });
     }
-  }, [receiptIssuedAt, formData]);
+  }, [termsOfServiceIssuedAt, formData]);
 
   useEffect(() => {
     if (alreadyAgreed && formData) {
@@ -102,6 +106,8 @@ export function TermsAgreementPage() {
         const response = await getFormById(formId, hash);
         setReceiptUrl(response.receipt?.url ?? null);
         setReceiptIssuedAt(response.receipt?.issuedAt ?? Date.now());
+        setTermsOfServiceUrl(response.termsOfService?.url ?? null);
+        setTermsOfServiceIssuedAt(response.termsOfService?.issuedAt ?? Date.now());
         setFormData(response.formData);
 
         // Check if terms are already agreed
@@ -119,11 +125,91 @@ export function TermsAgreementPage() {
   }, [formId, hash, t]);
 
   const handleAgree = async () => {
-    if (!formId || !hash) return;
+    if (!formId || !hash || !termsOfService) return;
 
     try {
       setIsSubmitting(true);
       setError(null);
+
+      // Create a temporary container with styled terms of service content
+      const element = document.createElement('div');
+      element.innerHTML = `
+        <div style="
+          font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+          padding: 8mm;
+          line-height: 1.4;
+          font-size: 10pt;
+        ">
+          ${termsOfService}
+        </div>
+      `;
+
+      // Apply additional styles to ensure proper rendering
+      const styles = `
+        h1 { font-size: 14pt; margin: 0 0 0.5em 0; }
+        h2 { font-size: 12pt; margin: 0.8em 0 0.4em 0; }
+        h3, h4, h5, h6 { font-size: 11pt; margin: 0.6em 0 0.3em 0; }
+        p { margin: 0.3em 0; font-size: 10pt; }
+        table { border-collapse: collapse; width: 100%; margin: 0.5em 0; font-size: 9pt; }
+        th, td { border: 1px solid #ddd; padding: 4px 6px; text-align: left; }
+        th { background-color: #f5f5f5; font-weight: 600; }
+      `;
+
+      const styleElement = document.createElement('style');
+      styleElement.textContent = styles;
+      element.append(styleElement);
+
+      // Configure html2pdf options for A4 page
+      const filename = `terms_of_service_${formId}_${new Date().toLocaleString('ja-JP', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        timeZone: 'Asia/Tokyo', // Essential for Japan Standard Time
+      })}.pdf`;
+
+      const options = {
+        margin: [10, 10, 10, 10] as [number, number, number, number],
+        filename,
+        image: { type: 'jpeg' as const, quality: 0.98 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          letterRendering: true,
+        },
+        jsPDF: {
+          unit: 'mm' as const,
+          format: 'a4' as const,
+          orientation: 'portrait' as const,
+        },
+      };
+
+      // Generate PDF as blob
+      const pdfBlob = await html2pdf().set(options).from(element).outputPdf('blob');
+
+      // Get upload URL from backend
+      const { uploadUrl, s3Url } = await getTermsOfServiceUploadUrl(formId, hash);
+
+      // Upload PDF to S3
+      const uploadResponse = await fetch(uploadUrl, {
+        method: 'PUT',
+        body: pdfBlob,
+        headers: {
+          'Content-Type': 'application/pdf',
+        },
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error('Failed to upload terms of service to S3');
+      }
+
+      // Save terms of service URL to backend
+      await saveTermsOfServiceUrl(formId, s3Url, hash);
+      setTermsOfServiceUrl(s3Url);
+
+      // Mark as agreed
       await agreeTermsOfService(formId, hash);
       setAlreadyAgreed(true);
     } catch (error_) {
@@ -431,6 +517,18 @@ export function TermsAgreementPage() {
           {!alreadyAgreed && (
             <Button onClick={handleAgree} loading={isSubmitting} size="lg">
               {t('termsAgreement.agreeButton')}
+            </Button>
+          )}
+
+          {alreadyAgreed && termsOfServiceUrl && (
+            <Button
+              onClick={() => {
+                window.open(termsOfServiceUrl, '_blank');
+              }}
+              variant="outline"
+              size="lg"
+            >
+              {t('termsAgreement.viewTermsOfServiceButton', 'View Terms of Service PDF')}
             </Button>
           )}
 

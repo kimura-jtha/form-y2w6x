@@ -63,6 +63,11 @@ export async function getFormById(
     issuedAt: number;
     url: string;
   };
+  termsOfService?: {
+    valid: boolean;
+    issuedAt: number;
+    url: string;
+  };
 }> {
   const response = await fetchLambda<{
     form: {
@@ -119,6 +124,35 @@ export async function saveReceiptUrl(formId: string, receiptUrl: string, hash: s
     body: {
       hash,
       receiptUrl,
+    },
+  });
+}
+
+type TermsOfServiceUploadUrlResponse = {
+  uploadUrl: string;
+  s3Url: string;
+  formId: string;
+  expiresIn: number;
+};
+
+export async function getTermsOfServiceUploadUrl(
+  formId: string,
+  hash: string,
+): Promise<TermsOfServiceUploadUrlResponse> {
+  const response = await fetchLambda<TermsOfServiceUploadUrlResponse>({
+    path: `forms/${formId}/terms-of-service/upload-url?hash=${hash}&ext=pdf`,
+    method: 'GET',
+  });
+  return response;
+}
+
+export async function saveTermsOfServiceUrl(formId: string, tosUrl: string, hash: string) {
+  await fetchLambda({
+    path: `forms/${formId}/terms-of-service`,
+    method: 'POST',
+    body: {
+      hash,
+      tosUrl,
     },
   });
 }
