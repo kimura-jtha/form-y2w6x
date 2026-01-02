@@ -102,6 +102,11 @@
           "title": "Tournament Required"
         }
       },
+      "loadAll": "Load All",
+      "loadAll.error": "Failed to Load All",
+      "loadAll.errorMessage": "Failed to load all data. Please try again.",
+      "loadAll.success": "Success",
+      "loadAll.successMessage": "Successfully loaded all {{count}} form(s)",
       "refresh": "Refresh",
       "status": {
         "approved": "Approved",

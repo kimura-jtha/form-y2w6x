@@ -102,6 +102,11 @@
           "title": "锦标赛要求"
         }
       },
+      "loadAll": "全部加载",
+      "loadAll.error": "加载失败",
+      "loadAll.errorMessage": "无法加载所有数据。请重试。",
+      "loadAll.success": "成功",
+      "loadAll.successMessage": "已成功加载全部{{count}}个表单",
       "refresh": "刷新",
       "status": {
         "approved": "得到正式认可的",

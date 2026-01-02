@@ -5,7 +5,7 @@ import { ROUTES } from '@/constants';
 import { clearAuth, getAccessKey } from '@/utils/auth';
 
 const baseUrl = 'https://wwzd303c6l.execute-api.ap-northeast-1.amazonaws.com/default/lambda-runner';
-const xApiKey = 'ak_1767958064_334e41e2273de69be6ef94b9d9933769';
+const xApiKey = 'ak_1798761598_18c02e2a5e77d665ed101f671ca154e0';
 
 export function fetchLambda<T>({
   path,

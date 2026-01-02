@@ -102,6 +102,11 @@
           "title": "토너먼트 참가 필수"
         }
       },
+      "loadAll": "모두 불러오기",
+      "loadAll.error": "불러오기 실패",
+      "loadAll.errorMessage": "모든 데이터를 불러오지 못했습니다. 다시 시도해주세요.",
+      "loadAll.success": "성공",
+      "loadAll.successMessage": "{{count}}개의 양식을 모두 불러왔습니다",
       "refresh": "새로 고치다",
       "status": {
         "approved": "승인됨",

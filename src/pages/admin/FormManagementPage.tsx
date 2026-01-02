@@ -54,9 +54,11 @@ export function FormManagementPage() {
   const [exportType, setExportType] = useState<'all' | 'japanese'>('all');
   const [exportOnlyTermsAgreed, setExportOnlyTermsAgreed] = useState(false);
 
+  const [allForms, setAllForms] = useState<PrizeClaimFormSubmission[]>([]);
   const [forms, setForms] = useState<PrizeClaimFormSubmission[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isLoadingAll, setIsLoadingAll] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [deletingFormId, setDeletingFormId] = useState<string | null>(null);
   const [selectedEventName, setSelectedEventName] = useState<string | null>(null);
@@ -72,6 +74,7 @@ export function FormManagementPage() {
   ]);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(false);
+  const [allDataLoaded, setAllDataLoaded] = useState(false);
   const [selectedForm, setSelectedForm] = useState<PrizeClaimFormSubmission | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
   const [sortByCreatedAt, setSortByCreatedAt] = useState<'asc' | 'desc' | null>(null);
@@ -130,6 +133,33 @@ export function FormManagementPage() {
       }));
   }, [tournaments, selectedDateRange, selectedEventName]);
 
+  const filterFormsClientSide = (
+    formsToFilter: PrizeClaimFormSubmission[],
+    tournamentId: string | null,
+    dateRange: [Date | null, Date | null],
+  ) => {
+    let filtered = formsToFilter;
+
+    // Filter by tournament
+    if (tournamentId) {
+      filtered = filtered.filter((form) => form.formContent.tournamentId === tournamentId);
+    }
+
+    // Filter by date range
+    const [dateFrom, dateTo] = dateRange;
+    if (dateFrom || dateTo) {
+      filtered = filtered.filter((form) => {
+        const formDate = new Date(form.createdAt);
+        const from = dateFrom ? new Date(dateFrom).setHours(0, 0, 0, 0) : 0;
+        const to = dateTo ? new Date(dateTo).setHours(23, 59, 59, 999) : Infinity;
+        const formTime = formDate.getTime();
+        return formTime >= from && formTime <= to;
+      });
+    }
+
+    return filtered;
+  };
+
   const sortedForms = useMemo(() => {
     if (!sortByCreatedAt) return forms;
 
@@ -185,20 +215,24 @@ export function FormManagementPage() {
       const [dateFrom, dateTo] = dateRange || [null, null];
       const { forms: fetchedForms, pagination } = await getForms(
         undefined,
-        20,
+        50,
         tournamentId || undefined,
         dateFrom ? dateFrom.toISOString().split('T')[0] : undefined,
         dateTo ? dateTo.toISOString().split('T')[0] : undefined,
       );
+      setAllForms(fetchedForms);
       setForms(fetchedForms);
       setNextCursor(pagination.nextCursor || null);
       setHasMore(pagination.hasMore);
+      setAllDataLoaded(!pagination.hasMore);
       setAppliedTournamentId(tournamentId || null);
       setAppliedDateRange(dateRange || [null, null]);
     } catch (error_) {
       console.error('Failed to fetch forms:', error_);
     } finally {
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
     }
   };
 
@@ -215,13 +249,121 @@ export function FormManagementPage() {
         dateFrom ? dateFrom.toISOString().split('T')[0] : undefined,
         dateTo ? dateTo.toISOString().split('T')[0] : undefined,
       );
+      const updatedAllForms = [...allForms, ...moreForms];
+      setAllForms(updatedAllForms);
       setForms([...forms, ...moreForms]);
       setNextCursor(pagination.nextCursor || null);
       setHasMore(pagination.hasMore);
+      setAllDataLoaded(!pagination.hasMore);
     } catch (error_) {
       console.error('Failed to load more forms:', error_);
     } finally {
       setIsLoadingMore(false);
+    }
+  };
+
+  const loadAllForms = async () => {
+    if (!nextCursor || isLoadingAll || isLoadingMore) return;
+
+    try {
+      setIsLoadingAll(true);
+      let cursor = nextCursor;
+      let hasMoreData = hasMore;
+      let loadedForms = [...allForms];
+
+      const [dateFrom, dateTo] = appliedDateRange;
+
+      // Keep loading until there's no more data
+      while (cursor && hasMoreData) {
+        const { forms: moreForms, pagination } = await getForms(
+          cursor,
+          100,
+          appliedTournamentId || undefined,
+          dateFrom ? dateFrom.toISOString().split('T')[0] : undefined,
+          dateTo ? dateTo.toISOString().split('T')[0] : undefined,
+        );
+
+        loadedForms = [...loadedForms, ...moreForms];
+        cursor = pagination.nextCursor || '';
+        hasMoreData = pagination.hasMore;
+      }
+
+      setAllForms(loadedForms);
+      setForms(loadedForms);
+      setNextCursor(null);
+      setHasMore(false);
+      setAllDataLoaded(true);
+
+      notifications.show({
+        title: t('admin.forms.loadAll.success'),
+        message: t('admin.forms.loadAll.successMessage', { count: loadedForms.length }),
+        color: 'green',
+      });
+    } catch (error_) {
+      console.error('Failed to load all forms:', error_);
+      notifications.show({
+        title: t('admin.forms.loadAll.error'),
+        message: t('admin.forms.loadAll.errorMessage'),
+        color: 'red',
+      });
+    } finally {
+      setIsLoadingAll(false);
+    }
+  };
+
+  const fetchAllFormsWithFilter = async (
+    tournamentId?: string | null,
+    dateRange?: [Date | null, Date | null],
+  ) => {
+    try {
+      setIsLoading(true);
+      const [dateFrom, dateTo] = dateRange || [null, null];
+
+      let cursor: string | undefined;
+      let hasMoreData = true;
+      let loadedForms: PrizeClaimFormSubmission[] = [];
+
+      // Keep loading until there's no more data
+      while (hasMoreData) {
+        const { forms: moreForms, pagination } = await getForms(
+          cursor,
+          100,
+          tournamentId || undefined,
+          dateFrom ? dateFrom.toISOString().split('T')[0] : undefined,
+          dateTo ? dateTo.toISOString().split('T')[0] : undefined,
+        );
+
+        loadedForms = [...loadedForms, ...moreForms];
+        cursor = pagination.nextCursor || undefined;
+        hasMoreData = pagination.hasMore;
+      }
+
+      setAllForms(loadedForms);
+      setForms(loadedForms);
+      setNextCursor(null);
+      setHasMore(false);
+      setAllDataLoaded(true);
+      setAppliedTournamentId(tournamentId || null);
+      setAppliedDateRange(dateRange || [null, null]);
+
+      if (loadedForms.length > 0) {
+        notifications.show({
+          title: t('admin.forms.loadAll.success'),
+          message: t('admin.forms.loadAll.successMessage', { count: loadedForms.length }),
+          color: 'green',
+        });
+      }
+    } catch (error_) {
+      console.error('Failed to fetch all forms:', error_);
+      notifications.show({
+        title: t('admin.forms.loadAll.error'),
+        message: t('admin.forms.loadAll.errorMessage'),
+        color: 'red',
+      });
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
     }
   };
 
@@ -232,14 +374,41 @@ export function FormManagementPage() {
   }, []);
 
   const applyFilter = () => {
-    fetchForms(selectedTournamentId, selectedDateRange);
+    // If all data is already loaded, filter on client side
+    if (allDataLoaded) {
+      const filtered = filterFormsClientSide(allForms, selectedTournamentId, selectedDateRange);
+      setForms(filtered);
+      setAppliedTournamentId(selectedTournamentId);
+      setAppliedDateRange(selectedDateRange);
+
+      notifications.show({
+        title: t('admin.forms.filters.apply'),
+        message: `${filtered.length} ${t('admin.forms.table.formsFound')}`,
+        color: 'blue',
+      });
+    } else {
+      // When tournament is selected, load all data automatically
+      if (selectedTournamentId) {
+        fetchAllFormsWithFilter(selectedTournamentId, selectedDateRange);
+      } else {
+        fetchForms(selectedTournamentId, selectedDateRange);
+      }
+    }
   };
 
   const handleClearFilter = () => {
     setSelectedEventName(null);
     setSelectedTournamentId(null);
     setSelectedDateRange([null, null]);
-    fetchForms(null, [null, null]);
+
+    // If all data is loaded, just show all forms
+    if (allDataLoaded) {
+      setForms(allForms);
+      setAppliedTournamentId(null);
+      setAppliedDateRange([null, null]);
+    } else {
+      fetchForms(null, [null, null]);
+    }
   };
 
   const handleExportCSV = () => {
@@ -261,29 +430,35 @@ export function FormManagementPage() {
       setIsExporting(true);
       closeExportModal();
 
-      // Fetch all forms for the selected tournament with pagination
-      const allForms: PrizeClaimFormSubmission[] = [];
-      let cursor: string | undefined;
-      let hasMoreData = true;
+      let exportForms: PrizeClaimFormSubmission[] = [];
 
-      const [dateFrom, dateTo] = appliedDateRange;
+      // If all data is already loaded, use filtered forms from client side
+      if (allDataLoaded) {
+        exportForms = filterFormsClientSide(allForms, appliedTournamentId, appliedDateRange);
+      } else {
+        // Fetch all forms for the selected tournament with pagination
+        let cursor: string | undefined;
+        let hasMoreData = true;
 
-      while (hasMoreData) {
-        const { forms: fetchedForms, pagination } = await getForms(
-          cursor,
-          100, // Use larger page size for export
-          appliedTournamentId || undefined,
-          dateFrom ? dateFrom.toISOString().split('T')[0] : undefined,
-          dateTo ? dateTo.toISOString().split('T')[0] : undefined,
-        );
+        const [dateFrom, dateTo] = appliedDateRange;
 
-        allForms.push(...fetchedForms);
+        while (hasMoreData) {
+          const { forms: fetchedForms, pagination } = await getForms(
+            cursor,
+            100, // Use larger page size for export
+            appliedTournamentId || undefined,
+            dateFrom ? dateFrom.toISOString().split('T')[0] : undefined,
+            dateTo ? dateTo.toISOString().split('T')[0] : undefined,
+          );
 
-        hasMoreData = pagination.hasMore;
-        cursor = pagination.nextCursor;
+          exportForms.push(...fetchedForms);
+
+          hasMoreData = pagination.hasMore;
+          cursor = pagination.nextCursor;
+        }
       }
 
-      if (allForms.length === 0) {
+      if (exportForms.length === 0) {
         notifications.show({
           title: t('admin.forms.notifications.noData.title'),
           message: t('admin.forms.notifications.noData.message'),
@@ -293,7 +468,7 @@ export function FormManagementPage() {
       }
 
       // Filter forms based on export type
-      let filteredForms = allForms;
+      let filteredForms = exportForms;
       const filterSuffixes: string[] = [];
 
       // First, filter by user type (all or japanese)
@@ -368,7 +543,8 @@ export function FormManagementPage() {
       setDeletingFormId(formToDelete.id);
       await deleteForm(formToDelete.id);
 
-      // Remove the deleted form from the list
+      // Remove the deleted form from both lists
+      setAllForms(allForms.filter((form) => form.id !== formToDelete.id));
       setForms(forms.filter((form) => form.id !== formToDelete.id));
 
       // Show success notification
@@ -492,7 +668,13 @@ export function FormManagementPage() {
           </Button>
           <Button
             leftSection={<IconRefresh size={16} />}
-            onClick={() => fetchForms(appliedTournamentId, appliedDateRange)}
+            onClick={() => {
+              if (appliedTournamentId) {
+                fetchAllFormsWithFilter(appliedTournamentId, appliedDateRange);
+              } else {
+                fetchForms(appliedTournamentId, appliedDateRange);
+              }
+            }}
             variant="light"
           >
             {t('admin.forms.refresh')}
@@ -540,16 +722,6 @@ export function FormManagementPage() {
                         {sortByCreatedAt === 'asc' && <IconArrowUp size={10} />}
                         {sortByCreatedAt === 'desc' && <IconArrowDown size={10} />}
                       </Table.Th>
-                      {/* <Table.Th
-                        onClick={handleSortByCreatedAt}
-                        style={{ cursor: 'pointer', userSelect: 'none' }}
-                      >
-                        <Group gap={4} wrap="nowrap">
-                          <Text>{t('admin.forms.table.createdAt')}</Text>
-                          {sortByCreatedAt === 'asc' && <IconArrowUp size={16} />}
-                          {sortByCreatedAt === 'desc' && <IconArrowDown size={16} />}
-                        </Group>
-                      </Table.Th> */}
                       <Table.Th w="180px">{t('admin.forms.table.actions')}</Table.Th>
                     </Table.Tr>
                   </Table.Thead>
@@ -642,9 +814,14 @@ export function FormManagementPage() {
                 </Table>
                 {hasMore && !isLoading && (
                   <Center mt="md">
-                    <Button onClick={loadMoreForms} loading={isLoadingMore} variant="light">
-                      {t('common.loadMore')}
-                    </Button>
+                    <Group gap="sm">
+                      <Button onClick={loadMoreForms} loading={isLoadingMore} variant="light" disabled={isLoadingAll}>
+                        {t('common.loadMore')}
+                      </Button>
+                      <Button onClick={loadAllForms} loading={isLoadingAll} variant="filled" disabled={isLoadingMore}>
+                        {t('admin.forms.loadAll')}
+                      </Button>
+                    </Group>
                   </Center>
                 )}
               </>

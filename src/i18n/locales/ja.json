@@ -102,6 +102,11 @@
           "title": "トーナメントが必要です"
         }
       },
+      "loadAll": "すべて読み込む",
+      "loadAll.error": "読み込み失敗",
+      "loadAll.errorMessage": "すべてのデータの読み込みに失敗しました。もう一度お試しください。",
+      "loadAll.success": "成功",
+      "loadAll.successMessage": "{{count}}件のフォームをすべて読み込みました",
       "refresh": "更新",
       "status": {
         "approved": "承認済み",

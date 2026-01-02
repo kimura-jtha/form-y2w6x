@@ -35,16 +35,20 @@ export function LanguageSwitcher({ variant = 'default', size = 'sm' }: LanguageS
     return null;
   }
 
-  const handleChange = (value: string | null) => {
-    if (value) {
-      changeLanguage(value);
-    }
-  };
-
   return (
     <Select
       value={currentLanguage}
-      onChange={handleChange}
+      onChange={(value: string | null) => {
+        if (value) {
+          if (value === currentLanguage) {
+            return;
+          }
+          changeLanguage(value);
+          setTimeout(() => {
+            window.location.reload();
+          }, 300);
+        }
+      }}
       data={LANGUAGE_OPTIONS.map((option) => ({
         value: option.value,
         label: `${option.flag} ${option.label}`,
