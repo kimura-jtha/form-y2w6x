@@ -66,6 +66,8 @@
         "success": "TODO: translate me!!!",
         "successMessage": "TODO: translate me!!!"
       },
+      "exportAll": "导出所有数据",
+      "exportAllHelper": "导出所有已加载的表单数据。您可以在导出前选择应用过滤器。",
       "exportCSV": "导出 CSV 文件",
       "exportHelper": "请使用下方的筛选器选择赛事以导出该赛事的 CSV 数据。",
       "filters": {

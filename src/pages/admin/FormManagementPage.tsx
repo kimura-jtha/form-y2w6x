@@ -36,7 +36,6 @@ import {
   IconDownload,
   IconFileText,
   IconInfoCircle,
-  IconRefresh,
   IconTrash,
   IconX
 } from '@tabler/icons-react';
@@ -412,7 +411,8 @@ export function FormManagementPage() {
   };
 
   const handleExportCSV = () => {
-    if (!appliedTournamentId) {
+    // Allow export if all data is loaded OR tournament is selected
+    if (!allDataLoaded && !appliedTournamentId) {
       notifications.show({
         title: t('admin.forms.notifications.noTournamentSelected.title'),
         message: t('admin.forms.notifications.noTournamentSelected.message'),
@@ -582,25 +582,52 @@ export function FormManagementPage() {
         <Title order={2}>{t('admin.forms.title')}</Title>
         <Group gap="sm">
           <Group gap={4}>
-            <Button
-              leftSection={<IconDownload size={16} />}
-              onClick={handleExportCSV}
-              loading={isExporting}
-              disabled={!appliedTournamentId || isLoading}
-              color="green"
-            >
-              {t('admin.forms.exportCSV')}
-            </Button>
-            <Popover width={300} position="bottom" withArrow shadow="md">
-              <Popover.Target>
-                <ActionIcon variant="subtle" color="red.3" size="lg">
-                  <IconInfoCircle size={18} />
-                </ActionIcon>
-              </Popover.Target>
-              <Popover.Dropdown>
-                <Text size="sm">{t('admin.forms.exportHelper')}</Text>
-              </Popover.Dropdown>
-            </Popover>
+            {(!appliedTournamentId && allDataLoaded) ? (
+              <>
+                <Button
+                  leftSection={<IconDownload size={16} />}
+                  onClick={handleExportCSV}
+                  loading={isExporting}
+                  disabled={isLoading}
+                  color="green"
+                  variant="filled"
+                >
+                  {t('admin.forms.exportAll')}
+                </Button>
+                <Popover width={300} position="bottom" withArrow shadow="md">
+                  <Popover.Target>
+                    <ActionIcon variant="subtle" color="red.3" size="lg">
+                      <IconInfoCircle size={18} />
+                    </ActionIcon>
+                  </Popover.Target>
+                  <Popover.Dropdown>
+                    <Text size="sm">{t('admin.forms.exportAllHelper')}</Text>
+                  </Popover.Dropdown>
+                </Popover>
+              </>
+            ) : (
+              <>
+                <Button
+                  leftSection={<IconDownload size={16} />}
+                  onClick={handleExportCSV}
+                  loading={isExporting}
+                  disabled={!appliedTournamentId || isLoading}
+                  color="green"
+                >
+                  {t('admin.forms.exportCSV')}
+                </Button>
+                <Popover width={300} position="bottom" withArrow shadow="md">
+                  <Popover.Target>
+                    <ActionIcon variant="subtle" color="red.3" size="lg">
+                      <IconInfoCircle size={18} />
+                    </ActionIcon>
+                  </Popover.Target>
+                  <Popover.Dropdown>
+                    <Text size="sm">{t('admin.forms.exportHelper')}</Text>
+                  </Popover.Dropdown>
+                </Popover>
+              </>
+            )}
           </Group>
         </Group>
       </Group>
@@ -667,17 +694,8 @@ export function FormManagementPage() {
             {t('admin.forms.filters.clear')}
           </Button>
           <Button
-            leftSection={<IconRefresh size={16} />}
-            onClick={() => {
-              if (appliedTournamentId) {
-                fetchAllFormsWithFilter(appliedTournamentId, appliedDateRange);
-              } else {
-                fetchForms(appliedTournamentId, appliedDateRange);
-              }
-            }}
-            variant="light"
-          >
-            {t('admin.forms.refresh')}
+            onClick={loadAllForms} loading={isLoadingAll} variant="filled" disabled={isLoadingMore || allDataLoaded}>
+            {t('admin.forms.loadAll')}
           </Button>
         </Group>
       </Paper>

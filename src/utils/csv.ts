@@ -444,12 +444,15 @@ function validateTournamentRow(row: Record<string, string>, rowNumber: number): 
   // Validate date
   if (!row['date']) {
     rowErrors.push({ row: rowNumber, field: 'date', message: 'Date is required' });
-  } else if (!/^\d{4}-\d{2}-\d{2}$/.test(row['date'])) {
-    rowErrors.push({
-      row: rowNumber,
-      field: 'date',
-      message: 'Date must be in YYYY-MM-DD format',
-    });
+  } else {
+    row['date'] = row['date'].replaceAll('/', '-');
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(row['date'])) {
+      rowErrors.push({
+        row: rowNumber,
+        field: 'date',
+        message: 'Date must be in YYYY-MM-DD or YYYY/MM/DD format',
+      });
+    }
   }
 
   // Validate status

@@ -66,6 +66,8 @@
         "success": "Export Successful",
         "successMessage": "Successfully exported {{count}} form(s)"
       },
+      "exportAll": "Export All Data",
+      "exportAllHelper": "Export all loaded forms data. You can optionally apply filters before exporting.",
       "exportCSV": "Export CSV",
       "exportHelper": "Please select a tournament using the filter below to export CSV data for that specific tournament.",
       "filters": {

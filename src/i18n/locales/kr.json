@@ -66,6 +66,8 @@
         "success": "TODO: translate me!!!",
         "successMessage": "TODO: translate me!!!"
       },
+      "exportAll": "모든 데이터 내보내기",
+      "exportAllHelper": "로드된 모든 양식 데이터를 내보냅니다. 내보내기 전에 필터를 적용할 수도 있습니다.",
       "exportCSV": "CSV 내보내기",
       "exportHelper": "CSV 데이터를 내보내려면 아래 필터를 사용하여 토너먼트를 선택하세요.",
       "filters": {
