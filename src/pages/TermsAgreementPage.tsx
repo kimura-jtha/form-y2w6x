@@ -629,7 +629,7 @@ const renderTemplate = (template: string, variables: Record<string, string>): st
  */
 const extractFormVariables = (formContent: PrizeClaimFormValues, issuedAt: number) => {
   const isSavings = formContent.accountType === 'savings';
-  const accountTypeJa = isSavings ? '当座預金' : '普通預金';
+  const accountTypeJa = isSavings ? '普通預金' : '当座預金';
   const accountTypeEn = isSavings ? 'Savings' : 'Checking';
   return {
     today: formatDate(issuedAt, false),
