@@ -12,6 +12,7 @@ interface EnvConfig {
   // Feature flags
   IS_DEV: boolean;
   IS_PROD: boolean;
+  IS_TEST: boolean;
 }
 
 function getEnvVar(key: string, defaultValue?: string): string {
@@ -22,6 +23,9 @@ function getEnvVar(key: string, defaultValue?: string): string {
   return value;
 }
 
+const IS_DEV = import.meta.env.DEV;
+const IS_PROD = !IS_DEV && location.hostname === 'form.jppa.jp';
+const IS_TEST = !IS_DEV && location.hostname !== 'form.jppa.jp';
 export const env: EnvConfig = {
   // App
   APP_NAME: getEnvVar('VITE_APP_NAME', 'Form Management'),
@@ -29,6 +33,7 @@ export const env: EnvConfig = {
   APP_BUILD: getEnvVar('VITE_APP_BUILD', 'dev'),
 
   // Feature flags
-  IS_DEV: import.meta.env.DEV,
-  IS_PROD: import.meta.env.PROD,
+  IS_DEV,
+  IS_PROD,
+  IS_TEST,
 };

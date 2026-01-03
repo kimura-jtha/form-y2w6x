@@ -2,12 +2,28 @@ import { RouterProvider } from 'react-router';
 
 import { ErrorBoundary } from '@/components';
 
+import { Affix, Center, Text } from '@mantine/core';
+import { useState } from 'react';
+import { env } from './config';
 import router from './router';
 
 export default function App() {
+  const [hide, setHide] = useState(false);
   return (
     <ErrorBoundary>
       <RouterProvider router={router} />
+      {!env.IS_PROD && !hide && (
+        <Affix position={{ bottom: 0, left: 0 }}>
+          <Center w="100vw" bg="red.1" p="xs" onClick={() => setHide(true)} style={{ cursor: 'pointer' }}>
+            <Text c="red" fw={600}>
+              NON PRODUCTION ENVIRONMENT
+            </Text>
+            <Text c="red" size="xs" style={{ fontStyle: 'italic' }}>
+              {'  '}(Click to hide)
+            </Text>
+          </Center>
+        </Affix>
+      )}
     </ErrorBoundary>
   );
 }
