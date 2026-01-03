@@ -1,13 +1,8 @@
 import { notifications } from '@mantine/notifications';
 import i18next from 'i18next';
 
-import { env } from '@/config';
 import { ROUTES } from '@/constants';
 import { clearAuth, getAccessKey } from '@/utils/auth';
-
-const base = 'https://wwzd303c6l.execute-api.ap-northeast-1.amazonaws.com/default/';
-const baseUrl = env.IS_PROD ? `${base}lambda-runner` : `${base}lambda-runner-test`;
-const xApiKey = 'ak_1798761598_18c02e2a5e77d665ed101f671ca154e0';
 
 export function fetchLambda<T>({
   path,
@@ -18,6 +13,11 @@ export function fetchLambda<T>({
   path: string;
   body?: unknown;
 }) {
+  const isProd = window.location.hostname === 'form.jppa.jp';
+  const base = 'https://wwzd303c6l.execute-api.ap-northeast-1.amazonaws.com/default/';
+  const baseUrl = isProd ? `${base}lambda-runner` : `${base}lambda-runner-test`;
+  const xApiKey = 'ak_1798761598_18c02e2a5e77d665ed101f671ca154e0';
+
   const headers: Record<string, string> = {
     'X-Api-Key': xApiKey,
   };

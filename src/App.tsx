@@ -4,15 +4,15 @@ import { ErrorBoundary } from '@/components';
 
 import { Affix, Center, Text } from '@mantine/core';
 import { useState } from 'react';
-import { env } from './config';
 import router from './router';
 
 export default function App() {
   const [hide, setHide] = useState(false);
+  const isProd = window.location.hostname === 'form.jppa.jp';
   return (
     <ErrorBoundary>
       <RouterProvider router={router} />
-      {!env.IS_PROD && !hide && (
+      {!isProd && !hide && (
         <Affix position={{ bottom: 0, left: 0 }}>
           <Center w="100vw" bg="red.1" p="xs" onClick={() => setHide(true)} style={{ cursor: 'pointer' }}>
             <Text c="red" fw={600}>
