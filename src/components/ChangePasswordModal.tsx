@@ -62,17 +62,7 @@ export function ChangePasswordModal({ opened, onClose }: ChangePasswordModalProp
 
     try {
       setIsLoading(true);
-      const response = await changePassword(oldPassword, newPassword);
-
-      if (response.success) {
-        setSuccess(true);
-        resetForm();
-        setTimeout(() => {
-          handleClose();
-        }, 2000);
-      } else {
-        setError(response.message || t('admin.changePassword.errors.failed'));
-      }
+      await changePassword(oldPassword, newPassword);
     } catch (error_) {
       console.error('Change password error:', error_);
       setError(t('admin.changePassword.errors.failed'));

@@ -37,7 +37,7 @@ import {
   IconFileText,
   IconInfoCircle,
   IconTrash,
-  IconX
+  IconX,
 } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
@@ -582,7 +582,7 @@ export function FormManagementPage() {
         <Title order={2}>{t('admin.forms.title')}</Title>
         <Group gap="sm">
           <Group gap={4}>
-            {(!appliedTournamentId && allDataLoaded) ? (
+            {!appliedTournamentId && allDataLoaded ? (
               <>
                 <Button
                   leftSection={<IconDownload size={16} />}
@@ -694,7 +694,11 @@ export function FormManagementPage() {
             {t('admin.forms.filters.clear')}
           </Button>
           <Button
-            onClick={loadAllForms} loading={isLoadingAll} variant="filled" disabled={isLoadingMore || allDataLoaded}>
+            onClick={loadAllForms}
+            loading={isLoadingAll}
+            variant="filled"
+            disabled={isLoadingMore || allDataLoaded}
+          >
             {t('admin.forms.loadAll')}
           </Button>
         </Group>
@@ -733,9 +737,11 @@ export function FormManagementPage() {
                       <Table.Th>{t('admin.forms.table.rank')}</Table.Th>
                       <Table.Th>{t('admin.forms.table.amount')}</Table.Th>
                       <Table.Th w="50">{t('admin.forms.table.termsAgreed')}</Table.Th>
-                      <Table.Th onClick={handleSortByCreatedAt} style={{ cursor: 'pointer', userSelect: 'none' }}>
-                        {t('admin.forms.table.createdAt')}
-                        {' '}
+                      <Table.Th
+                        onClick={handleSortByCreatedAt}
+                        style={{ cursor: 'pointer', userSelect: 'none' }}
+                      >
+                        {t('admin.forms.table.createdAt')}{' '}
                         {sortByCreatedAt === null && <IconArrowsUpDown size={10} />}
                         {sortByCreatedAt === 'asc' && <IconArrowUp size={10} />}
                         {sortByCreatedAt === 'desc' && <IconArrowDown size={10} />}
@@ -781,9 +787,7 @@ export function FormManagementPage() {
                             </Center>
                           </Table.Td>
                           <Table.Td>
-                            <Text size="xs">
-                              {formatDate(form.createdAt, true)}
-                            </Text>
+                            <Text size="xs">{formatDate(form.createdAt, true)}</Text>
                           </Table.Td>
                           <Table.Td>
                             <Group gap="xs">
@@ -833,10 +837,20 @@ export function FormManagementPage() {
                 {hasMore && !isLoading && (
                   <Center mt="md">
                     <Group gap="sm">
-                      <Button onClick={loadMoreForms} loading={isLoadingMore} variant="light" disabled={isLoadingAll}>
+                      <Button
+                        onClick={loadMoreForms}
+                        loading={isLoadingMore}
+                        variant="light"
+                        disabled={isLoadingAll}
+                      >
                         {t('common.loadMore')}
                       </Button>
-                      <Button onClick={loadAllForms} loading={isLoadingAll} variant="filled" disabled={isLoadingMore}>
+                      <Button
+                        onClick={loadAllForms}
+                        loading={isLoadingAll}
+                        variant="filled"
+                        disabled={isLoadingMore}
+                      >
                         {t('admin.forms.loadAll')}
                       </Button>
                     </Group>

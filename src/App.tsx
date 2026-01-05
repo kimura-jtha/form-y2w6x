@@ -14,7 +14,13 @@ export default function App() {
       <RouterProvider router={router} />
       {!isProd && !hide && (
         <Affix position={{ bottom: 0, left: 0 }}>
-          <Center w="100vw" bg="red.1" p="xs" onClick={() => setHide(true)} style={{ cursor: 'pointer' }}>
+          <Center
+            w="100vw"
+            bg="red.1"
+            p="xs"
+            onClick={() => setHide(true)}
+            style={{ cursor: 'pointer' }}
+          >
             <Text c="red" fw={600}>
               NON PRODUCTION ENVIRONMENT
             </Text>

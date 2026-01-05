@@ -159,14 +159,10 @@ export function UserManagementPage() {
                       <Table.Td>{user.name}</Table.Td>
                       <Table.Td>{user.email}</Table.Td>
                       <Table.Td>
-                        <Text size="xs">
-                          {formatDate(user.createdAt, false)}
-                        </Text>
+                        <Text size="xs">{formatDate(user.createdAt, false)}</Text>
                       </Table.Td>
                       <Table.Td>
-                        <Text size="xs">
-                          {formatDate(user.updatedAt, false)}
-                        </Text>
+                        <Text size="xs">{formatDate(user.updatedAt, false)}</Text>
                       </Table.Td>
                     </Table.Tr>
                   ))

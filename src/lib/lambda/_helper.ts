@@ -28,6 +28,7 @@ export function fetchLambda<T>({
   if (xUserAccessKey) {
     headers['X-User-Access-Key'] = xUserAccessKey;
   }
+  const start = Date.now();
   return fetch(`${baseUrl}/${path}`, {
     method,
     headers,
@@ -47,6 +48,14 @@ export function fetchLambda<T>({
     }
     if (response.status === 204) {
       return { success: true } as T;
+    }
+    const end = Date.now();
+    const duration = end - start;
+    console.log(`Lambda call duration: ${duration}ms`);
+    if (!isProd && method !== 'GET') {
+      if (duration > 5e3) {
+        alert(`Lambda call duration: ${(duration / 1e3).toFixed(2)} seconds`);
+      }
     }
     return response.json() as Promise<T>;
   });

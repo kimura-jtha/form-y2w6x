@@ -17,14 +17,14 @@ export async function login(email: string, password: string) {
   return { success: false, message: 'Failed to login' };
 }
 
-export function changePassword(oldPassword: string, newPassword: string) {
+export async function changePassword(currentPassword: string, newPassword: string) {
   const email = getEmail();
   if (!email) {
     return { success: false, message: 'Email not found' };
   }
-  return fetchLambda<{ success: boolean; message: string }>({
+  await fetchLambda<{ success: boolean; message: string }>({
     path: 'auth/change-password',
     method: 'POST',
-    body: { email, oldPassword, newPassword },
+    body: { email, currentPassword, newPassword },
   });
 }

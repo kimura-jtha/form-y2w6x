@@ -565,31 +565,29 @@ export function TermsAgreementPage() {
               />
 
               <Box style={{ opacity: isProcessingReceipt ? 0 : 1 }}>
-                {selectedDocumentType === 'terms' ? (
-                  !termsOfServiceUrl && (
-                    <ScrollArea h={400} type="always" offsetScrollbars>
-                      <Box
-                        p="md"
-                        style={{
-                          borderRadius: 'var(--mantine-radius-sm)',
-                        }}
-                        dangerouslySetInnerHTML={{ __html: termsOfService }}
-                      />
-                    </ScrollArea>
-                  )
-                ) : (
-                  !receiptUrl && (
-                    <ScrollArea h={400} type="always" offsetScrollbars>
-                      <Box
-                        p="md"
-                        style={{
-                          borderRadius: 'var(--mantine-radius-sm)',
-                        }}
-                        dangerouslySetInnerHTML={{ __html: receipt }}
-                      />
-                    </ScrollArea>
-                  )
-                )}
+                {selectedDocumentType === 'terms'
+                  ? !termsOfServiceUrl && (
+                      <ScrollArea h={400} type="always" offsetScrollbars>
+                        <Box
+                          p="md"
+                          style={{
+                            borderRadius: 'var(--mantine-radius-sm)',
+                          }}
+                          dangerouslySetInnerHTML={{ __html: termsOfService }}
+                        />
+                      </ScrollArea>
+                    )
+                  : !receiptUrl && (
+                      <ScrollArea h={400} type="always" offsetScrollbars>
+                        <Box
+                          p="md"
+                          style={{
+                            borderRadius: 'var(--mantine-radius-sm)',
+                          }}
+                          dangerouslySetInnerHTML={{ __html: receipt }}
+                        />
+                      </ScrollArea>
+                    )}
               </Box>
 
               <Button onClick={handleDownloadDocument} loading={isProcessingReceipt} size="lg">

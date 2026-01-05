@@ -391,9 +391,7 @@ export function TournamentDetailPage() {
                           </Center>
                         </Table.Td>
                         <Table.Td>
-                          <Text size="xs">
-                            {formatDate(form.createdAt, true)}
-                          </Text>
+                          <Text size="xs">{formatDate(form.createdAt, true)}</Text>
                         </Table.Td>
                       </Table.Tr>
                     ))
