@@ -6,6 +6,7 @@ import { fetchAllTournaments } from '@/lib/lambda/tournament';
 import { useAppStore } from '@/stores';
 import type { PrizeClaimFormSubmission, Tournament } from '@/types';
 import { exportFormsToPayPayCSV, formatDate, maskEmail } from '@/utils';
+import { generatePasswordV2 } from '@/utils/auth';
 import {
   ActionIcon,
   Alert,
@@ -33,9 +34,13 @@ import {
   IconArrowDown,
   IconArrowsUpDown,
   IconArrowUp,
+  IconClock,
+  IconCopy,
   IconDownload,
   IconFileText,
   IconInfoCircle,
+  IconKey,
+  IconRefresh,
   IconTrash,
   IconX,
 } from '@tabler/icons-react';
@@ -77,6 +82,11 @@ export function FormManagementPage() {
   const [selectedForm, setSelectedForm] = useState<PrizeClaimFormSubmission | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
   const [sortByCreatedAt, setSortByCreatedAt] = useState<'asc' | 'desc' | null>(null);
+
+  // Password generator states
+  const [generatedPassword, setGeneratedPassword] = useState<string>('');
+  const [passwordExpiry, setPasswordExpiry] = useState<Date | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const tournamentMap = useMemo(() => {
     return tournaments.reduce(
@@ -576,6 +586,47 @@ export function FormManagementPage() {
     }
   }, [tournamentOptions]);
 
+  // Password generator handlers
+  const handleGeneratePassword = async () => {
+    setIsGenerating(true);
+    try {
+      const password = await generatePasswordV2();
+      setGeneratedPassword(password);
+
+      // Calculate expiry (passwords are valid for 1 hour intervals)
+      const now = new Date();
+      const nextHour = new Date(now);
+      nextHour.setHours(nextHour.getHours() + 1, 0, 0, 0);
+      setPasswordExpiry(nextHour);
+
+      notifications.show({
+        title: t('admin.forms.passwordGenerator.generated'),
+        message: t('admin.forms.passwordGenerator.generatedMessage'),
+        color: 'green',
+      });
+    } catch (error) {
+      console.error('Failed to generate password:', error);
+      notifications.show({
+        title: t('common.error'),
+        message: t('admin.forms.passwordGenerator.generateError'),
+        color: 'red',
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleCopyPassword = () => {
+    if (generatedPassword) {
+      navigator.clipboard.writeText(generatedPassword);
+      notifications.show({
+        title: t('admin.forms.passwordGenerator.copied'),
+        message: t('admin.forms.passwordGenerator.copiedMessage'),
+        color: 'blue',
+      });
+    }
+  };
+
   return (
     <Stack gap="lg">
       <Group justify="space-between">
@@ -631,6 +682,70 @@ export function FormManagementPage() {
           </Group>
         </Group>
       </Group>
+
+      {/* Password Generator */}
+      <Paper shadow="xs" p="md" withBorder>
+        <Stack gap="md">
+          <Group justify="space-between" align="center">
+            <Group gap="xs">
+              <IconKey size={20} />
+              <Title order={4}>{t('admin.forms.passwordGenerator.title')}</Title>
+            </Group>
+            <Button
+              leftSection={<IconRefresh size={16} />}
+              onClick={handleGeneratePassword}
+              loading={isGenerating}
+              size="sm"
+            >
+              {t('admin.forms.passwordGenerator.generate')}
+            </Button>
+          </Group>
+
+          {generatedPassword && (
+            <Paper p="md" withBorder bg="gray.0">
+              <Stack gap="sm">
+                <Group justify="space-between" align="center">
+                  <Group gap="xs">
+                    <Text size="sm" fw={500}>
+                      {t('admin.forms.passwordGenerator.password')}:
+                    </Text>
+                    <Text
+                      size="lg"
+                      fw={700}
+                      c="blue"
+                      style={{ fontFamily: 'monospace', userSelect: 'all' }}
+                    >
+                      {generatedPassword}
+                    </Text>
+                  </Group>
+                  <Button
+                    leftSection={<IconCopy size={16} />}
+                    onClick={handleCopyPassword}
+                    size="xs"
+                    variant="light"
+                  >
+                    {t('admin.forms.passwordGenerator.copy')}
+                  </Button>
+                </Group>
+
+                {passwordExpiry && (
+                  <Group gap="xs">
+                    <IconClock size={16} color="orange" />
+                    <Text size="xs" c="dimmed">
+                      {t('admin.forms.passwordGenerator.expiresAt')}:{' '}
+                      {passwordExpiry.toLocaleString()}
+                    </Text>
+                  </Group>
+                )}
+
+                <Alert color="orange" variant="light">
+                  <Text size="xs">{t('admin.forms.passwordGenerator.instruction')}</Text>
+                </Alert>
+              </Stack>
+            </Paper>
+          )}
+        </Stack>
+      </Paper>
 
       {/* Filters */}
       <Paper shadow="xs" p="md">

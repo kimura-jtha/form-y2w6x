@@ -52,10 +52,8 @@ export function fetchLambda<T>({
     const end = Date.now();
     const duration = end - start;
     console.log(`Lambda call duration: ${duration}ms`);
-    if (!isProd && method !== 'GET') {
-      if (duration > 5e3) {
-        alert(`Lambda call duration: ${(duration / 1e3).toFixed(2)} seconds`);
-      }
+    if (!isProd && method !== 'GET' && duration > 5e3) {
+      alert(`Lambda call duration: ${(duration / 1e3).toFixed(2)} seconds`);
     }
     return response.json() as Promise<T>;
   });
