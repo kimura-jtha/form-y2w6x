@@ -576,7 +576,7 @@
       "title": "送信確認"
     },
     "errors": {
-      "backendUnavailable": "サーバーが現在利用できません。しばらくしてから再度お試しください。"
+      "backendUnavailable": "再度読み込みを行うか、管理者に連絡をしてください。"
     },
     "fields": {
       "accountHolderName": {
