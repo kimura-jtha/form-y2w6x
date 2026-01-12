@@ -104,19 +104,6 @@
           "title": "Tournament Required"
         }
       },
-      "passwordGenerator": {
-        "title": "Form Password Generator",
-        "generate": "Generate New Password",
-        "password": "Password",
-        "copy": "Copy Password",
-        "expiresAt": "Valid until",
-        "instruction": "Share this password with the user. It will expire at the displayed time and a new one will need to be generated.",
-        "generated": "Password Generated",
-        "generatedMessage": "Password has been generated successfully",
-        "generateError": "Failed to generate password",
-        "copied": "Copied",
-        "copiedMessage": "Password copied to clipboard"
-      },
       "loadAll": "Load All",
       "loadAll.error": "Failed to Load All",
       "loadAll.errorMessage": "Failed to load all data. Please try again.",
@@ -657,11 +644,6 @@
         "label": "Phone Number",
         "placeholder": "03-1234-5678"
       },
-      "password": {
-        "description": "Enter the password provided by the administrator",
-        "label": "Form Password",
-        "placeholder": "Enter password"
-      },
       "playersId": {
         "description": "Japanese players use Players+ ID, non-Japanese use Passport Number",
         "label": "Players+ ID / Passport Number",
@@ -705,16 +687,7 @@
       "submitSuccess": {
         "message": "Please check your email for the confirmation.",
         "title": "Form Submitted Successfully"
-      },
-      "invalidPassword": {
-        "message": "The password you entered is invalid or has expired. Please contact the administrator for a new password.",
-        "title": "Invalid Password"
       }
-    },
-    "passwordGate": {
-      "title": "Form Access Verification",
-      "description": "Please enter the password provided by the administrator to access the prize claim form.",
-      "submit": "Verify & Continue"
     },
     "ranks": {
       "1": "1st Place",
@@ -731,7 +704,6 @@
       "contact": "Contact Information",
       "name": "Name",
       "nameKana": "Name (Katakana)",
-      "password": "Form Password",
       "playersId": "Players+ ID / Passport Number",
       "privacyPolicy": "Privacy Policy",
       "tournament": "Tournament Information"
@@ -741,7 +713,6 @@
       "emailAlreadyClaimed": "This email has already been used to claim a prize for this tournament",
       "invalidAccountNumber": "Please enter a 7-digit account number",
       "invalidEmail": "Please enter a valid email address",
-      "invalidPassword": "The password you entered is invalid or has expired. Please contact the administrator for a new password.",
       "invalidPhoneNumber": "Please enter a valid phone number (e.g., 03-1234-5678)",
       "invalidPostalCode": "Please enter a 7-digit postal code",
       "katakanaOnly": "Please enter in full-width Katakana",

@@ -27,11 +27,7 @@ import { IconAlertCircle } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { usePrizeClaimForm } from './usePrizeClaimForm';
 
-interface PrizeClaimFormProps {
-  password: string;
-}
-
-export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
+export function PrizeClaimForm() {
   const { t, i18n } = useTranslation();
   const [confirmOpened, { open: openConfirm, close: closeConfirm }] = useDisclosure(false);
   const [isCheckingHealth, setIsCheckingHealth] = useState(true);
@@ -59,7 +55,7 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
     padAccountNumber,
     handleSubmit,
     handleClear,
-  } = usePrizeClaimForm(password);
+  } = usePrizeClaimForm();
 
   // Check backend health on mount
   useEffect(() => {

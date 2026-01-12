@@ -1,7 +1,6 @@
 import type { PrizeClaimFormSubmission, PrizeClaimFormValues } from '@/types';
 import { asyncDeduplicator } from '@/utils/dedupe';
 
-import { validatePasswordV2 } from '@/utils/auth';
 import { fetchLambda } from './_helper';
 
 /**
@@ -21,18 +20,13 @@ export interface PrizeClaimSubmitResponse {
  */
 export async function submitPrizeClaimForm(
   formData: PrizeClaimFormValues,
-  password: string,
 ): Promise<PrizeClaimSubmitResponse> {
-  if (!validatePasswordV2(password)) {
-    throw new Error('Invalid password');
-  }
   try {
     const response = await fetchLambda<{ form: { id: string } }>({
       path: 'forms',
       method: 'POST',
       body: {
         formContent: formData,
-        password,
       },
     });
 

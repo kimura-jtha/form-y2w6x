@@ -5,7 +5,6 @@ import { notifications } from '@mantine/notifications';
 import { useTranslation } from 'react-i18next';
 
 import { useDebounce } from '@/hooks';
-import i18n from '@/i18n';
 import {
   fetchActiveTournaments,
   fetchBanks,
@@ -15,7 +14,7 @@ import {
 } from '@/lib';
 import type { Bank, Branch, PrizeClaimFormValues, PrizeRank, Tournament } from '@/types';
 import { initialPrizeClaimFormValues } from '@/types';
-import { validatePasswordV2 } from '@/utils/auth';
+import i18n from '@/i18n';
 
 // Validation patterns
 const POSTAL_CODE_PATTERN = /^\d{7}$/;
@@ -24,7 +23,7 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const KATAKANA_PATTERN = /^[\u3000-\u303F\u30A0-\u30FF]+$/;
 const ACCOUNT_NUMBER_PATTERN = /^\d{6,7}$/;
 
-export function usePrizeClaimForm(password: string) {
+export function usePrizeClaimForm() {
   const { t } = useTranslation();
 
   // Loading states
@@ -138,8 +137,6 @@ export function usePrizeClaimForm(password: string) {
         !value ? t('prizeClaim.validation.mustAgreeToPrivacyPolicy') : null,
     },
   });
-
-  // Password for form submission
 
   // Mark as initialized
   useEffect(() => {
@@ -410,19 +407,7 @@ export function usePrizeClaimForm(password: string) {
     async (values: PrizeClaimFormValues) => {
       setIsSubmitting(true);
       try {
-        // Validate password on frontend
-        if (!password || !validatePasswordV2(password)) {
-          notifications.show({
-            autoClose: false,
-            position: 'top-right',
-            title: t('prizeClaim.notifications.invalidPassword.title'),
-            message: t('prizeClaim.notifications.invalidPassword.message'),
-            color: 'red',
-          });
-          return;
-        }
-
-        const result = await submitPrizeClaimForm(values, password);
+        const result = await submitPrizeClaimForm(values);
 
         if (result.success) {
           notifications.show({
@@ -453,7 +438,7 @@ export function usePrizeClaimForm(password: string) {
         setIsSubmitting(false);
       }
     },
-    [form, t, password],
+    [form, t],
   );
 
   // Handle form clear

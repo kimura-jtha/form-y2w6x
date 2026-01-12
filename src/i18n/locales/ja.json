@@ -104,19 +104,6 @@
           "title": "トーナメントが必要です"
         }
       },
-      "passwordGenerator": {
-        "title": "フォームパスワード生成",
-        "generate": "新しいパスワードを生成",
-        "password": "パスワード",
-        "copy": "パスワードをコピー",
-        "expiresAt": "有効期限",
-        "instruction": "このパスワードをユーザーに共有してください。表示された時刻に期限が切れ、新しいパスワードを生成する必要があります。",
-        "generated": "パスワード生成完了",
-        "generatedMessage": "パスワードが正常に生成されました",
-        "generateError": "パスワードの生成に失敗しました",
-        "copied": "コピー完了",
-        "copiedMessage": "パスワードをクリップボードにコピーしました"
-      },
       "loadAll": "すべて読み込む",
       "loadAll.error": "読み込み失敗",
       "loadAll.errorMessage": "すべてのデータの読み込みに失敗しました。もう一度お試しください。",
@@ -657,11 +644,6 @@
         "label": "電話番号",
         "placeholder": "03-1234-5678"
       },
-      "password": {
-        "description": "管理者から提供されたパスワードを入力してください",
-        "label": "フォームパスワード",
-        "placeholder": "パスワードを入力"
-      },
       "playersId": {
         "description": "日本のプレイヤーはプレイヤーズプラスID、外国人はパスポート番号を入力してください",
         "label": "プレイヤーズ＋ID / パスポート番号",
@@ -705,16 +687,7 @@
       "submitSuccess": {
         "message": "メールをご確認ください。",
         "title": "フォームが正常に送信されました"
-      },
-      "invalidPassword": {
-        "message": "入力されたパスワードが無効または期限切れです。管理者に新しいパスワードを依頼してください。",
-        "title": "無効なパスワード"
       }
-    },
-    "passwordGate": {
-      "title": "フォームアクセス確認",
-      "description": "賞金請求フォームにアクセスするには、管理者から提供されたパスワードを入力してください。",
-      "submit": "確認して続行"
     },
     "ranks": {
       "1": "1位",
@@ -731,7 +704,6 @@
       "contact": "連絡先情報",
       "name": "氏名",
       "nameKana": "氏名（カナ）",
-      "password": "フォームパスワード",
       "playersId": "プレイヤーズ＋ID / パスポート番号",
       "privacyPolicy": "プライバシーポリシー",
       "tournament": "トーナメント情報"
@@ -741,7 +713,6 @@
       "emailAlreadyClaimed": "このメールアドレスは既にこのトーナメントで賞金請求に使用されています",
       "invalidAccountNumber": "7桁の口座番号を入力してください",
       "invalidEmail": "有効なメールアドレスを入力してください",
-      "invalidPassword": "入力されたパスワードが無効または期限切れです。管理者に新しいパスワードを依頼してください。",
       "invalidPhoneNumber": "有効な電話番号を入力してください（例: 03-1234-5678）",
       "invalidPostalCode": "7桁の郵便番号を入力してください",
       "katakanaOnly": "全角カタカナで入力してください",
