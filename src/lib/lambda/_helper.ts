@@ -1,8 +1,8 @@
-import { notifications } from '@mantine/notifications';
-import i18next from 'i18next';
-
+import { env } from '@/config';
 import { ROUTES } from '@/constants';
 import { clearAuth, getAccessKey } from '@/utils/auth';
+import { notifications } from '@mantine/notifications';
+import i18next from 'i18next';
 
 export function fetchLambda<T>({
   path,
@@ -13,7 +13,7 @@ export function fetchLambda<T>({
   path: string;
   body?: unknown;
 }) {
-  const isProd = window.location.hostname === 'form.jppa.jp';
+  const isProd = env.IS_PROD;
   const base = 'https://wwzd303c6l.execute-api.ap-northeast-1.amazonaws.com/default/';
   const baseUrl = isProd ? `${base}lambda-runner` : `${base}lambda-runner-test`;
   const xApiKey = 'ak_1798761598_18c02e2a5e77d665ed101f671ca154e0';
@@ -52,10 +52,8 @@ export function fetchLambda<T>({
     const end = Date.now();
     const duration = end - start;
     console.log(`Lambda call duration: ${duration}ms`);
-    if (!isProd && method !== 'GET') {
-      if (duration > 5e3) {
-        alert(`Lambda call duration: ${(duration / 1e3).toFixed(2)} seconds`);
-      }
+    if (!isProd && method !== 'GET' && duration > 5e3) {
+      alert(`Lambda call duration: ${(duration / 1e3).toFixed(2)} seconds`);
     }
     return response.json() as Promise<T>;
   });

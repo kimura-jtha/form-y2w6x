@@ -576,7 +576,7 @@
       "title": "确认提交"
     },
     "errors": {
-      "backendUnavailable": "服务器目前无法访问，请稍后再试。"
+      "backendUnavailable": "请刷新页面或联系管理员。"
     },
     "fields": {
       "accountHolderName": {

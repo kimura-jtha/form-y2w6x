@@ -12,6 +12,7 @@ interface EnvConfig {
   // Feature flags
   IS_DEV: boolean;
   IS_PROD: boolean;
+  IS_TEST: boolean;
 }
 
 function getEnvVar(key: string, defaultValue?: string): string {
@@ -30,5 +31,6 @@ export const env: EnvConfig = {
 
   // Feature flags
   IS_DEV: import.meta.env.DEV,
-  IS_PROD: import.meta.env.PROD,
+  IS_PROD: import.meta.env.PROD && window.location.hostname === 'form.jppa.jp',
+  IS_TEST: import.meta.env.PROD && window.location.hostname !== 'form.jppa.jp',
 };
