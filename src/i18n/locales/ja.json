@@ -58,8 +58,8 @@
           "allDescription": "全てのフォーム送信をダウンロード",
           "japanese": "日本人ユーザーのみ",
           "japaneseDescription": "カタカナ名のフォームのみダウンロード",
-          "terms": "利用規約同意ユーザーのみ",
-          "termsDescription": "利用規約に同意したユーザーのみを含める"
+          "terms": "契約書同意ユーザーのみ",
+          "termsDescription": "契約書に同意したユーザーのみを含める"
         },
         "selectType": "エクスポートタイプを選択",
         "selectTypeDescription": "ユーザータイプと追加フィルターを選択：",
@@ -84,7 +84,7 @@
         "noTournamentsFound": "トーナメントが見つかりません",
         "status": "ステータス",
         "statusPlaceholder": "全てのステータス",
-        "termsAgreed": "利用規約同意",
+        "termsAgreed": "契約書同意",
         "termsAgreedPlaceholder": "すべて",
         "title": "フィルター",
         "tournamentName": "トーナメント名",
@@ -141,7 +141,7 @@
         "playerName": "プレイヤー名",
         "rank": "順位",
         "status": "ステータス",
-        "termsAgreed": "利用規約同意",
+        "termsAgreed": "契約書同意",
         "tournament": "トーナメント"
       },
       "title": "フォーム管理"
@@ -173,28 +173,26 @@
         "saveContractEmail": "TODO: translate me!!!",
         "savePrivacy": "プライバシーポリシーを保存",
         "saveReceipt": "TODO: translate me!!!",
-        "saveTerms": "利用規約を保存",
-        "termsLabel": "利用規約コンテンツ",
-        "termsSubjectLabel": "利用規約サブジェクト",
+        "saveTerms": "契約書を保存",
+        "termsLabel": "契約書コンテンツ",
+        "termsSubjectLabel": "契約書サブジェクト",
         "title": "HTMLエディター"
       },
       "lastUpdated": "最終更新",
       "success": "成功",
       "successMessage": {
         "confirmationEmail": "確認メールテンプレートが正常に更新されました",
-        "contract": "契約書が正常に更新されました",
+        "terms": "契約書が正常に更新されました",
         "contractEmail": "契約書メールテンプレートが正常に更新されました",
         "privacy": "プライバシーポリシーが正常に更新されました",
-        "receipt": "領収書テンプレートが正常に更新されました",
-        "terms": "利用規約が正常に更新されました"
+        "receipt": "領収書テンプレートが正常に更新されました"
       },
       "tabs": {
         "confirmationEmail": "確認メールテンプレート",
-        "contract": "契約書",
+        "terms": "契約書",
         "contractEmail": "契約書メールテンプレート",
         "privacy": "プライバシーポリシー",
-        "receipt": "領収書テンプレート",
-        "terms": "利用規約"
+        "receipt": "領収書テンプレート"
       },
       "title": "サービス管理",
       "updatedBy": "更新者",
@@ -307,17 +305,17 @@
             "description": "領収書コンテンツ（プレーンテキスト）"
           },
           "termsOfServiceHtml": {
-            "description": "利用規約コンテンツ（HTML形式）"
+            "description": "契約書コンテンツ（HTML形式）"
           },
           "termsOfServiceText": {
-            "description": "利用規約コンテンツ（プレーンテキスト）"
+            "description": "契約書コンテンツ（プレーンテキスト）"
           },
           "today": {
             "description": "今日の日付（フォーマット済み）",
             "example": "2025年12月17日"
           },
           "tosLink": {
-            "description": "利用規約ページへのリンク",
+            "description": "契約書ページへのリンク",
             "example": "https://example.com/terms"
           },
           "tournamentDate": {
@@ -483,8 +481,13 @@
     },
     "users": {
       "addButton": "ユーザー追加",
+      "cannotDeleteSelf": "自分のアカウントは削除できません",
+      "deleteButton": "削除",
       "modal": {
         "addTitle": "新しいユーザーを追加",
+        "deleteTitle": "ユーザー削除",
+        "deleteConfirmMessage": "ユーザー {{name}} ({{email}}) を削除してもよろしいですか？この操作は元に戻せません。",
+        "deleteConfirm": "ユーザーを削除",
         "emailLabel": "メールアドレス",
         "emailPlaceholder": "user@example.com",
         "nameLabel": "名前",
@@ -501,6 +504,18 @@
           "message": "ユーザーが正常に追加されました",
           "title": "成功"
         },
+        "cannotDeleteSelf": {
+          "message": "自分のアカウントは削除できません",
+          "title": "操作が許可されていません"
+        },
+        "deleteError": {
+          "message": "ユーザーの削除に失敗しました",
+          "title": "エラー"
+        },
+        "deleteSuccess": {
+          "message": "ユーザーが正常に削除されました",
+          "title": "成功"
+        },
         "loadError": {
           "message": "ユーザーの読み込みに失敗しました",
           "title": "エラー"
@@ -508,6 +523,7 @@
       },
       "refresh": "更新",
       "table": {
+        "actions": "操作",
         "createdAt": "作成日時",
         "email": "メールアドレス",
         "name": "名前",
@@ -750,9 +766,17 @@
     }
   },
   "termsAgreement": {
-    "agreeButton": "利用規約に同意する",
+    "viewTermsButton": "契約書を表示",
+    "downloadTermsButton": "契約書をダウンロード",
+    "viewReceiptButton": "領収書を表示",
+    "selectDocumentType": "ドキュメントタイプを選択",
+    "documentTypes": {
+      "terms": "契約書",
+      "receipt": "領収書"
+    },
+    "agreeButton": "契約書に同意する",
     "alreadyConfirmed": {
-      "message": "このフォームはすでに確認済みで、利用規約に同意しています。",
+      "message": "このフォームはすでに確認済みで、契約書に同意しています。",
       "title": "確認済み"
     },
     "bankInfo": {
@@ -765,7 +789,7 @@
     },
     "downloadReceiptButton": "領収書をダウンロード",
     "error": {
-      "agreeFailed": "利用規約への同意に失敗しました",
+      "agreeFailed": "契約書への同意に失敗しました",
       "downloadFailed": "ダウンロードウィンドウを開けませんでした。ポップアップブロッカーの設定を確認してください。",
       "formIdNotFound": "URLにフォームIDが見つかりません",
       "formNotFound": "フォームデータが見つかりません",
@@ -786,8 +810,8 @@
     "loading": "フォームデータを読み込み中...",
     "receiptTitle": "領収書",
     "termsAlert": {
-      "message": "以下の「同意する」をクリックすることで、提供されたすべての情報が正確であることを確認し、賞金支払いに関する利用規約に同意したことになります。",
-      "title": "利用規約"
+      "message": "以下の「同意する」をクリックすることで、提供されたすべての情報が正確であることを確認し、賞金支払いに関する契約書に同意したことになります。",
+      "title": "契約書"
     },
     "title": "プロ契約について"
   }

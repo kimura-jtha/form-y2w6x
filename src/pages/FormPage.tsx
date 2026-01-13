@@ -1,7 +1,6 @@
-import { type KeyboardEvent, useState } from 'react';
+import { type KeyboardEvent, useCallback, useState } from 'react';
 
 import { PrizeClaimForm } from '@/components/PrizeClaimForm';
-import { env } from '@/config/env';
 import { validatePasswordV3 } from '@/utils/auth';
 import { Box, Button, Paper, Stack, Text, TextInput, Title } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
@@ -15,7 +14,7 @@ export function FormPage() {
   const [isValidatingPassword, setIsValidatingPassword] = useState(false);
 
   // Handle password validation before showing form
-  const handlePasswordValidation = async () => {
+  const handlePasswordValidation = useCallback(async () => {
     if (!passwordInput.trim()) {
       setPasswordError(t('prizeClaim.validation.required'));
       return;
@@ -43,16 +42,16 @@ export function FormPage() {
     } finally {
       setIsValidatingPassword(false);
     }
-  };
+  }, [passwordInput, t]);
 
-  const handlePasswordKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
+  const handlePasswordKeyPress = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handlePasswordValidation();
     }
-  };
+  }, [handlePasswordValidation]);
 
   // Show password gate if password not validated
-  if (!isPasswordValidated && !env.IS_PROD) {
+  if (!isPasswordValidated) {
     return (
       <Box maw={500} mx="auto" p="md">
         <Title order={2} mb="lg" ta="center">

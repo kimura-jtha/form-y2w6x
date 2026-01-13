@@ -135,7 +135,7 @@
     },
     "navigation": {
       "forms": "양식 관리",
-      "services": "서비스",
+      "services": "계약",
       "tournaments": "토너먼트",
       "users": "사용자 관리"
     },
@@ -160,30 +160,28 @@
         "saveContractEmail": "계약서 저장 이메일",
         "savePrivacy": "개인정보 보호정책 저장",
         "saveReceipt": "영수증 템플릿 저장",
-        "saveTerms": "서비스 약관 저장",
-        "termsLabel": "서비스 약관 내용",
-        "termsSubjectLabel": "서비스 약관",
+        "saveTerms": "계약 저장",
+        "termsLabel": "계약 내용",
+        "termsSubjectLabel": "계약",
         "title": "HTML 편집기"
       },
       "lastUpdated": "최종 업데이트됨",
       "success": "성공",
       "successMessage": {
         "confirmationEmail": "확인 이메일이 성공적으로 업데이트되었습니다.",
-        "contract": "계약이 성공적으로 업데이트되었습니다.",
+        "terms": "계약이 성공적으로 업데이트되었습니다.",
         "contractEmail": "계약 이메일이 성공적으로 업데이트되었습니다.",
         "privacy": "개인정보처리방침이 성공적으로 업데이트되었습니다.",
-        "receipt": "영수증 템플릿이 성공적으로 업데이트되었습니다.",
-        "terms": "서비스 약관이 성공적으로 업데이트되었습니다."
+        "receipt": "영수증 템플릿이 성공적으로 업데이트되었습니다."
       },
       "tabs": {
         "confirmationEmail": "확인 이메일 템플릿",
-        "contract": "계약",
+        "terms": "계약",
         "contractEmail": "계약 관련 이메일 템플릿",
         "privacy": "개인정보 보호정책",
-        "receipt": "영수증 템플릿",
-        "terms": "서비스 약관"
+        "receipt": "영수증 템플릿"
       },
-      "title": "서비스 관리",
+      "title": "계약 관리",
       "updatedBy": "에 의해",
       "variables": {
         "buttonLabel": "템플릿 변수",
@@ -294,17 +292,17 @@
             "description": "영수증 내용(일반 텍스트)"
           },
           "termsOfServiceHtml": {
-            "description": "서비스 약관 내용 (HTML 형식)"
+            "description": "계약 내용 (HTML 형식)"
           },
           "termsOfServiceText": {
-            "description": "서비스 약관 내용 (일반 텍스트)"
+            "description": "계약 내용 (일반 텍스트)"
           },
           "today": {
             "description": "오늘 날짜 (형식화)",
             "example": "2025년 12월 17일"
           },
           "tosLink": {
-            "description": "서비스 약관 페이지 링크",
+            "description": "계약 페이지 링크",
             "example": "https://example.com/terms"
           },
           "tournamentDate": {
@@ -470,8 +468,13 @@
     },
     "users": {
       "addButton": "사용자 추가",
+      "cannotDeleteSelf": "자신의 계정은 삭제할 수 없습니다",
+      "deleteButton": "삭제",
       "modal": {
         "addTitle": "새 사용자 추가",
+        "deleteTitle": "사용자 삭제",
+        "deleteConfirmMessage": "사용자 {{name}} ({{email}})을(를) 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+        "deleteConfirm": "사용자 삭제",
         "emailLabel": "이메일",
         "emailPlaceholder": "user@example.com",
         "nameLabel": "이름",
@@ -488,6 +491,18 @@
           "message": "사용자가 성공적으로 추가되었습니다",
           "title": "성공"
         },
+        "cannotDeleteSelf": {
+          "message": "자신의 계정은 삭제할 수 없습니다",
+          "title": "작업이 허용되지 않음"
+        },
+        "deleteError": {
+          "message": "사용자 삭제에 실패했습니다",
+          "title": "오류"
+        },
+        "deleteSuccess": {
+          "message": "사용자가 성공적으로 삭제되었습니다",
+          "title": "성공"
+        },
         "loadError": {
           "message": "사용자 로드에 실패했습니다",
           "title": "오류"
@@ -495,6 +510,7 @@
       },
       "refresh": "새로 고침",
       "table": {
+        "actions": "작업",
         "createdAt": "생성일",
         "email": "이메일",
         "name": "이름",
@@ -721,9 +737,17 @@
     }
   },
   "termsAgreement": {
-    "agreeButton": "서비스 약관에 동의합니다",
+    "viewTermsButton": "계약서 보기",
+    "downloadTermsButton": "계약서 다운로드",
+    "viewReceiptButton": "영수증 보기",
+    "selectDocumentType": "문서 유형 선택",
+    "documentTypes": {
+      "terms": "계약",
+      "receipt": "영수증"
+    },
+    "agreeButton": "계약에 동의합니다",
     "alreadyConfirmed": {
-      "message": "이 양식은 이미 확인되었으며, 귀하는 서비스 약관에 동의하셨습니다.",
+      "message": "이 양식은 이미 확인되었으며, 귀하는 계약에 동의하셨습니다.",
       "title": "이미 확정됨"
     },
     "bankInfo": {
@@ -757,8 +781,8 @@
     "loading": "폼 데이터를 불러오는 중...",
     "receiptTitle": "영수증",
     "termsAlert": {
-      "message": "아래 동의합니다를 클릭하시면 제공하신 모든 정보가 정확하며 경품 지급에 관한 서비스 약관에 동의하시는 것으로 간주됩니다.",
-      "title": "서비스 약관"
+      "message": "아래 동의합니다를 클릭하시면 제공하신 모든 정보가 정확하며 경품 지급에 관한 계약에 동의하시는 것으로 간주됩니다.",
+      "title": "계약"
     },
     "title": "프로 연락처 양식에 대하여"
   }

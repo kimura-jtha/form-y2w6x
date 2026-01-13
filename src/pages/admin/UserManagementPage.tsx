@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
-import { addUser, fetchUsers } from '@/lib/lambda/user';
+import { addUser, fetchUsers, removeUser } from '@/lib/lambda/user';
+import { getEmail } from '@/utils/auth';
 import { formatDate } from '@/utils/string';
 import {
   Box,
@@ -15,11 +16,12 @@ import {
   Text,
   TextInput,
   Title,
+  Tooltip,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
-import { IconPlus, IconRefresh } from '@tabler/icons-react';
+import { IconPlus, IconRefresh, IconTrash } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
 type User = {
@@ -41,7 +43,13 @@ export function UserManagementPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<User | null>(null);
   const [addModalOpened, { open: openAddModal, close: closeAddModal }] = useDisclosure(false);
+  const [deleteModalOpened, { open: openDeleteModal, close: closeDeleteModal }] =
+    useDisclosure(false);
+
+  const currentUserEmail = getEmail();
 
   const form = useForm<AddUserFormValues>({
     initialValues: {
@@ -110,6 +118,60 @@ export function UserManagementPage() {
     }
   };
 
+  const handleOpenDeleteModal = (user: User) => {
+    // Prevent opening delete modal for current user
+    if (user.email === currentUserEmail) {
+      notifications.show({
+        title: t('admin.users.notifications.cannotDeleteSelf.title'),
+        message: t('admin.users.notifications.cannotDeleteSelf.message'),
+        color: 'orange',
+      });
+      return;
+    }
+    setUserToDelete(user);
+    openDeleteModal();
+  };
+
+  const handleRemoveUser = async () => {
+    if (!userToDelete) return;
+
+    // Final safeguard: prevent self-deletion
+    if (userToDelete.email === currentUserEmail) {
+      notifications.show({
+        title: t('admin.users.notifications.cannotDeleteSelf.title'),
+        message: t('admin.users.notifications.cannotDeleteSelf.message'),
+        color: 'orange',
+      });
+      closeDeleteModal();
+      setUserToDelete(null);
+      return;
+    }
+
+    try {
+      setIsDeleting(true);
+      await removeUser(userToDelete.id);
+
+      notifications.show({
+        title: t('admin.users.notifications.deleteSuccess.title'),
+        message: t('admin.users.notifications.deleteSuccess.message'),
+        color: 'green',
+      });
+
+      closeDeleteModal();
+      setUserToDelete(null);
+      loadUsers();
+    } catch (error) {
+      console.error('Failed to remove user:', error);
+      notifications.show({
+        title: t('admin.users.notifications.deleteError.title'),
+        message: t('admin.users.notifications.deleteError.message'),
+        color: 'red',
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <Stack gap="lg">
       <Group justify="space-between">
@@ -142,30 +204,52 @@ export function UserManagementPage() {
                   <Table.Th>{t('admin.users.table.email')}</Table.Th>
                   <Table.Th>{t('admin.users.table.createdAt')}</Table.Th>
                   <Table.Th>{t('admin.users.table.updatedAt')}</Table.Th>
+                  <Table.Th>{t('admin.users.table.actions')}</Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
                 {users.length === 0 ? (
                   <Table.Tr>
-                    <Table.Td colSpan={4}>
+                    <Table.Td colSpan={5}>
                       <Text ta="center" c="dimmed">
                         {t('admin.users.table.noUsers')}
                       </Text>
                     </Table.Td>
                   </Table.Tr>
                 ) : (
-                  users.map((user) => (
-                    <Table.Tr key={user.id}>
-                      <Table.Td>{user.name}</Table.Td>
-                      <Table.Td>{user.email}</Table.Td>
-                      <Table.Td>
-                        <Text size="xs">{formatDate(user.createdAt, false)}</Text>
-                      </Table.Td>
-                      <Table.Td>
-                        <Text size="xs">{formatDate(user.updatedAt, false)}</Text>
-                      </Table.Td>
-                    </Table.Tr>
-                  ))
+                  users.map((user) => {
+                    const isCurrentUser = user.email === currentUserEmail;
+                    return (
+                      <Table.Tr key={user.id}>
+                        <Table.Td>{user.name}</Table.Td>
+                        <Table.Td>{user.email}</Table.Td>
+                        <Table.Td>
+                          <Text size="xs">{formatDate(user.createdAt, false)}</Text>
+                        </Table.Td>
+                        <Table.Td>
+                          <Text size="xs">{formatDate(user.updatedAt, false)}</Text>
+                        </Table.Td>
+                        <Table.Td>
+                          <Tooltip
+                            label={t('admin.users.cannotDeleteSelf')}
+                            disabled={!isCurrentUser}
+                            withArrow
+                          >
+                            <Button
+                              size="xs"
+                              color="red"
+                              variant="light"
+                              leftSection={<IconTrash size={14} />}
+                              onClick={() => handleOpenDeleteModal(user)}
+                              disabled={isCurrentUser}
+                            >
+                              {t('admin.users.deleteButton')}
+                            </Button>
+                          </Tooltip>
+                        </Table.Td>
+                      </Table.Tr>
+                    );
+                  })
                 )}
               </Table.Tbody>
             </Table>
@@ -214,6 +298,31 @@ export function UserManagementPage() {
             </Group>
           </Stack>
         </form>
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        opened={deleteModalOpened}
+        onClose={closeDeleteModal}
+        title={t('admin.users.modal.deleteTitle')}
+        centered
+      >
+        <Stack gap="md">
+          <Text size="sm">
+            {t('admin.users.modal.deleteConfirmMessage', {
+              name: userToDelete?.name || '',
+              email: userToDelete?.email || '',
+            })}
+          </Text>
+          <Group justify="flex-end" gap="sm">
+            <Button variant="light" onClick={closeDeleteModal} disabled={isDeleting}>
+              {t('common.cancel')}
+            </Button>
+            <Button color="red" onClick={handleRemoveUser} loading={isDeleting}>
+              {t('admin.users.modal.deleteConfirm')}
+            </Button>
+          </Group>
+        </Stack>
       </Modal>
     </Stack>
   );

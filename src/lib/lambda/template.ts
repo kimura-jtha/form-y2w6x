@@ -28,17 +28,6 @@ export async function saveTermsOfServiceTemplate({
   return _saveTemplate(id, 'Terms of Service', content);
 }
 
-export async function saveContractTemplate({
-  id,
-  content,
-}: {
-  id: string;
-  content: string;
-  subject?: string;
-}): Promise<void> {
-  return _saveTemplate(id, 'Contract', content);
-}
-
 export async function saveReceiptTemplate({
   id,
   content,
@@ -88,10 +77,6 @@ export async function getPrivacyPolicyTemplate(lang = 'ja'): Promise<Template> {
 
 export async function getTermsOfServiceTemplate(lang = 'ja'): Promise<Template> {
   return _getTemplate(`terms-of-service-${lang}`);
-}
-
-export async function getContractTemplate(lang = 'ja'): Promise<Template> {
-  return _getTemplate(`contract-${lang}`);
 }
 
 export async function getReceiptTemplate(lang = 'ja'): Promise<Template> {

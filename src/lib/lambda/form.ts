@@ -84,6 +84,11 @@ export async function getFormById(
         issuedAt: number;
         url: string;
       };
+      termsOfService?: {
+        valid: boolean;
+        issuedAt: number;
+        url: string;
+      };
       createdAt?: string;
     };
   }>({
@@ -93,6 +98,7 @@ export async function getFormById(
   return {
     formId: response.form.id,
     receipt: response.form.receipt,
+    termsOfService: response.form.termsOfService,
     formData: {
       ...response.form.formContent,
       createdAt: response.form.createdAt,

@@ -58,8 +58,8 @@
           "allDescription": "Download all form submissions",
           "japanese": "Japanese Users Only",
           "japaneseDescription": "Download only forms with Katakana names",
-          "terms": "Only Terms Agreed Users",
-          "termsDescription": "Filter to include only users who agreed to terms of service"
+          "terms": "Only Contract Agreed Users",
+          "termsDescription": "Filter to include only users who agreed to contract"
         },
         "selectType": "Select Export Type",
         "selectTypeDescription": "Select user type and optional filters:",
@@ -141,7 +141,7 @@
         "playerName": "Player Name",
         "rank": "Rank",
         "status": "Status",
-        "termsAgreed": "Terms Agreed",
+        "termsAgreed": "Contract Agreed",
         "tournament": "Tournament"
       },
       "title": "Form Management"
@@ -173,28 +173,26 @@
         "saveContractEmail": "Save Contract Email",
         "savePrivacy": "Save Privacy Policy",
         "saveReceipt": "Save Receipt Template",
-        "saveTerms": "Save Terms of Service",
-        "termsLabel": "Terms of Service Content",
-        "termsSubjectLabel": "Terms of Service Subject",
+        "saveTerms": "Save Contract",
+        "termsLabel": "Contract Content",
+        "termsSubjectLabel": "Contract Subject",
         "title": "HTML Editor"
       },
       "lastUpdated": "Last updated",
       "success": "Success",
       "successMessage": {
         "confirmationEmail": "Confirmation email updated successfully",
-        "contract": "Contract updated successfully",
+        "terms": "Contract updated successfully",
         "contractEmail": "Contract email updated successfully",
         "privacy": "Privacy Policy updated successfully",
-        "receipt": "Receipt template updated successfully",
-        "terms": "Terms of Service updated successfully"
+        "receipt": "Receipt template updated successfully"
       },
       "tabs": {
         "confirmationEmail": "Confirmation Email Template",
-        "contract": "Contract",
+        "terms": "Contract",
         "contractEmail": "Contract Email Template",
         "privacy": "Privacy Policy",
-        "receipt": "Receipt Template",
-        "terms": "Terms of Service"
+        "receipt": "Receipt Template"
       },
       "title": "Service Management",
       "updatedBy": "By",
@@ -307,17 +305,17 @@
             "description": "Receipt content (plain text)"
           },
           "termsOfServiceHtml": {
-            "description": "Terms of Service content (HTML format)"
+            "description": "Contract content (HTML format)"
           },
           "termsOfServiceText": {
-            "description": "Terms of Service content (plain text)"
+            "description": "Contract content (plain text)"
           },
           "today": {
             "description": "Today's date (formatted)",
             "example": "December 17, 2025"
           },
           "tosLink": {
-            "description": "Link to Terms of Service page",
+            "description": "Link to Contract page",
             "example": "https://example.com/terms"
           },
           "tournamentDate": {
@@ -483,8 +481,13 @@
     },
     "users": {
       "addButton": "Add User",
+      "cannotDeleteSelf": "You cannot delete your own account",
+      "deleteButton": "Delete",
       "modal": {
         "addTitle": "Add New User",
+        "deleteTitle": "Delete User",
+        "deleteConfirmMessage": "Are you sure you want to delete user {{name}} ({{email}})? This action cannot be undone.",
+        "deleteConfirm": "Delete User",
         "emailLabel": "Email",
         "emailPlaceholder": "user@example.com",
         "nameLabel": "Name",
@@ -501,6 +504,18 @@
           "message": "User added successfully",
           "title": "Success"
         },
+        "cannotDeleteSelf": {
+          "message": "You cannot delete your own account",
+          "title": "Action Not Allowed"
+        },
+        "deleteError": {
+          "message": "Failed to delete user",
+          "title": "Error"
+        },
+        "deleteSuccess": {
+          "message": "User deleted successfully",
+          "title": "Success"
+        },
         "loadError": {
           "message": "Failed to load users",
           "title": "Error"
@@ -508,6 +523,7 @@
       },
       "refresh": "Refresh",
       "table": {
+        "actions": "Actions",
         "createdAt": "Created At",
         "email": "Email",
         "name": "Name",
@@ -750,7 +766,15 @@
     }
   },
   "termsAgreement": {
-    "agreeButton": "I Agree to Terms of Service",
+    "viewTermsButton": "View Terms",
+    "downloadTermsButton": "Download Terms",
+    "viewReceiptButton": "View Receipt",
+    "selectDocumentType": "Select Document Type",
+    "documentTypes": {
+      "terms": "Terms of Service",
+      "receipt": "Receipt"
+    },
+    "agreeButton": "I Agree to Contract",
     "alreadyConfirmed": {
       "message": "This form has already been confirmed and you have agreed to the terms of service.",
       "title": "Already Confirmed"
@@ -787,7 +811,7 @@
     "receiptTitle": "Receipt",
     "termsAlert": {
       "message": "By clicking \"I Agree\" below, you confirm that all the information provided is accurate and you agree to our terms of service for prize disbursement.",
-      "title": "Terms of Service"
+      "title": "Contract"
     },
     "title": "About Pro Contact Form"
   }

@@ -21,26 +21,18 @@ import { TemplateVariablesModal } from '@/components/TemplateVariablesModal';
 import {
   getConfirmationEmailTemplate,
   getContractEmailTemplate,
-  getContractTemplate,
   getPrivacyPolicyTemplate,
   getReceiptTemplate,
   getTermsOfServiceTemplate,
   saveConfirmationEmailTemplate,
   saveContractEmailTemplate,
-  saveContractTemplate,
   savePrivacyPolicyTemplate,
   saveReceiptTemplate,
   saveTermsOfServiceTemplate,
 } from '@/lib/lambda/template';
 import type { Template } from '@/types/template';
 
-type TabValue =
-  | 'terms'
-  | 'privacy'
-  | 'contract'
-  | 'receipt'
-  | 'confirmationEmail'
-  | 'contractEmail';
+type TabValue = 'terms' | 'privacy' | 'receipt' | 'confirmationEmail' | 'contractEmail';
 
 interface TabState {
   data: Template | null;
@@ -55,7 +47,7 @@ const getTabFromHash = (): TabValue => {
   const hash = window.location.hash.slice(1); // Remove the '#' character
   if (
     hash &&
-    ['terms', 'privacy', 'contract', 'receipt', 'confirmationEmail', 'contractEmail'].includes(hash)
+    ['terms', 'privacy', 'receipt', 'confirmationEmail', 'contractEmail'].includes(hash)
   ) {
     return hash as TabValue;
   }
@@ -70,7 +62,6 @@ export function ServiceManagementPage() {
   const [tabSubjects, setTabSubjects] = useState<Record<TabValue, string>>({
     terms: '',
     privacy: '',
-    contract: '',
     receipt: '',
     confirmationEmail: '',
     contractEmail: '',
@@ -79,7 +70,6 @@ export function ServiceManagementPage() {
   const [tabStates, setTabStates] = useState<Record<TabValue, TabState>>({
     terms: { data: null, content: '', isLoading: true, isSaving: false, success: false },
     privacy: { data: null, content: '', isLoading: true, isSaving: false, success: false },
-    contract: { data: null, content: '', isLoading: true, isSaving: false, success: false },
     receipt: { data: null, content: '', isLoading: true, isSaving: false, success: false },
     confirmationEmail: {
       data: null,
@@ -97,28 +87,20 @@ export function ServiceManagementPage() {
       const fetchers = {
         terms: getTermsOfServiceTemplate,
         privacy: getPrivacyPolicyTemplate,
-        contract: getContractTemplate,
         receipt: getReceiptTemplate,
         confirmationEmail: getConfirmationEmailTemplate,
         contractEmail: getContractEmailTemplate,
       };
 
       try {
-        const [
-          termsData,
-          privacyData,
-          contractData,
-          receiptData,
-          confirmationEmailData,
-          contractEmailData,
-        ] = await Promise.all([
-          fetchers.terms(),
-          fetchers.privacy(),
-          fetchers.contract(),
-          fetchers.receipt(),
-          fetchers.confirmationEmail(),
-          fetchers.contractEmail(),
-        ]);
+        const [termsData, privacyData, receiptData, confirmationEmailData, contractEmailData] =
+          await Promise.all([
+            fetchers.terms(),
+            fetchers.privacy(),
+            fetchers.receipt(),
+            fetchers.confirmationEmail(),
+            fetchers.contractEmail(),
+          ]);
 
         setTabStates({
           terms: {
@@ -131,13 +113,6 @@ export function ServiceManagementPage() {
           privacy: {
             data: privacyData,
             content: privacyData.content,
-            isLoading: false,
-            isSaving: false,
-            success: false,
-          },
-          contract: {
-            data: contractData,
-            content: contractData.content,
             isLoading: false,
             isSaving: false,
             success: false,
@@ -169,7 +144,6 @@ export function ServiceManagementPage() {
           ...prev,
           terms: termsData.subject,
           privacy: privacyData.subject,
-          contract: contractData.subject,
           receipt: receiptData.subject,
           confirmationEmail: confirmationEmailData.subject,
           contractEmail: contractEmailData.subject,
@@ -179,7 +153,6 @@ export function ServiceManagementPage() {
         setTabStates((prev) => ({
           terms: { ...prev.terms, isLoading: false },
           privacy: { ...prev.privacy, isLoading: false },
-          contract: { ...prev.contract, isLoading: false },
           receipt: { ...prev.receipt, isLoading: false },
           confirmationEmail: { ...prev.confirmationEmail, isLoading: false },
           contractEmail: { ...prev.contractEmail, isLoading: false },
@@ -188,7 +161,6 @@ export function ServiceManagementPage() {
           ...prev,
           terms: '',
           privacy: '',
-          contract: '',
           receipt: '',
           confirmationEmail: '',
           contractEmail: '',
@@ -217,7 +189,6 @@ export function ServiceManagementPage() {
     const updaters = {
       terms: saveTermsOfServiceTemplate,
       privacy: savePrivacyPolicyTemplate,
-      contract: saveContractTemplate,
       receipt: saveReceiptTemplate,
       confirmationEmail: saveConfirmationEmailTemplate,
       contractEmail: saveContractEmailTemplate,
@@ -226,7 +197,6 @@ export function ServiceManagementPage() {
     const fetchers = {
       terms: getTermsOfServiceTemplate,
       privacy: getPrivacyPolicyTemplate,
-      contract: getContractTemplate,
       receipt: getReceiptTemplate,
       confirmationEmail: getConfirmationEmailTemplate,
       contractEmail: getContractEmailTemplate,
@@ -398,9 +368,6 @@ export function ServiceManagementPage() {
           <Tabs.Tab fw="bold" value="privacy">
             {t('admin.services.tabs.privacy')}
           </Tabs.Tab>
-          <Tabs.Tab fw="bold" value="contract">
-            {t('admin.services.tabs.contract')}
-          </Tabs.Tab>
           <Tabs.Tab fw="bold" value="receipt">
             {t('admin.services.tabs.receipt')}
           </Tabs.Tab>
@@ -418,10 +385,6 @@ export function ServiceManagementPage() {
 
         <Tabs.Panel value="privacy" pt="lg">
           {renderTabPanel('privacy')}
-        </Tabs.Panel>
-
-        <Tabs.Panel value="contract" pt="lg">
-          {renderTabPanel('contract')}
         </Tabs.Panel>
 
         <Tabs.Panel value="receipt" pt="lg">

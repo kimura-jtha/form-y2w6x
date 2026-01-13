@@ -47,16 +47,6 @@ export async function fetchActiveTournaments(): Promise<Tournament[]> {
     return tournaments;
   });
 
-  // Cache for 1 hours in production, 10 seconds in development
-  // const DURATION_IN_MS = env.IS_PROD ? 1000 * 60 * 60 : 1000 * 10;
-  // localStorage.setItem(
-  //   '__tournaments__',
-  //   JSON.stringify({
-  //     tournaments,
-  //     // Cache for 1 hours
-  //     expiresAt: Date.now() + DURATION_IN_MS,
-  //   }),
-  // );
   return tournaments;
 }
 

@@ -548,17 +548,17 @@ export function TermsAgreementPage() {
               <Title order={2}>{t('termsAgreement.documentsTitle', 'Documents')}</Title>
 
               <Select
-                label={t('termsAgreement.selectDocumentType', 'Select Document Type')}
+                label={t('termsAgreement.selectDocumentType')}
                 value={selectedDocumentType}
                 onChange={(value) => setSelectedDocumentType(value as 'terms' | 'receipt')}
                 data={[
                   {
                     value: 'terms',
-                    label: t('termsAgreement.documentTypes.terms', 'Terms of Service'),
+                    label: t('termsAgreement.documentTypes.terms'),
                   },
                   {
                     value: 'receipt',
-                    label: t('termsAgreement.documentTypes.receipt', 'Receipt'),
+                    label: t('termsAgreement.documentTypes.receipt'),
                   },
                 ]}
                 size="md"
@@ -593,11 +593,11 @@ export function TermsAgreementPage() {
               <Button onClick={handleDownloadDocument} loading={isProcessingReceipt} size="lg">
                 {selectedDocumentType === 'terms'
                   ? termsOfServiceUrl
-                    ? t('termsAgreement.viewTermsButton', 'View Terms of Service')
-                    : t('termsAgreement.downloadTermsButton', 'Download Terms of Service')
+                    ? t('termsAgreement.viewTermsButton')
+                    : t('termsAgreement.downloadTermsButton')
                   : receiptUrl
-                    ? t('termsAgreement.viewReceiptButton', 'View Receipt')
-                    : t('termsAgreement.downloadReceiptButton', 'Download Receipt')}
+                    ? t('termsAgreement.viewReceiptButton')
+                    : t('termsAgreement.downloadReceiptButton')}
               </Button>
             </>
           )}

@@ -1,7 +1,6 @@
 import { type MouseEvent, useEffect, useMemo, useState } from 'react';
 
 import { FormDetailModal } from '@/components/FormDetailModal';
-import { env } from '@/config/env';
 import { deleteForm, getForms } from '@/lib/lambda/form';
 import { fetchAllTournaments } from '@/lib/lambda/tournament';
 import { useAppStore } from '@/stores';
@@ -697,70 +696,68 @@ export function FormManagementPage() {
       </Group>
 
       {/* Password Generator */}
-      {!env.IS_PROD && (
-        <Paper shadow="xs" p="md" withBorder>
-          <Stack gap="md">
-            <Group justify="space-between" align="center">
-              <Group gap="xs">
-                <IconKey size={20} />
-                <Title order={4}>{t('admin.forms.passwordGenerator.title')}</Title>
-              </Group>
-              <Button
-                leftSection={<IconRefresh size={16} />}
-                onClick={handleGeneratePassword}
-                loading={isGenerating}
-                size="sm"
-              >
-                {t('admin.forms.passwordGenerator.generate')}
-              </Button>
+      <Paper shadow="xs" p="md" withBorder>
+        <Stack gap="md">
+          <Group justify="space-between" align="center">
+            <Group gap="xs">
+              <IconKey size={20} />
+              <Title order={4}>{t('admin.forms.passwordGenerator.title')}</Title>
             </Group>
+            <Button
+              leftSection={<IconRefresh size={16} />}
+              onClick={handleGeneratePassword}
+              loading={isGenerating}
+              size="sm"
+            >
+              {t('admin.forms.passwordGenerator.generate')}
+            </Button>
+          </Group>
 
-            {generatedPassword && (
-              <Paper p="md" withBorder bg="gray.0">
-                <Stack gap="sm">
-                  <Group justify="space-between" align="center">
-                    <Group gap="xs">
-                      <Text size="sm" fw={500}>
-                        {t('admin.forms.passwordGenerator.password')}:
-                      </Text>
-                      <Text
-                        size="lg"
-                        fw={700}
-                        c="blue"
-                        style={{ fontFamily: 'monospace', userSelect: 'all' }}
-                      >
-                        {generatedPassword}
-                      </Text>
-                    </Group>
-                    <Button
-                      leftSection={<IconCopy size={16} />}
-                      onClick={handleCopyPassword}
-                      size="xs"
-                      variant="light"
+          {generatedPassword && (
+            <Paper p="md" withBorder bg="gray.0">
+              <Stack gap="sm">
+                <Group justify="space-between" align="center">
+                  <Group gap="xs">
+                    <Text size="sm" fw={500}>
+                      {t('admin.forms.passwordGenerator.password')}:
+                    </Text>
+                    <Text
+                      size="lg"
+                      fw={700}
+                      c="blue"
+                      style={{ fontFamily: 'monospace', userSelect: 'all' }}
                     >
-                      {t('admin.forms.passwordGenerator.copy')}
-                    </Button>
+                      {generatedPassword}
+                    </Text>
                   </Group>
+                  <Button
+                    leftSection={<IconCopy size={16} />}
+                    onClick={handleCopyPassword}
+                    size="xs"
+                    variant="light"
+                  >
+                    {t('admin.forms.passwordGenerator.copy')}
+                  </Button>
+                </Group>
 
-                  {passwordExpiry && (
-                    <Group gap="xs">
-                      <IconClock size={16} color="orange" />
-                      <Text size="xs" c="dimmed">
-                        {t('admin.forms.passwordGenerator.expiresAt')}:{' '}
-                        {passwordExpiry.toLocaleString()}
-                      </Text>
-                    </Group>
-                  )}
+                {passwordExpiry && (
+                  <Group gap="xs">
+                    <IconClock size={16} color="orange" />
+                    <Text size="xs" c="dimmed">
+                      {t('admin.forms.passwordGenerator.expiresAt')}:{' '}
+                      {passwordExpiry.toLocaleString()}
+                    </Text>
+                  </Group>
+                )}
 
-                  <Alert color="orange" variant="light">
-                    <Text size="xs">{t('admin.forms.passwordGenerator.instruction')}</Text>
-                  </Alert>
-                </Stack>
-              </Paper>
-            )}
-          </Stack>
-        </Paper>
-      )}
+                <Alert color="orange" variant="light">
+                  <Text size="xs">{t('admin.forms.passwordGenerator.instruction')}</Text>
+                </Alert>
+              </Stack>
+            </Paper>
+          )}
+        </Stack>
+      </Paper>
 
       {/* Filters */}
       <Paper shadow="xs" p="md">

@@ -160,28 +160,26 @@
         "saveContractEmail": "保存合同电子邮件",
         "savePrivacy": "保存隐私政策",
         "saveReceipt": "保存收据模板",
-        "saveTerms": "保存服务条款",
-        "termsLabel": "服务条款内容",
-        "termsSubjectLabel": "服务条款主题",
+        "saveTerms": "保存合同",
+        "termsLabel": "合同内容",
+        "termsSubjectLabel": "合同主题",
         "title": "HTML编辑器"
       },
       "lastUpdated": "最后更新时间",
       "success": "成功",
       "successMessage": {
         "confirmationEmail": "确认邮件已成功更新",
-        "contract": "合同已成功更新",
+        "terms": "合同已成功更新",
         "contractEmail": "合同邮件已成功更新",
         "privacy": "隐私政策已成功更新",
-        "receipt": "收据模板已成功更新",
-        "terms": "服务条款已成功更新"
+        "receipt": "收据模板已成功更新"
       },
       "tabs": {
         "confirmationEmail": "确认邮件模板",
-        "contract": "合同",
+        "terms": "合同",
         "contractEmail": "合同邮件模板",
         "privacy": "隐私政策",
-        "receipt": "收据模板",
-        "terms": "服务条款"
+        "receipt": "收据模板"
       },
       "title": "服务管理",
       "updatedBy": "经过",
@@ -294,17 +292,17 @@
             "description": "收据内容（纯文本）"
           },
           "termsOfServiceHtml": {
-            "description": "服务条款内容（HTML格式）"
+            "description": "合同内容（HTML格式）"
           },
           "termsOfServiceText": {
-            "description": "服务条款内容（纯文本）"
+            "description": "合同内容（纯文本）"
           },
           "today": {
             "description": "今天的日期（已格式化）",
             "example": "2025年12月17日"
           },
           "tosLink": {
-            "description": "服务条款页面链接",
+            "description": "合同页面链接",
             "example": "https://example.com/terms"
           },
           "tournamentDate": {
@@ -470,8 +468,13 @@
     },
     "users": {
       "addButton": "添加用户",
+      "cannotDeleteSelf": "您不能删除自己的账户",
+      "deleteButton": "删除",
       "modal": {
         "addTitle": "添加新用户",
+        "deleteTitle": "删除用户",
+        "deleteConfirmMessage": "确定要删除用户 {{name}} ({{email}}) 吗？此操作无法撤销。",
+        "deleteConfirm": "删除用户",
         "emailLabel": "电子邮件",
         "emailPlaceholder": "user@example.com",
         "nameLabel": "姓名",
@@ -488,6 +491,18 @@
           "message": "用户添加成功",
           "title": "成功"
         },
+        "cannotDeleteSelf": {
+          "message": "您不能删除自己的账户",
+          "title": "不允许的操作"
+        },
+        "deleteError": {
+          "message": "删除用户失败",
+          "title": "错误"
+        },
+        "deleteSuccess": {
+          "message": "用户删除成功",
+          "title": "成功"
+        },
         "loadError": {
           "message": "加载用户失败",
           "title": "错误"
@@ -495,6 +510,7 @@
       },
       "refresh": "刷新",
       "table": {
+        "actions": "操作",
         "createdAt": "创建时间",
         "email": "电子邮件",
         "name": "姓名",
@@ -721,9 +737,17 @@
     }
   },
   "termsAgreement": {
-    "agreeButton": "我同意服务条款",
+    "viewTermsButton": "查看合同",
+    "downloadTermsButton": "下载合同",
+    "viewReceiptButton": "查看收据",
+    "selectDocumentType": "选择文档类型",
+    "documentTypes": {
+      "terms": "合同",
+      "receipt": "收据"
+    },
+    "agreeButton": "我同意合同",
     "alreadyConfirmed": {
-      "message": "此表格已确认，您已同意服务条款。에 동의하셨습니다.",
+      "message": "此表格已确认，您已同意合同。에 동의하셨습니다.",
       "title": "已确认"
     },
     "bankInfo": {
@@ -757,8 +781,8 @@
     "loading": "正在加载表单数据...",
     "receiptTitle": "收据",
     "termsAlert": {
-      "message": "点击下方的“我同意”按钮，即表示您确认所提供的所有信息均准确无误，并同意我们的奖金发放服务条款。에 관한 서비스 약관에 동의하시는 것으로 간주됩니다.",
-      "title": "服务条款"
+      "message": "点击下方的“我同意”按钮，即表示您确认所提供的所有信息均准确无误，并同意我们的奖金发放合同。에 관한 서비스 약관에 동의하시는 것으로 간주됩니다.",
+      "title": "合同"
     },
     "title": "关于 Pro 联系表单"
   }
