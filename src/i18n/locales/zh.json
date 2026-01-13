@@ -661,7 +661,7 @@
         "placeholder": "03-1234-5678"
       },
       "playersId": {
-        "description": "日本玩家使用 Players+ ID，非日本玩家使用护照号码。닌 플레이어는 여권 번호를 사용합니다.",
+        "description": "如果您是Players Plus会员，请输入您的会员ID。如果不是，请输入您的护照号码。",
         "label": "玩家+ ID/护照号码",
         "placeholder": "输入玩家身份证或护照号码"
       },

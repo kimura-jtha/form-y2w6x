@@ -679,7 +679,7 @@
         "placeholder": "Enter password"
       },
       "playersId": {
-        "description": "Japanese players use Players+ ID, non-Japanese use Passport Number",
+        "description": "If you have Players Plus, enter your ID. If not, enter your passport number.",
         "label": "Players+ ID / Passport Number",
         "placeholder": "Enter Players+ ID or Passport Number"
       },
