@@ -10,7 +10,7 @@ import {
   Center,
   Group,
   Loader,
-  NumberInput,
+  Pagination,
   Paper,
   Select,
   Stack,
@@ -73,7 +73,7 @@ export function TournamentManagementPage() {
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(20);
+  const itemsPerPage = 20;
 
   const fetchTournaments = async () => {
     try {
@@ -429,12 +429,6 @@ export function TournamentManagementPage() {
     );
   };
 
-  const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
-  };
-
   return (
     <Stack gap="lg">
       <Group justify="space-between">
@@ -533,26 +527,11 @@ export function TournamentManagementPage() {
                 {filteredAndSortedTournaments.length}{' '}
                 {t('admin.tournaments.table.tournamentsFound')}
               </Text>
-              <Group gap="xs">
+              {totalPages > 1 && (
                 <Text size="sm" c="dimmed">
-                  {t('admin.tournaments.table.itemsPerPage')}:
+                  {t('common.page', 'Page')} {currentPage} / {totalPages}
                 </Text>
-                <Select
-                  value={itemsPerPage.toString()}
-                  onChange={(value) => {
-                    setItemsPerPage(Number(value));
-                    setCurrentPage(1);
-                  }}
-                  data={[
-                    { value: '10', label: '10' },
-                    { value: '20', label: '20' },
-                    { value: '50', label: '50' },
-                    { value: '100', label: '100' },
-                  ]}
-                  w={80}
-                  size="xs"
-                />
-              </Group>
+              )}
             </Group>
 
             <Table striped highlightOnHover withTableBorder>
@@ -682,44 +661,7 @@ export function TournamentManagementPage() {
             {/* Pagination */}
             {totalPages > 1 && (
               <Center mt="md">
-                <Group gap="xs">
-                  <Button
-                    size="xs"
-                    variant="light"
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                  >
-                    {t('admin.tournaments.pagination.previous')}
-                  </Button>
-
-                  {/* Page number input */}
-                  <Group gap={4}>
-                    <Text size="sm">{t('admin.tournaments.pagination.page')}</Text>
-                    <NumberInput
-                      value={currentPage}
-                      onChange={(value) => {
-                        const page = typeof value === 'number' ? value : 1;
-                        handlePageChange(page);
-                      }}
-                      min={1}
-                      max={totalPages}
-                      w={60}
-                      size="xs"
-                    />
-                    <Text size="sm">
-                      {t('admin.tournaments.pagination.of')} {totalPages}
-                    </Text>
-                  </Group>
-
-                  <Button
-                    size="xs"
-                    variant="light"
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                  >
-                    {t('admin.tournaments.pagination.next')}
-                  </Button>
-                </Group>
+                <Pagination total={totalPages} value={currentPage} onChange={setCurrentPage} />
               </Center>
             )}
           </>

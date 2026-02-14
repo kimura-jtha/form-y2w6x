@@ -88,7 +88,9 @@
         "termsAgreedPlaceholder": "모두",
         "title": "필터",
         "tournamentName": "토너먼트 이름",
-        "tournamentNamePlaceholder": "토너먼트 이름으로 검색"
+        "tournamentNamePlaceholder": "토너먼트 이름으로 검색",
+        "email": "이메일",
+        "emailPlaceholder": "이메일로 검색"
       },
       "notifications": {
         "exportError": {
@@ -120,6 +122,7 @@
         "amount": "양",
         "createdAt": "제작일:",
         "email": "이메일",
+        "playersId": "플레이어스+ ID",
         "eventName": "이벤트 이름",
         "formsFound": "발견된 양식(들)",
         "id": "ID",
@@ -129,7 +132,9 @@
         "rank": "계급",
         "status": "상태",
         "termsAgreed": "약관 동의",
-        "tournament": "토너먼트"
+        "tournament": "토너먼트",
+        "downloadTerms": "계약서 다운로드",
+        "downloadReceipt": "영수증 다운로드"
       },
       "title": "양식 관리"
     },
@@ -566,7 +571,9 @@
     "search": "찾다",
     "submit": "제출하다",
     "success": "성공",
-    "yes": "예"
+    "yes": "예",
+    "page": "페이지",
+    "refresh": "새로고침"
   },
   "pages": {
     "home": {

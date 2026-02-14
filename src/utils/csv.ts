@@ -5,6 +5,7 @@
 import Encoding from 'encoding-japanese';
 
 import type { PrizeClaimFormSubmission, PrizeRank, Tournament, TournamentStatus } from '@/types';
+import { toHalfWidthKatakana } from '@/utils/kana';
 
 /**
  * CSV Import Result
@@ -84,17 +85,18 @@ export function exportFormsToPayPayCSV(forms: PrizeClaimFormSubmission[], filena
       // 口座番号 (Account number)
       formContent.accountNumber,
       // 受取人名 (Recipient name in half-width katakana)
-      formContent.accountHolderName,
+      toHalfWidthKatakana(formContent.accountHolderName),
       // 振込金額 (Transfer amount)
       formContent.amount.toString(),
       // 振込依頼人名 (Client name - optional)
-      '',
+      'ｼｬ)ﾆﾎﾝﾌﾟﾛﾌｪｯｼｮﾅﾙﾎﾟｰｶｰｷｮｳｶｲ',
     ];
   });
 
   // Add summary row (trailer record)
   // レコード区分=2, 合計件数, 合計金額
-  rows.push(['2', '', '', '', '', '', totalAmount.toString(), '']);
+  const totalForms = forms.length;
+  rows.push(['2', '', '', '', '', totalForms.toString(), totalAmount.toString(), '']);
 
   // Generate CSV content
   const csvContent = arrayToCSV(rows);
@@ -187,8 +189,8 @@ export function exportFormsToCSV(forms: PrizeClaimFormSubmission[], filename: st
       // Personal Information
       formContent.lastNameKanji,
       formContent.firstNameKanji,
-      formContent.lastNameKana,
-      formContent.firstNameKana,
+      toHalfWidthKatakana(formContent.lastNameKana),
+      toHalfWidthKatakana(formContent.firstNameKana),
       formContent.playersId,
       // Contact Information
       formContent.postalCode,
@@ -208,7 +210,7 @@ export function exportFormsToCSV(forms: PrizeClaimFormSubmission[], filename: st
       formContent.branchName,
       formContent.accountType === 'savings' ? '普通' : '当座',
       formContent.accountNumber,
-      formContent.accountHolderName,
+      toHalfWidthKatakana(formContent.accountHolderName),
       // Agreements
       formContent.privacyAgreed ? '☑︎' : '☐',
       formContent.termsAgreed ? '☑︎' : '☐',

@@ -88,7 +88,9 @@
         "termsAgreedPlaceholder": "全部",
         "title": "过滤器",
         "tournamentName": "赛事名称",
-        "tournamentNamePlaceholder": "按赛事名称搜索"
+        "tournamentNamePlaceholder": "按赛事名称搜索",
+        "email": "电子邮件",
+        "emailPlaceholder": "按电子邮件搜索"
       },
       "notifications": {
         "exportError": {
@@ -120,6 +122,7 @@
         "amount": "数量",
         "createdAt": "创建于",
         "email": "电子邮件",
+        "playersId": "玩家身份证或护照号码",
         "eventName": "事件名称",
         "formsFound": "找到表格",
         "id": "ID",
@@ -129,7 +132,9 @@
         "rank": "秩",
         "status": "地位",
         "termsAgreed": "双方同意的条款",
-        "tournament": "比赛"
+        "tournament": "比赛",
+        "downloadTerms": "下载条款",
+        "downloadReceipt": "下载收据"
       },
       "title": "表单管理"
     },
@@ -566,7 +571,9 @@
     "search": "搜索",
     "submit": "提交",
     "success": "成功",
-    "yes": "是的"
+    "yes": "是的",
+    "page": "页",
+    "refresh": "刷新"
   },
   "pages": {
     "home": {

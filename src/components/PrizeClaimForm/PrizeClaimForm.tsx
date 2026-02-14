@@ -1,5 +1,3 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-
 import { alive } from '@/lib/lambda/health';
 import { getPrivacyPolicyTemplate } from '@/lib/lambda/template';
 import type { AccountType } from '@/types';
@@ -24,6 +22,7 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconAlertCircle } from '@tabler/icons-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePrizeClaimForm } from './usePrizeClaimForm';
 
@@ -57,6 +56,7 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
     handleTournamentSelect,
     handleRankSelect,
     padAccountNumber,
+    convertToHalfWidthKana,
     handleSubmit,
     handleClear,
   } = usePrizeClaimForm(password);
@@ -426,6 +426,9 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
                     disabled={isFormDisabled}
                     key={form.key('lastNameKana')}
                     {...form.getInputProps('lastNameKana')}
+                    onBlur={(e) => {
+                      form.getInputProps('lastNameKana').onBlur?.(e);
+                    }}
                   />
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, sm: 6 }}>
@@ -437,6 +440,9 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
                     disabled={isFormDisabled}
                     key={form.key('firstNameKana')}
                     {...form.getInputProps('firstNameKana')}
+                    onBlur={(e) => {
+                      form.getInputProps('firstNameKana').onBlur?.(e);
+                    }}
                   />
                 </Grid.Col>
               </Grid>
@@ -683,6 +689,10 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
                       disabled={isFormDisabled}
                       key={form.key('accountHolderName')}
                       {...form.getInputProps('accountHolderName')}
+                      onBlur={(e) => {
+                        form.getInputProps('accountHolderName').onBlur?.(e);
+                        convertToHalfWidthKana('accountHolderName', e.target.value);
+                      }}
                     />
                   </Grid.Col>
                 </Grid>

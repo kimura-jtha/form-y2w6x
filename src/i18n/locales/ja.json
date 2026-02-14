@@ -87,6 +87,8 @@
         "termsAgreed": "契約書同意",
         "termsAgreedPlaceholder": "すべて",
         "title": "フィルター",
+        "email": "メールアドレス",
+        "emailPlaceholder": "メールアドレスで検索",
         "tournamentName": "トーナメント名",
         "tournamentNamePlaceholder": "トーナメント名で検索"
       },
@@ -133,6 +135,7 @@
         "amount": "金額",
         "createdAt": "作成日時",
         "email": "メールアドレス",
+        "playersId": "プレイヤーズ＋ID",
         "eventName": "大会名",
         "formsFound": "件のフォーム",
         "id": "ID",
@@ -141,6 +144,8 @@
         "playerName": "プレイヤー名",
         "rank": "順位",
         "status": "ステータス",
+        "downloadReceipt": "領収書ダウンロード",
+        "downloadTerms": "契約書ダウンロード",
         "termsAgreed": "契約書同意",
         "tournament": "トーナメント"
       },
@@ -576,6 +581,8 @@
     "notFound": "見つかりません",
     "required": "必須",
     "save": "保存",
+    "page": "ページ",
+    "refresh": "更新",
     "search": "検索",
     "submit": "送信する",
     "success": "成功",
@@ -760,6 +767,7 @@
       "invalidPassword": "入力されたパスワードが無効または期限切れです。管理者に新しいパスワードを依頼してください。",
       "invalidPhoneNumber": "有効な電話番号を入力してください（例: 03-1234-5678）",
       "invalidPostalCode": "7桁の郵便番号を入力してください",
+      "kanjiNotAllowed": "漢字は使用できません。カタカナで入力してください",
       "katakanaOnly": "全角カタカナで入力してください",
       "mustAgreeToPrivacyPolicy": "プライバシーポリシーに同意してください",
       "required": "この項目は必須です"

@@ -50,20 +50,47 @@ export async function fetchActiveTournaments(): Promise<Tournament[]> {
   return tournaments;
 }
 
+let _allTournamentsCache: Tournament[] | null = null;
+
+export function clearTournamentCache() {
+  _allTournamentsCache = null;
+}
+
 /**
- * Fetch all tournaments from the database
+ * Fetch all tournaments from the database using cursor pagination.
+ * Loads all pages until there is no more data. Results are cached in memory.
  * @returns Promise<Tournament[]> - List of all tournaments
  */
 export async function fetchAllTournaments(): Promise<Tournament[]> {
-  return asyncDeduplicator.call('fetchAllTournaments', async () => {
-    const response = await fetchLambda<{
-      tournaments: ApiTournament[];
-    }>({
-      path: 'admin/tournaments',
-      method: 'GET',
-    });
-    return response.tournaments.map(convertApiTournamentToTournament);
+  if (_allTournamentsCache) return _allTournamentsCache;
+
+  const result = await asyncDeduplicator.call('fetchAllTournaments', async () => {
+    const allTournaments: Tournament[] = [];
+    let cursor: string | undefined;
+    let hasMore = true;
+
+    while (hasMore) {
+      let path = 'admin/tournaments?limit=100';
+      if (cursor) path += `&cursor=${cursor}`;
+
+      const response = await fetchLambda<{
+        items: ApiTournament[];
+        pagination: { limit: number; hasMore: boolean; nextCursor: string };
+      }>({
+        path,
+        method: 'GET',
+      });
+
+      allTournaments.push(...response.items.map(convertApiTournamentToTournament));
+      hasMore = response.pagination.hasMore;
+      cursor = response.pagination.nextCursor || undefined;
+    }
+
+    return allTournaments;
   });
+
+  _allTournamentsCache = result;
+  return result;
 }
 
 /**
@@ -75,6 +102,7 @@ export async function createTournament(
   tournament: Omit<Tournament, 'id' | 'createdAt' | 'updatedAt'>,
 ): Promise<Tournament> {
   localStorage.removeItem('__tournaments__');
+  clearTournamentCache();
   const response = await fetchLambda<{
     tournament: ApiTournament;
   }>({
@@ -100,6 +128,7 @@ export async function createTournament(
  */
 export async function updateTournament(tournament: Tournament): Promise<Tournament> {
   localStorage.removeItem('__tournaments__');
+  clearTournamentCache();
   const response = await fetchLambda<{
     tournament: ApiTournament;
   }>({
@@ -125,6 +154,7 @@ export async function updateTournament(tournament: Tournament): Promise<Tourname
  */
 export async function toggleTournamentStatus(tournament: Tournament): Promise<Tournament> {
   localStorage.removeItem('__tournaments__');
+  clearTournamentCache();
   await updateTournament(tournament);
   const response = await fetchLambda<{
     tournament: ApiTournament;

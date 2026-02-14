@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { addUser, fetchUsers, removeUser } from '@/lib/lambda/user';
 import { getEmail } from '@/utils/auth';
@@ -71,7 +71,7 @@ export function UserManagementPage() {
     },
   });
 
-  const loadUsers = async () => {
+  const loadUsers = useCallback(async () => {
     try {
       setIsLoading(true);
       const data = await fetchUsers();
@@ -86,11 +86,11 @@ export function UserManagementPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [t]);
 
   useEffect(() => {
     loadUsers();
-  }, []);
+  }, [loadUsers]);
 
   const handleAddUser = async (values: AddUserFormValues) => {
     try {

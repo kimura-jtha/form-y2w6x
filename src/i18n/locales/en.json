@@ -87,6 +87,8 @@
         "termsAgreed": "Terms Agreed",
         "termsAgreedPlaceholder": "All",
         "title": "Filters",
+        "email": "Email",
+        "emailPlaceholder": "Search by email",
         "tournamentName": "Tournament Name",
         "tournamentNamePlaceholder": "Search by tournament name"
       },
@@ -133,6 +135,7 @@
         "amount": "Amount",
         "createdAt": "Created At",
         "email": "Email",
+        "playersId": "Players+ ID",
         "eventName": "Event Name",
         "formsFound": "form(s) found",
         "id": "ID",
@@ -141,6 +144,8 @@
         "playerName": "Player Name",
         "rank": "Rank",
         "status": "Status",
+        "downloadReceipt": "Download Receipt",
+        "downloadTerms": "Download Terms",
         "termsAgreed": "Contract Agreed",
         "tournament": "Tournament"
       },
@@ -576,6 +581,8 @@
     "notFound": "Not Found",
     "required": "Required",
     "save": "Save",
+    "page": "Page",
+    "refresh": "Refresh",
     "search": "Search",
     "submit": "Submit",
     "success": "Success",
@@ -760,6 +767,7 @@
       "invalidPassword": "The password you entered is invalid or has expired. Please contact the administrator for a new password.",
       "invalidPhoneNumber": "Please enter a valid phone number (e.g., 03-1234-5678)",
       "invalidPostalCode": "Please enter a 7-digit postal code",
+      "kanjiNotAllowed": "Kanji characters are not allowed. Please enter in Katakana",
       "katakanaOnly": "Please enter in full-width Katakana",
       "mustAgreeToPrivacyPolicy": "You must agree to the privacy policy",
       "required": "This field is required"

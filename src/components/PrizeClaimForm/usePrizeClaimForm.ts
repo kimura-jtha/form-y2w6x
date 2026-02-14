@@ -1,9 +1,3 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-
-import { useForm } from '@mantine/form';
-import { notifications } from '@mantine/notifications';
-import { useTranslation } from 'react-i18next';
-
 import { useDebounce } from '@/hooks';
 import i18n from '@/i18n';
 import {
@@ -16,6 +10,11 @@ import {
 import type { Bank, Branch, PrizeClaimFormValues, PrizeRank, Tournament } from '@/types';
 import { initialPrizeClaimFormValues } from '@/types';
 import { validatePasswordV3 } from '@/utils/auth';
+import { containsKanji, toHalfWidthKatakana } from '@/utils/kana';
+import { useForm } from '@mantine/form';
+import { notifications } from '@mantine/notifications';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 // Validation patterns
 const POSTAL_CODE_PATTERN = /^\d{7}$/;
@@ -56,6 +55,7 @@ export function usePrizeClaimForm(password: string) {
           return null;
         }
         if (!value.trim()) return t('prizeClaim.validation.required');
+        if (containsKanji(value)) return t('prizeClaim.validation.kanjiNotAllowed');
         if (!KATAKANA_PATTERN.test(value)) return t('prizeClaim.validation.katakanaOnly');
         return null;
       },
@@ -64,6 +64,7 @@ export function usePrizeClaimForm(password: string) {
           return null;
         }
         if (!value.trim()) return t('prizeClaim.validation.required');
+        if (containsKanji(value)) return t('prizeClaim.validation.kanjiNotAllowed');
         if (!KATAKANA_PATTERN.test(value)) return t('prizeClaim.validation.katakanaOnly');
         return null;
       },
@@ -132,7 +133,9 @@ export function usePrizeClaimForm(password: string) {
         if (!isJapanese.current) {
           return null;
         }
-        return !value.trim() ? t('prizeClaim.validation.required') : null;
+        if (!value.trim()) return t('prizeClaim.validation.required');
+        if (containsKanji(value)) return t('prizeClaim.validation.kanjiNotAllowed');
+        return null;
       },
       privacyAgreed: (value) =>
         !value ? t('prizeClaim.validation.mustAgreeToPrivacyPolicy') : null,
@@ -405,6 +408,20 @@ export function usePrizeClaimForm(password: string) {
     [form],
   );
 
+  // Convert kana field to half-width katakana
+  const convertToHalfWidthKana = useCallback(
+    (fieldName: keyof PrizeClaimFormValues, value: string) => {
+      if (!value.trim()) return;
+      // Skip conversion if value contains kanji (let validation handle it)
+      if (containsKanji(value)) return;
+      const converted = toHalfWidthKatakana(value);
+      if (converted !== value) {
+        form.setFieldValue(fieldName, converted);
+      }
+    },
+    [form],
+  );
+
   // Handle form submission
   const handleSubmit = useCallback(
     async (values: PrizeClaimFormValues) => {
@@ -488,6 +505,7 @@ export function usePrizeClaimForm(password: string) {
     handleTournamentSelect,
     handleRankSelect,
     padAccountNumber,
+    convertToHalfWidthKana,
     handleSubmit,
     handleClear,
   };

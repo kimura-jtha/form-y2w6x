@@ -208,16 +208,14 @@ export async function deleteForm(formId: string) {
  * @param cursor - Cursor
  * @param limit - Limit
  * @param tournamentId - Tournament ID filter
- * @param dateFrom - Start date filter (ISO 8601 string)
- * @param dateTo - End date filter (ISO 8601 string)
+ * @param email - Email filter
  * @returns Promise<{ forms: PrizeClaimFormSubmission[]; pagination: { total, hasMore, nextCursor } }> - Forms with pagination
  */
 export async function getForms(
   cursor?: string,
   limit?: number,
   tournamentId?: string,
-  dateFrom?: string,
-  dateTo?: string,
+  email?: string,
 ): Promise<{
   forms: PrizeClaimFormSubmission[];
   pagination: {
@@ -227,7 +225,7 @@ export async function getForms(
   };
 }> {
   return asyncDeduplicator.call(
-    `getForms:${cursor || ''}:${limit || 100}:${tournamentId || ''}:${dateFrom || ''}:${dateTo || ''}`,
+    `getForms:${cursor || ''}:${limit || 100}:${tournamentId || ''}:${email || ''}`,
     async () => {
       let path = `admin/forms?limit=${limit || 20}`;
       if (cursor) {
@@ -236,11 +234,8 @@ export async function getForms(
       if (tournamentId) {
         path += `&tournamentId=${tournamentId}`;
       }
-      if (dateFrom) {
-        path += `&dateFrom=${dateFrom}`;
-      }
-      if (dateTo) {
-        path += `&dateTo=${dateTo}`;
+      if (email) {
+        path += `&email=${encodeURIComponent(email)}`;
       }
       const response = await fetchLambda<{
         items: PrizeClaimFormSubmission[];
