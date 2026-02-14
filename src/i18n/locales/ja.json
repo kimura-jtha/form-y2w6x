@@ -58,8 +58,14 @@
           "allDescription": "全てのフォーム送信をダウンロード",
           "japanese": "日本人ユーザーのみ",
           "japaneseDescription": "カタカナ名のフォームのみダウンロード",
+          "full": "全データ (UTF-8)",
+          "fullDescription": "テーブルに表示されている全カラムをダウンロード（UTF-8エンコーディング）",
           "terms": "契約書同意ユーザーのみ",
           "termsDescription": "契約書に同意したユーザーのみを含める"
+        },
+        "groups": {
+          "fullData": "全データ (UTF-8)",
+          "paypay": "PayPay振込用 (Shift_JIS)"
         },
         "selectType": "エクスポートタイプを選択",
         "selectTypeDescription": "ユーザータイプと追加フィルターを選択：",
@@ -227,7 +233,7 @@
           },
           "amount": {
             "description": "賞金額（通貨付きフォーマット）",
-            "example": "¥100,000"
+            "example": "+P100,000"
           },
           "bankCode": {
             "description": "銀行コード",
@@ -703,6 +709,10 @@
         "description": "選択したトーナメントと順位に基づいて自動計算されます",
         "label": "賞金額"
       },
+      "isPoint": {
+        "point": "ポイント (+P)",
+        "cash": "現金 (¥)"
+      },
       "rank": {
         "label": "順位",
         "placeholder": "順位を選択"
@@ -756,6 +766,7 @@
       "nameKana": "氏名（カナ）",
       "password": "フォームパスワード",
       "playersId": "プレイヤーズ＋ID / パスポート番号",
+      "prizeType": "賞金タイプ",
       "privacyPolicy": "プライバシーポリシー",
       "tournament": "トーナメント情報"
     },

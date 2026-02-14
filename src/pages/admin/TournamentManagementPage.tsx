@@ -30,6 +30,7 @@ import {
   IconLockOpen,
   IconPlus,
   IconRefresh,
+  IconTrash,
   IconX,
 } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
@@ -38,6 +39,7 @@ import { TournamentCSVImportModal } from '@/components/TournamentCSVImportModal'
 import { TournamentFormModal } from '@/components/TournamentFormModal';
 import {
   createTournament as createTournamentApi,
+  deleteTournament as deleteTournamentApi,
   fetchAllTournaments,
   updateTournament as updateTournamentApi,
 } from '@/lib/lambda/tournament';
@@ -58,6 +60,7 @@ export function TournamentManagementPage() {
   const [importOpened, { open: openImport, close: closeImport }] = useDisclosure(false);
   const [isImporting, setIsImporting] = useState(false);
   const [togglingTournamentId, setTogglingTournamentId] = useState<string | null>(null);
+  const [deletingTournamentId, setDeletingTournamentId] = useState<string | null>(null);
 
   // Filters
   const [selectedEventName, setSelectedEventName] = useState<string | null>(null);
@@ -199,6 +202,26 @@ export function TournamentManagementPage() {
       console.error('Failed to toggle tournament status:', error_);
     } finally {
       setTogglingTournamentId(null);
+    }
+  };
+
+  const handleDeleteTournament = async (tournament: Tournament) => {
+    const confirmed = window.confirm(
+      t('admin.tournaments.deleteConfirm', {
+        name: tournament.tournamentNameJa,
+        defaultValue: `Are you sure you want to delete "${tournament.tournamentNameJa}"?`,
+      }),
+    );
+    if (!confirmed) return;
+
+    try {
+      setDeletingTournamentId(tournament.id);
+      await deleteTournamentApi(tournament.id);
+      setTournaments(tournaments.filter((t) => t.id !== tournament.id));
+    } catch (error_) {
+      console.error('Failed to delete tournament:', error_);
+    } finally {
+      setDeletingTournamentId(null);
     }
   };
 
@@ -649,6 +672,16 @@ export function TournamentManagementPage() {
                             title={t('admin.tournaments.viewDetails')}
                           >
                             <IconEye size={16} />
+                          </ActionIcon>
+                          <ActionIcon
+                            variant="light"
+                            color="red"
+                            onClick={() => handleDeleteTournament(tournament)}
+                            loading={deletingTournamentId === tournament.id}
+                            disabled={deletingTournamentId !== null}
+                            title={t('admin.tournaments.delete', 'Delete')}
+                          >
+                            <IconTrash size={16} />
                           </ActionIcon>
                         </Group>
                       </Table.Td>

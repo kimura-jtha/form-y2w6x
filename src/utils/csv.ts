@@ -147,35 +147,35 @@ export function exportFormsToCSV(forms: PrizeClaimFormSubmission[], filename: st
   const headers = [
     // 'Form ID',
     // 'Status',
-    'Created At',
+    '作成日',
     // Personal Information
-    'Last Name (Kanji)',
-    'First Name (Kanji)',
-    'Last Name (Kana)',
-    'First Name (Kana)',
-    'Players ID',
+    '名字 (漢字)',
+    '名前 (漢字)',
+    '名字 (カナ)',
+    '名前 (カナ)',
+    'プレイヤーズ＋ID',
     // Contact Information
-    'Postal Code',
-    'Address',
-    'Phone Number',
-    'Email',
+    '郵便番号',
+    '住所',
+    '電話番号',
+    'メールアドレス',
     // Tournament Information
-    'Tournament Date',
+    '開催日',
     // 'Tournament ID',
-    'Tournament Name',
-    'Rank',
-    'Prize Amount',
+    'トーナメント',
+    '順位',
+    '種別',
+    '金額',
     // Bank Information
     // 'Bank Code',
-    'Bank Name',
+    '銀行名',
     // 'Branch Code',
-    'Branch Name',
-    'Account Type',
-    'Account Number',
-    'Account Holder Name',
+    '支店名',
+    '口座種別',
+    '口座番号',
+    '口座名義人',
     // Agreements
-    'Privacy Agreed',
-    'Terms Agreed',
+    '契約書同意',
   ];
 
   // Convert forms to CSV rows
@@ -187,33 +187,43 @@ export function exportFormsToCSV(forms: PrizeClaimFormSubmission[], filename: st
       // form.status,
       createdAt,
       // Personal Information
-      formContent.lastNameKanji,
-      formContent.firstNameKanji,
+      formContent.isPoint ? '' : formContent.lastNameKanji,
+      formContent.isPoint ? '' : formContent.firstNameKanji,
       toHalfWidthKatakana(formContent.lastNameKana),
       toHalfWidthKatakana(formContent.firstNameKana),
       formContent.playersId,
       // Contact Information
-      formContent.postalCode,
-      formContent.address,
+      formContent.isPoint ? '' : formContent.postalCode,
+      formContent.isPoint ? '' : formContent.address,
       formContent.phoneNumber,
-      formContent.email,
+      formContent.isPoint ? '' : formContent.email,
       // Tournament Information
       formContent.tournamentDate,
       // formContent.tournamentId,
       formContent.tournamentName,
       formContent.rank,
-      formContent.amount.toString(),
+      formContent.isPoint ? 'ポイント (+P)' : '現金 (¥)',
+      formContent.amount.toLocaleString(),
       // Bank Information
       // formContent.bankCode,
-      formContent.bankName,
+      formContent.isPoint ? '' : formContent.bankName ? formContent.bankName : '',
       // formContent.branchCode,
-      formContent.branchName,
-      formContent.accountType === 'savings' ? '普通' : '当座',
-      formContent.accountNumber,
-      toHalfWidthKatakana(formContent.accountHolderName),
+      formContent.isPoint ? '' : formContent.branchName ? formContent.branchName : '',
+      formContent.isPoint
+        ? ''
+        : formContent.accountType
+          ? formContent.accountType === 'savings'
+            ? '普通'
+            : '当座'
+          : '',
+      formContent.isPoint ? '' : formContent.accountNumber ? formContent.accountNumber : '',
+      formContent.isPoint
+        ? ''
+        : formContent.accountHolderName
+          ? toHalfWidthKatakana(formContent.accountHolderName)
+          : '',
       // Agreements
-      formContent.privacyAgreed ? '☑︎' : '☐',
-      formContent.termsAgreed ? '☑︎' : '☐',
+      formContent.isPoint ? '' : formContent.termsAgreed ? '☑︎' : '☐',
     ];
   });
 
@@ -448,7 +458,7 @@ function validateTournamentRow(row: Record<string, string>, rowNumber: number): 
     rowErrors.push({ row: rowNumber, field: 'date', message: 'Date is required' });
   } else {
     row['date'] = row['date'].replaceAll('/', '-');
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(row['date'])) {
+    if (!/^\d{4}-\d{1,2}-\d{1,2}$/.test(row['date'])) {
       rowErrors.push({
         row: rowNumber,
         field: 'date',

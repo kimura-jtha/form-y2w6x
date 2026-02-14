@@ -1,3 +1,4 @@
+import { POINT_PRIZE_PREFIX, PRIZE_PREFIX } from '@/config';
 import {
   agreeTermsOfService,
   getFormById,
@@ -52,6 +53,8 @@ export function TermsAgreementPage() {
   const [termsOfServiceUrl, setTermsOfServiceUrl] = useState<string | null>(null);
   const [termsOfServiceIssuedAt, setTermsOfServiceIssuedAt] = useState<number>(Date.now());
   const [selectedDocumentType, setSelectedDocumentType] = useState<'terms' | 'receipt'>('receipt');
+
+  const prizePrefix = formData?.isPoint ? POINT_PRIZE_PREFIX : PRIZE_PREFIX;
 
   // Extract form ID from URL hash
   useEffect(() => {
@@ -446,7 +449,10 @@ export function TermsAgreementPage() {
                   <Text size="xs" c="dimmed">
                     {t('termsAgreement.formInfo.prizeAmount')}
                   </Text>
-                  <Text size="sm">¥{formData.amount.toLocaleString()}</Text>
+                  <Text size="sm">
+                    {prizePrefix}
+                    {formData.amount.toLocaleString()}
+                  </Text>
                 </Grid.Col>
                 <Grid.Col span={6}>
                   <Text size="xs" c="dimmed">
@@ -629,6 +635,7 @@ const extractFormVariables = (formContent: PrizeClaimFormValues, issuedAt: numbe
   const isSavings = formContent.accountType === 'savings';
   const accountTypeJa = isSavings ? '普通預金' : '当座預金';
   const accountTypeEn = isSavings ? 'Savings' : 'Checking';
+  const prizePrefix = formContent.isPoint ? POINT_PRIZE_PREFIX : PRIZE_PREFIX;
   return {
     today: formatDate(issuedAt, false),
     year: new Date().getFullYear().toString(),
@@ -639,7 +646,7 @@ const extractFormVariables = (formContent: PrizeClaimFormValues, issuedAt: numbe
     tournamentName: formContent.tournamentName,
     tournamentDate: formContent.tournamentDate,
     rank: formContent.rank,
-    amount: formatCurrency(formContent.amount),
+    amount: formatCurrency(formContent.amount, prizePrefix),
     playersId: formContent.playersId,
     email: formContent.email,
     phoneNumber: formContent.phoneNumber,
@@ -656,6 +663,6 @@ const extractFormVariables = (formContent: PrizeClaimFormValues, issuedAt: numbe
   };
 };
 
-const formatCurrency = (amount: number): string => {
-  return `¥${amount.toLocaleString('ja-JP')}`;
+const formatCurrency = (amount: number, prizePrefix: string): string => {
+  return `${prizePrefix}${amount.toLocaleString('ja-JP')}`;
 };

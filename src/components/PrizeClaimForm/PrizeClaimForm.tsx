@@ -1,3 +1,4 @@
+import { POINT_PRIZE_PREFIX, PRIZE_PREFIX } from '@/config';
 import { alive } from '@/lib/lambda/health';
 import { getPrivacyPolicyTemplate } from '@/lib/lambda/template';
 import type { AccountType } from '@/types';
@@ -16,6 +17,7 @@ import {
   ScrollArea,
   Select,
   Stack,
+  Switch,
   Text,
   TextInput,
   Title,
@@ -174,42 +176,53 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
   // Get current form values (controlled mode)
   const formValues = form.getValues();
 
+  const prizePrefix = useMemo(() => {
+    return formValues.isPoint ? POINT_PRIZE_PREFIX : PRIZE_PREFIX;
+  }, [formValues.isPoint]);
+
   // Check if all required fields are filled
   const isFormComplete = useMemo(() => {
-    if (isJapanese) {
-      return Boolean(
-        formValues.lastNameKanji &&
-        formValues.firstNameKanji &&
-        formValues.lastNameKana &&
-        formValues.firstNameKana &&
-        formValues.playersId &&
-        formValues.postalCode &&
-        formValues.address &&
-        formValues.phoneNumber &&
-        formValues.email &&
-        formValues.tournamentDate &&
-        formValues.tournamentId &&
-        formValues.rank &&
-        formValues.bankCode &&
-        formValues.branchCode &&
-        formValues.accountType &&
-        formValues.accountNumber &&
-        formValues.accountHolderName &&
-        formValues.privacyAgreed,
-      );
-    }
-    return Boolean(
-      formValues.lastNameKanji &&
-      formValues.firstNameKanji &&
+    const baseComplete = Boolean(
       formValues.playersId &&
-      formValues.address &&
       formValues.phoneNumber &&
-      formValues.email &&
       formValues.tournamentDate &&
       formValues.tournamentId &&
       formValues.rank &&
       formValues.privacyAgreed,
     );
+
+    if (!baseComplete) return false;
+
+    if (formValues.isPoint) {
+      // Point mode: no name kanji, email, address, or bank fields required
+      if (isJapanese) {
+        return Boolean(formValues.lastNameKana && formValues.firstNameKana);
+      }
+      return true;
+    }
+
+    // Cash mode: name kanji and email required
+    const cashBaseComplete = Boolean(
+      formValues.lastNameKanji &&
+      formValues.firstNameKanji &&
+      formValues.email,
+    );
+    if (!cashBaseComplete) return false;
+
+    if (isJapanese) {
+      return Boolean(
+        formValues.lastNameKana &&
+        formValues.firstNameKana &&
+        formValues.postalCode &&
+        formValues.address &&
+        formValues.bankCode &&
+        formValues.branchCode &&
+        formValues.accountType &&
+        formValues.accountNumber &&
+        formValues.accountHolderName,
+      );
+    }
+    return Boolean(formValues.address);
   }, [formValues, isJapanese]);
 
   // Bank options for select
@@ -305,7 +318,22 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
 
   const confirmSubmit = () => {
     closeConfirm();
-    handleSubmit(form.getValues());
+    const values = form.getValues();
+    if (values.isPoint) {
+      values.lastNameKanji = '';
+      values.firstNameKanji = '';
+      values.email = '';
+      values.postalCode = '';
+      values.address = '';
+      values.bankName = '';
+      values.bankCode = '';
+      values.branchName = '';
+      values.branchCode = '';
+      values.accountType = '' as AccountType;
+      values.accountNumber = '';
+      values.accountHolderName = '';
+    }
+    handleSubmit(values);
   };
 
   // Derived state for form disabled
@@ -345,8 +373,26 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
 
       <form onSubmit={onSubmit}>
         <Stack gap="xl">
+          {/* Point/Cash Switcher */}
+          <Paper shadow="xs" p="md" withBorder>
+            <Group justify="space-between" align="center">
+              <Title order={4}>{t('prizeClaim.sections.prizeType')}</Title>
+              <Switch
+                label={
+                  formValues.isPoint
+                    ? t('prizeClaim.fields.isPoint.point')
+                    : t('prizeClaim.fields.isPoint.cash')
+                }
+                checked={formValues.isPoint ?? false}
+                color="blue.4"
+                onChange={(event) => form.setFieldValue('isPoint', event.currentTarget.checked)}
+                disabled={isFormDisabled}
+              />
+            </Group>
+          </Paper>
+
           {/* Name (Not Japanese) Section */}
-          {!isJapanese && (
+          {!isJapanese && !formValues.isPoint && (
             <Paper shadow="xs" p="md" withBorder>
               <Title order={4} mb="md">
                 {t('prizeClaim.sections.name')}
@@ -378,7 +424,7 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
             </Paper>
           )}
           {/* Name (Kanji) Section */}
-          {isJapanese && (
+          {isJapanese && !formValues.isPoint && (
             <Paper shadow="xs" p="md" withBorder>
               <Title order={4} mb="md">
                 {t('prizeClaim.sections.name')}
@@ -471,7 +517,7 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
               {t('prizeClaim.sections.contact')}
             </Title>
             <Stack gap="md">
-              {isJapanese && (
+              {!formValues.isPoint && isJapanese && (
                 <Grid align="flex-end">
                   <Grid.Col span={{ base: 12, sm: 8 }}>
                     <TextInput
@@ -499,14 +545,16 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
                 </Grid>
               )}
 
-              <TextInput
-                label={t('prizeClaim.fields.address.label')}
-                placeholder={t('prizeClaim.fields.address.placeholder')}
-                withAsterisk
-                disabled={isFormDisabled}
-                key={form.key('address')}
-                {...form.getInputProps('address')}
-              />
+              {!formValues.isPoint && (
+                <TextInput
+                  label={t('prizeClaim.fields.address.label')}
+                  placeholder={t('prizeClaim.fields.address.placeholder')}
+                  withAsterisk
+                  disabled={isFormDisabled}
+                  key={form.key('address')}
+                  {...form.getInputProps('address')}
+                />
+              )}
 
               <Grid>
                 <Grid.Col span={{ base: 12, sm: 6 }}>
@@ -520,18 +568,20 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
                     {...form.getInputProps('phoneNumber')}
                   />
                 </Grid.Col>
-                <Grid.Col span={{ base: 12, sm: 6 }}>
-                  <TextInput
-                    label={t('prizeClaim.fields.email.label')}
-                    placeholder={t('prizeClaim.fields.email.placeholder')}
-                    description={'\u00A0'}
-                    withAsterisk
-                    disabled={isFormDisabled}
-                    type="email"
-                    key={form.key('email')}
-                    {...form.getInputProps('email')}
-                  />
-                </Grid.Col>
+                {!formValues.isPoint && (
+                  <Grid.Col span={{ base: 12, sm: 6 }}>
+                    <TextInput
+                      label={t('prizeClaim.fields.email.label')}
+                      placeholder={t('prizeClaim.fields.email.placeholder')}
+                      description={'\u00A0'}
+                      withAsterisk
+                      disabled={isFormDisabled}
+                      type="email"
+                      key={form.key('email')}
+                      {...form.getInputProps('email')}
+                    />
+                  </Grid.Col>
+                )}
               </Grid>
             </Stack>
           </Paper>
@@ -594,7 +644,11 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
                   <TextInput
                     label={t('prizeClaim.fields.prizeAmount.label')}
                     description={t('prizeClaim.fields.prizeAmount.description')}
-                    value={formValues.amount > 0 ? `¥${formValues.amount.toLocaleString()}` : ''}
+                    value={
+                      formValues.amount > 0
+                        ? `${prizePrefix}${formValues.amount.toLocaleString()}`
+                        : ''
+                    }
                     readOnly
                     styles={{
                       input: {
@@ -610,7 +664,7 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
           </Paper>
 
           {/* Bank Information Section */}
-          {isJapanese && (
+          {isJapanese && !formValues.isPoint && (
             <Paper shadow="xs" p="md" withBorder>
               <Title order={4} mb="md">
                 {t('prizeClaim.sections.bank')}

@@ -26,7 +26,7 @@ function getEnvVar(key: string, defaultValue?: string): string {
 export const env: EnvConfig = {
   // App
   APP_NAME: getEnvVar('VITE_APP_NAME', 'Form Management'),
-  APP_VERSION: getEnvVar('VITE_APP_VERSION', '0.0.0'),
+  APP_VERSION: getEnvVar('VITE_APP_VERSION', '1.0.0'),
   APP_BUILD: getEnvVar('VITE_APP_BUILD', 'dev'),
 
   // Feature flags

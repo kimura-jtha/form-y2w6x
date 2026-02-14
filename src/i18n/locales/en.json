@@ -58,8 +58,14 @@
           "allDescription": "Download all form submissions",
           "japanese": "Japanese Users Only",
           "japaneseDescription": "Download only forms with Katakana names",
+          "full": "Full Data (UTF-8)",
+          "fullDescription": "Download all columns as displayed in the table (UTF-8 encoding)",
           "terms": "Only Contract Agreed Users",
           "termsDescription": "Filter to include only users who agreed to contract"
+        },
+        "groups": {
+          "fullData": "Full Data (UTF-8)",
+          "paypay": "PayPay Bank Transfer (Shift_JIS)"
         },
         "selectType": "Select Export Type",
         "selectTypeDescription": "Select user type and optional filters:",
@@ -227,7 +233,7 @@
           },
           "amount": {
             "description": "Prize amount (formatted with currency)",
-            "example": "¥100,000"
+            "example": "+P100,000"
           },
           "bankCode": {
             "description": "Bank code",
@@ -703,6 +709,10 @@
         "description": "Auto-calculated based on selected tournament and rank",
         "label": "Prize Amount"
       },
+      "isPoint": {
+        "point": "Point (+P)",
+        "cash": "Cash (¥)"
+      },
       "rank": {
         "label": "Rank",
         "placeholder": "Select rank"
@@ -756,6 +766,7 @@
       "nameKana": "Name (Katakana)",
       "password": "Form Password",
       "playersId": "Players+ ID / Passport Number",
+      "prizeType": "Prize Type",
       "privacyPolicy": "Privacy Policy",
       "tournament": "Tournament Information"
     },

@@ -1,11 +1,12 @@
 import { type MouseEvent, useEffect, useMemo, useState } from 'react';
 
 import { FormDetailModal } from '@/components/FormDetailModal';
+import { POINT_PRIZE_PREFIX, PRIZE_PREFIX } from '@/config';
 import { deleteForm, getForms } from '@/lib/lambda/form';
 import { clearTournamentCache, fetchAllTournaments } from '@/lib/lambda/tournament';
 import { useAppStore } from '@/stores';
 import type { PrizeClaimFormSubmission, Tournament } from '@/types';
-import { exportFormsToPayPayCSV, formatDate, maskEmail } from '@/utils';
+import { exportFormsToCSV, exportFormsToPayPayCSV, formatDate, maskEmail } from '@/utils';
 import { generatePasswordV3 } from '@/utils/auth';
 import {
   ActionIcon,
@@ -16,6 +17,7 @@ import {
   Button,
   Center,
   Checkbox,
+  Divider,
   Group,
   Loader,
   Modal,
@@ -112,7 +114,7 @@ export function FormManagementPage() {
   // Export
   const [exportModalOpened, { open: openExportModal, close: closeExportModal }] =
     useDisclosure(false);
-  const [exportType, setExportType] = useState<'all' | 'japanese'>('all');
+  const [exportType, setExportType] = useState<'all' | 'japanese' | 'full'>('all');
   const [exportOnlyTermsAgreed, setExportOnlyTermsAgreed] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
 
@@ -382,6 +384,42 @@ export function FormManagementPage() {
       }
 
       const filterSuffixes: string[] = [];
+
+      // Full data export (UTF-8, all columns like the table)
+      if (exportType === 'full') {
+        if (exportOnlyTermsAgreed) {
+          exportForms = exportForms.filter((form) => form.formContent.termsAgreed);
+          filterSuffixes.push('terms_agreed');
+        }
+
+        const filterSuffix = filterSuffixes.length > 0 ? `_${filterSuffixes.join('_')}` : '';
+
+        if (exportForms.length === 0) {
+          notifications.show({
+            title: t('admin.forms.notifications.noData.title'),
+            message: t('admin.forms.notifications.noData.message'),
+            color: 'orange',
+          });
+          return;
+        }
+
+        const timestamp = new Date()
+          .toISOString()
+          .slice(0, -8)
+          .replaceAll(/[:TZ-]/g, '_');
+        const filename = `forms_full_${timestamp}${filterSuffix}`;
+        exportFormsToCSV(exportForms, filename);
+
+        notifications.show({
+          title: t('admin.forms.export.success'),
+          message: t('admin.forms.export.successMessage', { count: exportForms.length }),
+          color: 'green',
+        });
+        return;
+      }
+
+      // PayPay CSV exports: exclude point-based prizes
+      exportForms = exportForms.filter((form) => !form.formContent.isPoint);
 
       if (exportType === 'japanese') {
         exportForms = exportForms.filter(
@@ -726,82 +764,92 @@ export function FormManagementPage() {
                     </Table.Td>
                   </Table.Tr>
                 ) : (
-                  paginatedForms.map((form) => (
-                    <Table.Tr
-                      key={form.id}
-                      onClick={() => handleRowClick(form)}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <Table.Td fw="bold">
-                        {tournamentMap[form.formContent.tournamentId]?.eventNameJa || '-'}
-                      </Table.Td>
-                      <Table.Td fw="bold">{form.formContent.tournamentName}</Table.Td>
-                      <Table.Td>
-                        {form.formContent.lastNameKanji} {form.formContent.firstNameKanji}
-                        {form.formContent.lastNameKana ? <>
-                          <br />
-                          {form.formContent.lastNameKana} {form.formContent.firstNameKana}
-                        </> : null}
-                      </Table.Td>
-                      <Table.Td>{form.formContent.playersId || '-'}</Table.Td>
-                      <Table.Td>{form.formContent.rank}</Table.Td>
-                      <Table.Td>¥{form.formContent.amount.toLocaleString()}</Table.Td>
-                      <Table.Td>
-                        <Center w="100%">
-                          <Badge
-                            fz="xl"
-                            variant="transparent"
-                            color={form.formContent.termsAgreed ? 'green' : 'red'}
-                          >
-                            {form.formContent.termsAgreed ? '☑︎' : '☐'}
-                          </Badge>
-                        </Center>
-                      </Table.Td>
-                      <Table.Td>
-                        <Text size="xs">{formatDate(form.createdAt, true)}</Text>
-                      </Table.Td>
-                      <Table.Td>
-                        <Group gap="xs">
-                          <Button
-                            size="xs"
-                            color="blue"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              e.preventDefault();
-                              window.open(form.termsOfService?.url, '_blank');
-                            }}
-                            disabled={!form.termsOfService?.url}
-                            title={t('admin.forms.table.downloadTerms')}
-                          >
-                            <IconFileText size={16} />
-                          </Button>
-                          <Button
-                            size="xs"
-                            color="green"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              e.preventDefault();
-                              window.open(form.receipt?.url, '_blank');
-                            }}
-                            disabled={!form.receipt?.url}
-                            title={t('admin.forms.table.downloadReceipt')}
-                          >
-                            <IconDownload size={16} />
-                          </Button>
-                          <Button
-                            size="xs"
-                            color="red"
-                            variant="light"
-                            onClick={(e) => handleDelete(form.id, e)}
-                            loading={deletingFormId === form.id}
-                            disabled={deletingFormId !== null}
-                          >
-                            <IconTrash size={16} />
-                          </Button>
-                        </Group>
-                      </Table.Td>
-                    </Table.Tr>
-                  ))
+                  paginatedForms.map((form) => {
+                    const prizePrefix = form.formContent.isPoint
+                      ? POINT_PRIZE_PREFIX
+                      : PRIZE_PREFIX;
+                    return (
+                      <Table.Tr
+                        key={form.id}
+                        onClick={() => handleRowClick(form)}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <Table.Td fw="bold">
+                          {tournamentMap[form.formContent.tournamentId]?.eventNameJa || '-'}
+                        </Table.Td>
+                        <Table.Td fw="bold">{form.formContent.tournamentName}</Table.Td>
+                        <Table.Td>
+                          {form.formContent.lastNameKanji} {form.formContent.firstNameKanji}
+                          {form.formContent.lastNameKana ? (
+                            <>
+                              <br />
+                              {form.formContent.lastNameKana} {form.formContent.firstNameKana}
+                            </>
+                          ) : null}
+                        </Table.Td>
+                        <Table.Td>{form.formContent.playersId || '-'}</Table.Td>
+                        <Table.Td>{form.formContent.rank}</Table.Td>
+                        <Table.Td>
+                          {prizePrefix}
+                          {form.formContent.amount.toLocaleString()}
+                        </Table.Td>
+                        <Table.Td>
+                          <Center w="100%">
+                            <Badge
+                              fz="xl"
+                              variant="transparent"
+                              color={form.formContent.termsAgreed ? 'green' : 'red'}
+                            >
+                              {form.formContent.termsAgreed ? '☑︎' : '☐'}
+                            </Badge>
+                          </Center>
+                        </Table.Td>
+                        <Table.Td>
+                          <Text size="xs">{formatDate(form.createdAt, true)}</Text>
+                        </Table.Td>
+                        <Table.Td>
+                          <Group gap="xs">
+                            <Button
+                              size="xs"
+                              color="blue"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                window.open(form.termsOfService?.url, '_blank');
+                              }}
+                              disabled={!form.termsOfService?.url}
+                              title={t('admin.forms.table.downloadTerms')}
+                            >
+                              <IconFileText size={16} />
+                            </Button>
+                            <Button
+                              size="xs"
+                              color="green"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                window.open(form.receipt?.url, '_blank');
+                              }}
+                              disabled={!form.receipt?.url}
+                              title={t('admin.forms.table.downloadReceipt')}
+                            >
+                              <IconDownload size={16} />
+                            </Button>
+                            <Button
+                              size="xs"
+                              color="red"
+                              variant="light"
+                              onClick={(e) => handleDelete(form.id, e)}
+                              loading={deletingFormId === form.id}
+                              disabled={deletingFormId !== null}
+                            >
+                              <IconTrash size={16} />
+                            </Button>
+                          </Group>
+                        </Table.Td>
+                      </Table.Tr>
+                    );
+                  })
                 )}
               </Table.Tbody>
             </Table>
@@ -822,6 +870,7 @@ export function FormManagementPage() {
         onClose={closeExportModal}
         title={t('admin.forms.export.selectType')}
         centered
+        size="lg"
       >
         <Stack gap="md">
           <Text size="sm" c="dimmed">
@@ -830,29 +879,49 @@ export function FormManagementPage() {
 
           <Radio.Group
             value={exportType}
-            onChange={(value) => setExportType(value as 'all' | 'japanese')}
+            onChange={(value) => setExportType(value as 'all' | 'japanese' | 'full')}
           >
-            <Stack gap="sm">
-              <Radio
-                value="all"
-                label={t('admin.forms.export.options.all')}
-                description={t('admin.forms.export.options.allDescription')}
-              />
-              <Radio
-                value="japanese"
-                label={t('admin.forms.export.options.japanese')}
-                description={t('admin.forms.export.options.japaneseDescription')}
-              />
+            <Stack gap="md">
+              {/* Group 1: Full Data (UTF-8) */}
+              <Paper p="md" withBorder>
+                <Text size="sm" fw={600} mb="sm" c="dimmed">
+                  {t('admin.forms.export.groups.fullData')}
+                </Text>
+                <Radio
+                  value="full"
+                  label={t('admin.forms.export.options.full')}
+                  description={t('admin.forms.export.options.fullDescription')}
+                />
+              </Paper>
+
+              {/* Group 2: PayPay (Shift_JIS) */}
+              <Paper p="md" withBorder>
+                <Text size="sm" fw={600} mb="sm" c="dimmed">
+                  {t('admin.forms.export.groups.paypay')}
+                </Text>
+                <Stack gap="sm">
+                  <Radio
+                    value="all"
+                    label={t('admin.forms.export.options.all')}
+                    description={t('admin.forms.export.options.allDescription')}
+                  />
+                  <Radio
+                    value="japanese"
+                    label={t('admin.forms.export.options.japanese')}
+                    description={t('admin.forms.export.options.japaneseDescription')}
+                  />
+                  <Divider />
+                  <Checkbox
+                    checked={exportOnlyTermsAgreed}
+                    onChange={(event) => setExportOnlyTermsAgreed(event.currentTarget.checked)}
+                    label={t('admin.forms.export.options.terms')}
+                    description={t('admin.forms.export.options.termsDescription')}
+                    disabled={exportType === 'full'}
+                  />
+                </Stack>
+              </Paper>
             </Stack>
           </Radio.Group>
-
-          <Checkbox
-            checked={exportOnlyTermsAgreed}
-            onChange={(event) => setExportOnlyTermsAgreed(event.currentTarget.checked)}
-            label={t('admin.forms.export.options.terms')}
-            description={t('admin.forms.export.options.termsDescription')}
-            mt="md"
-          />
 
           <Group justify="flex-end" gap="sm">
             <Button variant="light" onClick={closeExportModal}>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { Outlet, useLocation, useNavigate } from 'react-router';
 
-import { AppShell, Button, Container, Group, Tabs } from '@mantine/core';
+import { Affix, AppShell, Button, Container, Group, Tabs } from '@mantine/core';
 import {
   IconFileText,
   IconKey,
@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 
 import { ChangePasswordModal } from '@/components/ChangePasswordModal';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { env } from '@/config/env';
 import { ROUTES } from '@/constants';
 import { clearAuth } from '@/utils/auth';
 
@@ -90,6 +91,12 @@ export function AdminLayout() {
       <AppShell.Main>
         <Container size="xl">
           <Outlet />
+          <Affix c="dimmed" style={{ fontSize: '12px' }} position={{
+            top: 10,
+            right: 10,
+          }}>
+            Build: {env.APP_BUILD}
+          </Affix>
         </Container>
       </AppShell.Main>
 

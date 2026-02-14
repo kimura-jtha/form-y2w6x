@@ -48,8 +48,10 @@ export function usePrizeClaimForm(password: string) {
     mode: 'controlled',
     initialValues: initialPrizeClaimFormValues,
     validate: {
-      lastNameKanji: (value) => (!value.trim() ? t('prizeClaim.validation.required') : null),
-      firstNameKanji: (value) => (!value.trim() ? t('prizeClaim.validation.required') : null),
+      lastNameKanji: (value, values) =>
+        !values.isPoint && !value.trim() ? t('prizeClaim.validation.required') : null,
+      firstNameKanji: (value, values) =>
+        !values.isPoint && !value.trim() ? t('prizeClaim.validation.required') : null,
       lastNameKana: (value) => {
         if (!isJapanese.current) {
           return null;
@@ -69,21 +71,23 @@ export function usePrizeClaimForm(password: string) {
         return null;
       },
       playersId: (value) => (!value.trim() ? t('prizeClaim.validation.required') : null),
-      postalCode: (value) => {
-        if (!isJapanese.current) {
+      postalCode: (value, values) => {
+        if (!isJapanese.current || values.isPoint) {
           return null;
         }
         if (!value.trim()) return t('prizeClaim.validation.required');
         if (!POSTAL_CODE_PATTERN.test(value)) return t('prizeClaim.validation.invalidPostalCode');
         return null;
       },
-      address: (value) => (!value.trim() ? t('prizeClaim.validation.required') : null),
+      address: (value, values) =>
+        !values.isPoint && !value.trim() ? t('prizeClaim.validation.required') : null,
       phoneNumber: (value) => {
         if (!value.trim()) return t('prizeClaim.validation.required');
         // if (!PHONE_PATTERN.test(value)) return t('prizeClaim.validation.invalidPhoneNumber');
         return null;
       },
-      email: (value, _values) => {
+      email: (value, values) => {
+        if (values.isPoint) return null;
         if (!value.trim()) return t('prizeClaim.validation.required');
         if (!EMAIL_PATTERN.test(value)) return t('prizeClaim.validation.invalidEmail');
 
@@ -102,26 +106,26 @@ export function usePrizeClaimForm(password: string) {
       tournamentDate: (value) => (!value ? t('prizeClaim.validation.required') : null),
       tournamentId: (value) => (!value ? t('prizeClaim.validation.required') : null),
       rank: (value) => (!value ? t('prizeClaim.validation.required') : null),
-      bankCode: (value) => {
-        if (!isJapanese.current) {
+      bankCode: (value, values) => {
+        if (!isJapanese.current || values.isPoint) {
           return null;
         }
         return !value ? t('prizeClaim.validation.required') : null;
       },
-      branchCode: (value) => {
-        if (!isJapanese.current) {
+      branchCode: (value, values) => {
+        if (!isJapanese.current || values.isPoint) {
           return null;
         }
         return !value ? t('prizeClaim.validation.required') : null;
       },
-      accountType: (value) => {
-        if (!isJapanese.current) {
+      accountType: (value, values) => {
+        if (!isJapanese.current || values.isPoint) {
           return null;
         }
         return !value ? t('prizeClaim.validation.required') : null;
       },
-      accountNumber: (value) => {
-        if (!isJapanese.current) {
+      accountNumber: (value, values) => {
+        if (!isJapanese.current || values.isPoint) {
           return null;
         }
         if (!value.trim()) return t('prizeClaim.validation.required');
@@ -129,8 +133,8 @@ export function usePrizeClaimForm(password: string) {
           return t('prizeClaim.validation.invalidAccountNumber');
         return null;
       },
-      accountHolderName: (value) => {
-        if (!isJapanese.current) {
+      accountHolderName: (value, values) => {
+        if (!isJapanese.current || values.isPoint) {
           return null;
         }
         if (!value.trim()) return t('prizeClaim.validation.required');

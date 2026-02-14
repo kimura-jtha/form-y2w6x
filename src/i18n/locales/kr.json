@@ -58,8 +58,14 @@
           "allDescription": "TODO: translate me!!!",
           "japanese": "TODO: translate me!!!",
           "japaneseDescription": "TODO: translate me!!!",
+          "full": "TODO: translate me!!!",
+          "fullDescription": "TODO: translate me!!!",
           "terms": "TODO: translate me!!!",
           "termsDescription": "TODO: translate me!!!"
+        },
+        "groups": {
+          "fullData": "TODO: translate me!!!",
+          "paypay": "TODO: translate me!!!"
         },
         "selectType": "TODO: translate me!!!",
         "selectTypeDescription": "TODO: translate me!!!",
@@ -214,7 +220,7 @@
           },
           "amount": {
             "description": "상금 금액 (통화 형식으로 표시)",
-            "example": "10만 엔"
+            "example": "+P100,000"
           },
           "bankCode": {
             "description": "은행 코드",
@@ -685,6 +691,10 @@
         "description": "선택한 토너먼트와 순위에 따라 자동 계산됩니다.",
         "label": "상금 금액"
       },
+      "isPoint": {
+        "point": "포인트 (+P)",
+        "cash": "현금 (¥)"
+      },
       "rank": {
         "label": "계급",
         "placeholder": "순위를 선택하세요"
@@ -728,6 +738,7 @@
       "name": "이름",
       "nameKana": "이름 (가타카나)",
       "playersId": "플레이어 ID/여권 번호",
+      "prizeType": "상금 유형",
       "privacyPolicy": "개인정보 보호정책",
       "tournament": "토너먼트 정보"
     },

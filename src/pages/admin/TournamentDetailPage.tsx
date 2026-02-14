@@ -29,6 +29,7 @@ import {
 import { useTranslation } from 'react-i18next';
 
 import { TournamentFormModal } from '@/components/TournamentFormModal';
+import { PRIZE_PREFIX } from '@/config';
 import { ROUTES } from '@/constants';
 import {
   fetchFormsByTournament,
@@ -322,7 +323,10 @@ export function TournamentDetailPage() {
                       {tournament.prizes?.map((prize) => (
                         <Table.Tr key={prize.rank}>
                           <Table.Td>{prize.rank}</Table.Td>
-                          <Table.Td>¥{prize.amount.toLocaleString()}</Table.Td>
+                          <Table.Td>
+                            {PRIZE_PREFIX}
+                            {prize.amount.toLocaleString()}
+                          </Table.Td>
                         </Table.Tr>
                       ))}
                     </Table.Tbody>
@@ -378,7 +382,10 @@ export function TournamentDetailPage() {
                         </Table.Td>
                         <Table.Td>{form.formContent.email}</Table.Td>
                         <Table.Td>{form.formContent.rank}</Table.Td>
-                        <Table.Td>¥{form.formContent.amount.toLocaleString()}</Table.Td>
+                        <Table.Td>
+                          {PRIZE_PREFIX}
+                          {form.formContent.amount.toLocaleString()}
+                        </Table.Td>
                         <Table.Td>
                           <Center w="100%">
                             <Badge

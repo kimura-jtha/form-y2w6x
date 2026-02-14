@@ -58,8 +58,14 @@
           "allDescription": "TODO: translate me!!!",
           "japanese": "TODO: translate me!!!",
           "japaneseDescription": "TODO: translate me!!!",
+          "full": "TODO: translate me!!!",
+          "fullDescription": "TODO: translate me!!!",
           "terms": "TODO: translate me!!!",
           "termsDescription": "TODO: translate me!!!"
+        },
+        "groups": {
+          "fullData": "TODO: translate me!!!",
+          "paypay": "TODO: translate me!!!"
         },
         "selectType": "TODO: translate me!!!",
         "selectTypeDescription": "TODO: translate me!!!",
@@ -214,7 +220,7 @@
           },
           "amount": {
             "description": "奖金金额（以货币单位表示）",
-            "example": "100000日元"
+            "example": "+P100,000"
           },
           "bankCode": {
             "description": "银行代码",
@@ -685,6 +691,10 @@
         "description": "根据所选赛事和排名自动计算",
         "label": "奖金金额"
       },
+      "isPoint": {
+        "point": "积分 (+P)",
+        "cash": "现金 (¥)"
+      },
       "rank": {
         "label": "秩",
         "placeholder": "选择排名"
@@ -728,6 +738,7 @@
       "name": "姓名",
       "nameKana": "姓名（片假名）",
       "playersId": "玩家+ ID/护照号码",
+      "prizeType": "奖金类型",
       "privacyPolicy": "隐私政策",
       "tournament": "赛事信息"
     },

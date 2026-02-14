@@ -48,6 +48,8 @@ export interface PrizeClaimFormValues {
   rank: string;
   amount: number;
 
+  isPoint?: boolean | undefined;
+
   // Bank Information
   bankCode: string;
   bankName: string;
@@ -177,6 +179,7 @@ export const initialPrizeClaimFormValues: PrizeClaimFormValues = {
   tournamentName: '',
   rank: '',
   amount: 0,
+  isPoint: false,
   bankCode: '',
   bankName: '',
   branchCode: '',

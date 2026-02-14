@@ -24,17 +24,10 @@ type ApiTournament = {
  * @returns Promise<Tournament[]> - List of all active tournaments
  */
 export async function fetchActiveTournaments(): Promise<Tournament[]> {
-  // const rawData = localStorage.getItem('__tournaments__');
-  // if (rawData) {
-  //   const { tournaments, expiresAt } = JSON.parse(rawData) as {
-  //     tournaments: Tournament[];
-  //     expiresAt: number;
-  //   };
-  //   if (expiresAt > Date.now()) {
-  //     return tournaments;
-  //   }
-  //   localStorage.removeItem('__tournaments__');
-  // }
+  if (_allTournamentsCache && _allTournamentsCache.length > 0) {
+    return _allTournamentsCache.filter((t) => t.status === 'active')
+  };
+
   const tournaments = await asyncDeduplicator.call('fetchActiveTournaments', async () => {
     const response = await fetchLambda<{
       tournaments: ApiTournament[];
@@ -101,7 +94,6 @@ export async function fetchAllTournaments(): Promise<Tournament[]> {
 export async function createTournament(
   tournament: Omit<Tournament, 'id' | 'createdAt' | 'updatedAt'>,
 ): Promise<Tournament> {
-  localStorage.removeItem('__tournaments__');
   clearTournamentCache();
   const response = await fetchLambda<{
     tournament: ApiTournament;
@@ -127,7 +119,6 @@ export async function createTournament(
  * @returns Promise<Tournament> - Updated tournament
  */
 export async function updateTournament(tournament: Tournament): Promise<Tournament> {
-  localStorage.removeItem('__tournaments__');
   clearTournamentCache();
   const response = await fetchLambda<{
     tournament: ApiTournament;
@@ -153,7 +144,6 @@ export async function updateTournament(tournament: Tournament): Promise<Tourname
  * @returns Promise<Tournament> - Toggled tournament
  */
 export async function toggleTournamentStatus(tournament: Tournament): Promise<Tournament> {
-  localStorage.removeItem('__tournaments__');
   clearTournamentCache();
   await updateTournament(tournament);
   const response = await fetchLambda<{
@@ -311,4 +301,12 @@ export async function fetchFormsByTournament(
       };
     },
   );
+}
+
+export async function deleteTournament(_id: string): Promise<void> {
+  await fetchLambda({
+    path: `admin/tournaments/${_id}`,
+    method: 'DELETE',
+  });
+  clearTournamentCache();
 }

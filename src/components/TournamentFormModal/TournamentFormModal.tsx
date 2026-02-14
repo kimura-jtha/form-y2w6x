@@ -18,6 +18,7 @@ import { notifications } from '@mantine/notifications';
 import { IconCheck, IconEdit, IconPlus, IconTrash, IconX } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
+import { PRIZE_PREFIX } from '@/config';
 import type { PrizeRank, Tournament } from '@/types';
 
 interface TournamentFormModalProps {
@@ -289,7 +290,7 @@ export function TournamentFormModal({
                               allowNegative={false}
                               allowDecimal={false}
                               thousandSeparator=","
-                              prefix="¥"
+                              prefix={PRIZE_PREFIX}
                               size="xs"
                             />
                           </Table.Td>
@@ -318,7 +319,10 @@ export function TournamentFormModal({
                         // View mode
                         <>
                           <Table.Td>{prize.rank}</Table.Td>
-                          <Table.Td>¥{prize.amount.toLocaleString()}</Table.Td>
+                          <Table.Td>
+                            {PRIZE_PREFIX}
+                            {prize.amount.toLocaleString()}
+                          </Table.Td>
                           <Table.Td>
                             <Group gap="xs">
                               <ActionIcon
@@ -369,7 +373,7 @@ export function TournamentFormModal({
                 allowNegative={false}
                 allowDecimal={false}
                 thousandSeparator=","
-                prefix="¥"
+                prefix={PRIZE_PREFIX}
               />
             </Grid.Col>
             <Grid.Col span={3}>

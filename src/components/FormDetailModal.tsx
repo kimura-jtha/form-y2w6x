@@ -1,6 +1,7 @@
 import { Badge, Divider, Grid, Group, Modal, Stack, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 
+import { POINT_PRIZE_PREFIX, PRIZE_PREFIX } from '@/config';
 import type { PrizeClaimFormSubmission } from '@/types';
 import { formatDate } from '@/utils/string';
 
@@ -14,6 +15,8 @@ export function FormDetailModal({ opened, onClose, form }: FormDetailModalProps)
   const { t } = useTranslation();
 
   if (!form) return null;
+
+  const prizePrefix = form.formContent.isPoint ? POINT_PRIZE_PREFIX : PRIZE_PREFIX;
 
   // const getStatusColor = (status: string) => {
   //   switch (status) {
@@ -143,7 +146,7 @@ export function FormDetailModal({ opened, onClose, form }: FormDetailModalProps)
           <DetailRow label={t('prizeClaim.fields.rank.label')} value={form.formContent.rank} />
           <DetailRow
             label={t('prizeClaim.fields.prizeAmount.label')}
-            value={`¥${form.formContent.amount.toLocaleString()}`}
+            value={`${prizePrefix}${form.formContent.amount.toLocaleString()}`}
           />
         </Stack>
 
