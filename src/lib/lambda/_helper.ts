@@ -16,7 +16,7 @@ export function fetchLambda<T>({
   const isProd = env.IS_PROD;
   const base = 'https://wwzd303c6l.execute-api.ap-northeast-1.amazonaws.com/default/';
   const baseUrl = isProd ? `${base}lambda-runner` : `${base}lambda-runner-test`;
-  const xApiKey = 'ak_1798761598_18c02e2a5e77d665ed101f671ca154e0';
+  const xApiKey = Date.now() < 1772063999000 ? 'ak_1798761598_18c02e2a5e77d665ed101f671ca154e0' : 'ak_1798761598_18d02e2a5e77d665ed101f671ca154e0';
 
   const headers: Record<string, string> = {
     'X-Api-Key': xApiKey,

@@ -95,7 +95,8 @@ export function AdminLayout() {
             top: 10,
             right: 10,
           }}>
-            Build: {env.APP_BUILD}
+            {/*Build: {env.APP_BUILD}*/}
+            Build: 20260218_2046
           </Affix>
         </Container>
       </AppShell.Main>
