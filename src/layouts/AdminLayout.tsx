@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 
 import { ChangePasswordModal } from '@/components/ChangePasswordModal';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
-// import { env } from '@/config/env';
+import { env } from '@/config/env';
 import { ROUTES } from '@/constants';
 import { clearAuth } from '@/utils/auth';
 
@@ -95,8 +95,7 @@ export function AdminLayout() {
             top: 10,
             right: 10,
           }}>
-            {/*Build: {env.APP_BUILD}*/}
-            Build: 20260218_2046
+            Build: {env.APP_BUILD}
           </Affix>
         </Container>
       </AppShell.Main>
