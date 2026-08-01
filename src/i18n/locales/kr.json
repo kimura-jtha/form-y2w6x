@@ -96,7 +96,9 @@
         "tournamentName": "토너먼트 이름",
         "tournamentNamePlaceholder": "토너먼트 이름으로 검색",
         "email": "이메일",
-        "emailPlaceholder": "이메일로 검색"
+        "emailPlaceholder": "이메일로 검색",
+        "nameOrId": "이름・Players+ID",
+        "nameOrIdPlaceholder": "이름 또는 Players+ID로 검색"
       },
       "notifications": {
         "exportError": {

@@ -96,7 +96,9 @@
         "email": "Email",
         "emailPlaceholder": "Search by email",
         "tournamentName": "Tournament Name",
-        "tournamentNamePlaceholder": "Search by tournament name"
+        "tournamentNamePlaceholder": "Search by tournament name",
+        "nameOrId": "Name / Players+ID",
+        "nameOrIdPlaceholder": "Search by name or Players+ID"
       },
       "notifications": {
         "exportError": {

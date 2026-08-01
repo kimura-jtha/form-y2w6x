@@ -94,6 +94,7 @@ export function FormManagementPage() {
     null,
   ]);
   const [searchEmail, setSearchEmail] = useState('');
+  const [searchNameOrId, setSearchNameOrId] = useState('');
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -135,44 +136,22 @@ export function FormManagementPage() {
     );
   }, [tournaments]);
 
+  // 候補リストは他フィルタに依存せず常に全件から生成する（フィルタ独立化 A-1）
   const eventNameOptions = useMemo(() => {
-    const [dateFrom, dateTo] = selectedDateRange;
-    const ONE_DAY = 24 * 60 * 60 * 1000;
-    const from = (dateFrom ? new Date(dateFrom).getTime() : 0) - ONE_DAY;
-    const to = (dateTo ? new Date(dateTo).getTime() : Infinity) + ONE_DAY;
-
     const uniqueEventNames = new Set<string>();
-    tournaments
-      .filter((t) => {
-        const ts = new Date(t.date).getTime();
-        return ts >= from && ts <= to;
-      })
-      .forEach((t) => uniqueEventNames.add(t.eventNameJa));
-
+    tournaments.forEach((t) => uniqueEventNames.add(t.eventNameJa));
     return [...uniqueEventNames];
-  }, [tournaments, selectedDateRange]);
+  }, [tournaments]);
 
   const tournamentOptions = useMemo(() => {
-    const [dateFrom, dateTo] = selectedDateRange;
-    const ONE_DAY = 24 * 60 * 60 * 1000;
-    const from = (dateFrom ? new Date(dateFrom).getTime() : 0) - ONE_DAY;
-    const to = (dateTo ? new Date(dateTo).getTime() : Infinity) + ONE_DAY;
-
     // トーナメント名の「#N」から番号を数値抽出（無ければ末尾送りの Infinity）
     const tournamentNumber = (tournamentNameJa: string) => {
       const matched = tournamentNameJa.match(/#(\d+)/);
       return matched ? Number(matched[1]) : Infinity;
     };
 
-    return tournaments
-      .filter((t) => {
-        const ts = new Date(t.date).getTime();
-        const dateInRange = ts >= from && ts <= to;
-        const eventNameMatches =
-          !filterEventName || t.eventNameJa.toLowerCase().includes(filterEventName.toLowerCase());
-        return dateInRange && eventNameMatches;
-      })
-      // (イベント名 昇順, #N 数値昇順) の複合ソート。# 無しは各イベントの末尾。
+    return [...tournaments]
+      // (イベント名 昇順, #N 数値昇順) の複合ソート。# 無しは各イベントの末尾。(F-5)
       .sort((a, b) => {
         const eventCmp = a.eventNameJa.localeCompare(b.eventNameJa, 'ja');
         if (eventCmp !== 0) return eventCmp;
@@ -182,7 +161,7 @@ export function FormManagementPage() {
         return numA - numB;
       })
       .map((t) => `${t.eventNameJa} - ${t.tournamentNameJa} (${formatDate(t.date, false)})`);
-  }, [tournaments, selectedDateRange, filterEventName]);
+  }, [tournaments]);
 
   const sortedForms = useMemo(() => {
     if (!sortByCreatedAt) return displayedForms;
@@ -206,7 +185,8 @@ export function FormManagementPage() {
     !!filterTournament ||
     !!selectedDateRange[0] ||
     !!selectedDateRange[1] ||
-    !!searchEmail;
+    !!searchEmail ||
+    !!searchNameOrId;
 
   // --- Effects ---
 
@@ -278,6 +258,7 @@ export function FormManagementPage() {
       setFilterTournament('');
       setSelectedDateRange([null, null]);
       setSearchEmail('');
+      setSearchNameOrId('');
       setCurrentPage(1);
       notifications.show({
         title: t('admin.forms.loadAll.success'),
@@ -301,49 +282,61 @@ export function FormManagementPage() {
 
     let result = allForms;
 
-    // Tournament-related filtering
-    if (filterTournament) {
-      const search = filterTournament.toLowerCase();
+    // 各フィルタは独立して AND で適用する（設定されているものだけ絞り込む）。
+    // トーナメント名 / 大会名 / 開催日 はいずれもトーナメントを特定するので、
+    // 該当するトーナメント ID 集合を絞り込んでからフォームに適用する。
+    const [dateFrom, dateTo] = selectedDateRange;
+    const hasTournamentFilter =
+      !!filterTournament || !!filterEventName || !!dateFrom || !!dateTo;
+
+    if (hasTournamentFilter) {
+      const ONE_DAY = 24 * 60 * 60 * 1000;
+      const from = (dateFrom ? new Date(dateFrom).getTime() : 0) - ONE_DAY;
+      const to = (dateTo ? new Date(dateTo).getTime() : Infinity) + ONE_DAY;
+      const tournamentSearch = filterTournament.toLowerCase();
+      const eventNameSearch = filterEventName.toLowerCase();
+
       const matchingTournamentIds = new Set(
         tournaments
           .filter((t) => {
+            const ts = new Date(t.date).getTime();
+            const dateInRange = ts >= from && ts <= to;
+            const eventNameMatches =
+              !filterEventName || t.eventNameJa.toLowerCase().includes(eventNameSearch);
             const label = `${t.eventNameJa} - ${t.tournamentNameJa} (${formatDate(t.date, false)})`;
-            return label.toLowerCase().includes(search);
+            const tournamentMatches =
+              !filterTournament || label.toLowerCase().includes(tournamentSearch);
+            return dateInRange && eventNameMatches && tournamentMatches;
           })
           .map((t) => t.id),
       );
+
       result = result.filter((f) => matchingTournamentIds.has(f.formContent.tournamentId));
-    } else {
-      const hasEventFilter = !!filterEventName;
-      const [dateFrom, dateTo] = selectedDateRange;
-      const hasDateFilter = !!dateFrom || !!dateTo;
-
-      if (hasEventFilter || hasDateFilter) {
-        const ONE_DAY = 24 * 60 * 60 * 1000;
-        const from = (dateFrom ? new Date(dateFrom).getTime() : 0) - ONE_DAY;
-        const to = (dateTo ? new Date(dateTo).getTime() : Infinity) + ONE_DAY;
-
-        const matchingTournamentIds = new Set(
-          tournaments
-            .filter((t) => {
-              const ts = new Date(t.date).getTime();
-              const dateInRange = ts >= from && ts <= to;
-              const eventNameMatches =
-                !filterEventName ||
-                t.eventNameJa.toLowerCase().includes(filterEventName.toLowerCase());
-              return dateInRange && eventNameMatches;
-            })
-            .map((t) => t.id),
-        );
-
-        result = result.filter((f) => matchingTournamentIds.has(f.formContent.tournamentId));
-      }
     }
 
     // Email filtering
     if (searchEmail.trim()) {
       const email = searchEmail.trim().toLowerCase();
       result = result.filter((f) => f.formContent.email.toLowerCase().includes(email));
+    }
+
+    // Name (Kanji/Kana) / Players+ID filtering（クライアント側の部分一致・大小無視）
+    if (searchNameOrId.trim()) {
+      const query = searchNameOrId.trim().toLowerCase();
+      result = result.filter((f) => {
+        const c = f.formContent;
+        const candidates = [
+          c.lastNameKanji,
+          c.firstNameKanji,
+          c.lastNameKana,
+          c.firstNameKana,
+          c.playersId,
+          // 姓名連結（「山田太郎」等フルネーム入力にヒットさせる）
+          `${c.lastNameKanji}${c.firstNameKanji}`,
+          `${c.lastNameKana}${c.firstNameKana}`,
+        ];
+        return candidates.some((v) => (v ?? '').toLowerCase().includes(query));
+      });
     }
 
     setDisplayedForms(result);
@@ -354,6 +347,7 @@ export function FormManagementPage() {
     setFilterTournament('');
     setSelectedDateRange([null, null]);
     setSearchEmail('');
+    setSearchNameOrId('');
     setCurrentPage(1);
     setDisplayedForms(allForms);
   };
@@ -670,8 +664,9 @@ export function FormManagementPage() {
       {/* Filters */}
       <Paper shadow="xs" p="md">
         <Stack gap="sm">
-          <Group align="flex-end" grow>
+          <Group align="flex-end" grow wrap="wrap">
             <Autocomplete
+              miw={220}
               label={t('admin.forms.filters.eventName')}
               placeholder={t('admin.forms.filters.eventNamePlaceholder')}
               value={filterEventName}
@@ -679,6 +674,7 @@ export function FormManagementPage() {
               data={eventNameOptions}
             />
             <Autocomplete
+              miw={220}
               label={t('admin.forms.filters.tournamentName')}
               placeholder={t('admin.forms.filters.tournamentNamePlaceholder')}
               value={filterTournament}
@@ -686,6 +682,7 @@ export function FormManagementPage() {
               data={tournamentOptions}
             />
             <DatePickerInput
+              miw={220}
               type="range"
               label={t('admin.forms.filters.dateRange')}
               placeholder={t('admin.forms.filters.dateRangePlaceholder')}
@@ -704,10 +701,18 @@ export function FormManagementPage() {
               clearable
             />
             <TextInput
+              miw={220}
               label={t('admin.forms.filters.email')}
               placeholder={t('admin.forms.filters.emailPlaceholder')}
               value={searchEmail}
               onChange={(e) => setSearchEmail(e.currentTarget.value)}
+            />
+            <TextInput
+              miw={220}
+              label={t('admin.forms.filters.nameOrId')}
+              placeholder={t('admin.forms.filters.nameOrIdPlaceholder')}
+              value={searchNameOrId}
+              onChange={(e) => setSearchNameOrId(e.currentTarget.value)}
             />
           </Group>
           <Group justify="flex-end">
