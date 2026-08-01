@@ -158,6 +158,12 @@ export function FormManagementPage() {
     const from = (dateFrom ? new Date(dateFrom).getTime() : 0) - ONE_DAY;
     const to = (dateTo ? new Date(dateTo).getTime() : Infinity) + ONE_DAY;
 
+    // トーナメント名の「#N」から番号を数値抽出（無ければ末尾送りの Infinity）
+    const tournamentNumber = (tournamentNameJa: string) => {
+      const matched = tournamentNameJa.match(/#(\d+)/);
+      return matched ? Number(matched[1]) : Infinity;
+    };
+
     return tournaments
       .filter((t) => {
         const ts = new Date(t.date).getTime();
@@ -165,6 +171,15 @@ export function FormManagementPage() {
         const eventNameMatches =
           !filterEventName || t.eventNameJa.toLowerCase().includes(filterEventName.toLowerCase());
         return dateInRange && eventNameMatches;
+      })
+      // (イベント名 昇順, #N 数値昇順) の複合ソート。# 無しは各イベントの末尾。
+      .sort((a, b) => {
+        const eventCmp = a.eventNameJa.localeCompare(b.eventNameJa, 'ja');
+        if (eventCmp !== 0) return eventCmp;
+        const numA = tournamentNumber(a.tournamentNameJa);
+        const numB = tournamentNumber(b.tournamentNameJa);
+        if (numA === numB) return 0;
+        return numA - numB;
       })
       .map((t) => `${t.eventNameJa} - ${t.tournamentNameJa} (${formatDate(t.date, false)})`);
   }, [tournaments, selectedDateRange, filterEventName]);
