@@ -96,7 +96,9 @@
         "tournamentName": "赛事名称",
         "tournamentNamePlaceholder": "按赛事名称搜索",
         "email": "电子邮件",
-        "emailPlaceholder": "按电子邮件搜索"
+        "emailPlaceholder": "按电子邮件搜索",
+        "nameOrId": "姓名・Players+ID",
+        "nameOrIdPlaceholder": "按姓名或 Players+ID 搜索"
       },
       "notifications": {
         "exportError": {

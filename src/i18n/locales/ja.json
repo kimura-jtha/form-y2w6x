@@ -96,7 +96,9 @@
         "email": "メールアドレス",
         "emailPlaceholder": "メールアドレスで検索",
         "tournamentName": "トーナメント名",
-        "tournamentNamePlaceholder": "トーナメント名で検索"
+        "tournamentNamePlaceholder": "トーナメント名で検索",
+        "nameOrId": "氏名・Players+ID",
+        "nameOrIdPlaceholder": "氏名・Players+IDで検索"
       },
       "notifications": {
         "exportError": {
