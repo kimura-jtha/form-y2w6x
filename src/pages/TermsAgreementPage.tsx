@@ -56,28 +56,27 @@ export function TermsAgreementPage() {
 
   const prizePrefix = formData?.isPoint ? POINT_PRIZE_PREFIX : PRIZE_PREFIX;
 
-  // Extract form ID from URL hash
+  // Extract form id / hash from URL.
+  // Prefer the query string (?id=..&hash=..). Fall back to the URL fragment
+  // (#id=..&hash=..) for backward compatibility with already-sent emails.
   useEffect(() => {
-    const urlHash = window.location.hash;
-    {
-      // Get form id from URL
-      const match = urlHash.match(/id=([^&]+)/);
-      if (match) {
-        setFormId(match[1]);
-      } else {
-        setError(t('termsAgreement.error.formIdNotFound'));
-        setIsLoading(false);
-      }
+    const search = new URLSearchParams(window.location.search);
+    const fragment = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+    const id = search.get('id') ?? fragment.get('id');
+    const urlFormHash = search.get('hash') ?? fragment.get('hash');
+
+    if (id) {
+      setFormId(id);
+    } else {
+      setError(t('termsAgreement.error.formIdNotFound'));
+      setIsLoading(false);
     }
-    {
-      // Get hash from URL
-      const match = urlHash.match(/hash=([^&]+)/);
-      if (match) {
-        setHash(match[1]);
-      } else {
-        setError(t('termsAgreement.error.hashNotFound'));
-        setIsLoading(false);
-      }
+
+    if (urlFormHash) {
+      setHash(urlFormHash);
+    } else {
+      setError(t('termsAgreement.error.hashNotFound'));
+      setIsLoading(false);
     }
   }, [t]);
 
