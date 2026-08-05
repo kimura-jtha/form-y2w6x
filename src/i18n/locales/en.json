@@ -760,14 +760,15 @@
       "hasJapaneseResidence": {
         "yes": "Has residence in Japan",
         "no": "No residence in Japan",
-        "description": "Select whether you have a residence certificate in Japan (self-declared).",
+        "description": "Select whether you have a residence certificate in Japan.",
         "proNote": "Pro contracts are only available to players with a residence in Japan."
       },
       "withholding": {
         "title": "Withholding tax breakdown",
         "amountLabel": "Withholding tax",
         "netLabel": "Final payout",
-        "note": "Estimated withholding tax for sponsor (cash) contracts and the final payout rounded down to the nearest 1,000 yen. The definitive amount is recalculated by the operator."
+        "note": "Estimated withholding tax for sponsor (cash) contracts and the final payout rounded down to the nearest 1,000 yen. The definitive amount is recalculated by the operator.",
+        "feeNote": "Amounts under 1,000 yen are rounded down from the post-withholding amount as an administrative fee."
       }
     },
     "notifications": {

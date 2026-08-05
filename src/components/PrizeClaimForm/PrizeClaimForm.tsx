@@ -791,6 +791,9 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
                     <Text size="xs" c="dimmed">
                       {t('prizeClaim.fields.withholding.note')}
                     </Text>
+                    <Text size="xs" c="dimmed">
+                      {t('prizeClaim.fields.withholding.feeNote')}
+                    </Text>
                   </Stack>
                 </Alert>
               )}
