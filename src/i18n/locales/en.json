@@ -163,6 +163,18 @@
         "sponsor": "Sponsor",
         "pro": "Pro",
         "unset": "Unset"
+      },
+      "markPaid": {
+        "button": "Mark as paid",
+        "paidBadge": "Paid",
+        "paidAt": "Paid ({{at}})",
+        "confirmTitle": "Mark as paid",
+        "confirmMessage": "Mark this form as paid? Paid forms are excluded from the payout CSV and cannot be marked paid again (double-payment guard).",
+        "confirm": "Mark as paid",
+        "success": "Success",
+        "successMessage": "Form has been marked as paid",
+        "error": "Error",
+        "errorMessage": "Failed to mark form as paid. It may already be paid. Please try again."
       }
     },
     "navigation": {

@@ -1,7 +1,7 @@
 import type { PrizeClaimFormSubmission, PrizeClaimFormValues } from '@/types';
 import { asyncDeduplicator } from '@/utils/dedupe';
 
-import { validatePasswordV3 } from '@/utils/auth';
+import { getEmail, getUserName, validatePasswordV3 } from '@/utils/auth';
 import { fetchLambda } from './_helper';
 
 /**
@@ -201,6 +201,28 @@ export async function deleteForm(formId: string) {
     path: `admin/forms/${formId}`,
     method: 'DELETE',
   });
+}
+
+/**
+ * Mark a form as paid (double-payment guard).
+ * The backend enforces write-time exclusivity; a second attempt is rejected.
+ * @param formId - Form ID
+ * @returns Promise<{ paid: { at: string; by: string } }> - The stored paid marker
+ */
+export async function markFormPaid(
+  formId: string,
+): Promise<{ paid: { at: string; by: string } }> {
+  const by = getEmail() || getUserName() || 'admin';
+  const response = await fetchLambda<{
+    form: { formContent: { paid?: { at: string; by: string } } };
+  }>({
+    path: `admin/forms/${formId}/mark-paid`,
+    method: 'POST',
+    body: { by },
+  });
+  return {
+    paid: response.form.formContent.paid ?? { at: new Date().toISOString(), by },
+  };
 }
 
 /**
