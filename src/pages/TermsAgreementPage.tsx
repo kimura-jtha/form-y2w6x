@@ -36,7 +36,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export function TermsAgreementPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [opened, { toggle }] = useDisclosure(true);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -82,13 +82,17 @@ export function TermsAgreementPage() {
 
   useEffect(() => {
     if (formData) {
-      getTermsOfServiceTemplate().then((template) => {
+      // Phase 5: resolve the terms for this form's contract type (sponsor/pro).
+      const contractType = formData.contractType === 'pro' ? 'pro' : 'sponsor';
+      // Templates exist for ja/en only (multilingual scope is unchanged).
+      const lang = i18n.language === 'en' ? 'en' : 'ja';
+      getTermsOfServiceTemplate(lang, contractType).then((template) => {
         setTermsOfService(
           renderTemplate(template.content, extractFormVariables(formData, termsOfServiceIssuedAt)),
         );
       });
     }
-  }, [termsOfServiceIssuedAt, formData]);
+  }, [termsOfServiceIssuedAt, formData, i18n.language]);
 
   useEffect(() => {
     if (alreadyAgreed && formData) {

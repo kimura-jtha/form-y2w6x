@@ -78,14 +78,6 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
       }
     };
 
-    getPrivacyPolicyTemplate().then((template) => {
-      setPrivacyPolicy(
-        renderTemplate(template.content, {
-          year: new Date().getFullYear().toString(),
-        }),
-      );
-    });
-
     checkHealth();
   }, []);
 
@@ -177,6 +169,26 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
 
   // Get current form values (controlled mode)
   const formValues = form.getValues();
+
+  // Load the privacy policy for the selected contract type (Phase 5). Refetches
+  // when the player switches between sponsor/pro so the correct terms display.
+  const privacyContractType = formValues.contractType === 'pro' ? 'pro' : 'sponsor';
+  // Templates exist for ja/en only (multilingual scope is unchanged in Phase 5).
+  const privacyLang = i18n.language === 'en' ? 'en' : 'ja';
+  useEffect(() => {
+    let cancelled = false;
+    getPrivacyPolicyTemplate(privacyLang, privacyContractType).then((template) => {
+      if (cancelled) return;
+      setPrivacyPolicy(
+        renderTemplate(template.content, {
+          year: new Date().getFullYear().toString(),
+        }),
+      );
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [privacyContractType, privacyLang]);
 
   // Contract type selection (Phase 1). Pro contracts are only available to
   // players with a Japanese residence, so selecting "pro" forces residence=true
