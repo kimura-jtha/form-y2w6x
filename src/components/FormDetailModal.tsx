@@ -109,6 +109,26 @@ export function FormDetailModal({ opened, onClose, form }: FormDetailModalProps)
             label={t('prizeClaim.fields.playersId.label')}
             value={form.formContent.playersId}
           />
+          <DetailRow
+            blank={!form.formContent.contractType}
+            label={t('prizeClaim.sections.contractType')}
+            value={
+              form.formContent.contractType
+                ? t(`prizeClaim.fields.contractType.${form.formContent.contractType}`)
+                : '-'
+            }
+          />
+          <DetailRow
+            blank={form.formContent.hasJapaneseResidence === undefined}
+            label={t('prizeClaim.sections.residence')}
+            value={
+              form.formContent.hasJapaneseResidence === undefined
+                ? '-'
+                : form.formContent.hasJapaneseResidence
+                  ? t('prizeClaim.fields.hasJapaneseResidence.yes')
+                  : t('prizeClaim.fields.hasJapaneseResidence.no')
+            }
+          />
         </Stack>
 
         <Divider label={t('admin.forms.detail.contactInfo')} labelPosition="left" />

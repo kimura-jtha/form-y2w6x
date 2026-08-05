@@ -159,6 +159,15 @@ export function usePrizeClaimForm(password: string) {
       },
       privacyAgreed: (value) =>
         !value ? t('prizeClaim.validation.mustAgreeToPrivacyPolicy') : null,
+      contractType: (value) =>
+        value !== 'sponsor' && value !== 'pro'
+          ? t('prizeClaim.validation.required')
+          : null,
+      // Pro contracts are only available to players with a Japanese residence.
+      hasJapaneseResidence: (value, values) =>
+        values.contractType === 'pro' && value === false
+          ? t('prizeClaim.validation.proRequiresResidence')
+          : null,
     },
   });
 

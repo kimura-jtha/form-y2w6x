@@ -50,6 +50,12 @@ export interface PrizeClaimFormValues {
 
   isPoint?: boolean | undefined;
 
+  // Contract scheme (Phase 1)
+  // Optional so admin views of pre-existing forms (no backfill) do not break.
+  // New submissions always set both.
+  contractType?: ContractType;
+  hasJapaneseResidence?: boolean; // self-declared: has a residence certificate in Japan
+
   // Bank Information
   bankCode: string;
   bankName: string;
@@ -69,6 +75,8 @@ export interface PrizeClaimFormValues {
 }
 
 export type AccountType = 'savings' | 'checking';
+
+export type ContractType = 'sponsor' | 'pro';
 
 // Zengin bank data structure (from zengin-code)
 export interface ZenginBank {
@@ -180,6 +188,8 @@ export const initialPrizeClaimFormValues: PrizeClaimFormValues = {
   rank: '',
   amount: 0,
   isPoint: false,
+  contractType: 'sponsor',
+  hasJapaneseResidence: true,
   bankCode: '',
   bankName: '',
   branchCode: '',
