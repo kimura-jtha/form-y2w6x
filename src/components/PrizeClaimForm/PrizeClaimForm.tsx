@@ -2,6 +2,7 @@ import { POINT_PRIZE_PREFIX, PRIZE_PREFIX } from '@/config';
 import { alive } from '@/lib/lambda/health';
 import { getPrivacyPolicyTemplate } from '@/lib/lambda/template';
 import type { AccountType } from '@/types';
+import { calculateWithholding } from '@/utils/withholding';
 import {
   Alert,
   Box,
@@ -199,6 +200,24 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
   const prizePrefix = useMemo(() => {
     return formValues.isPoint ? POINT_PRIZE_PREFIX : PRIZE_PREFIX;
   }, [formValues.isPoint]);
+
+  // Withholding-tax preview (display only; the backend recomputes the definitive
+  // values at submission). Mirrors lambda/src/utils/withholding.util.ts.
+  const withholding = useMemo(
+    () =>
+      calculateWithholding({
+        amount: formValues.amount,
+        contractType: formValues.contractType,
+        hasJapaneseResidence: formValues.hasJapaneseResidence,
+        isPoint: formValues.isPoint,
+      }),
+    [
+      formValues.amount,
+      formValues.contractType,
+      formValues.hasJapaneseResidence,
+      formValues.isPoint,
+    ],
+  );
 
   // Check if all required fields are filled
   const isFormComplete = useMemo(() => {
@@ -731,6 +750,38 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
                   />
                 </Grid.Col>
               </Grid>
+
+              {/* Withholding-tax preview (sponsor + cash only) */}
+              {withholding.applies && (
+                <Alert
+                  variant="light"
+                  color="blue"
+                  icon={<IconAlertCircle size={18} />}
+                  title={t('prizeClaim.fields.withholding.title')}
+                >
+                  <Stack gap={4}>
+                    <Group justify="space-between">
+                      <Text size="sm" c="dimmed">
+                        {t('prizeClaim.fields.withholding.amountLabel')}
+                      </Text>
+                      <Text size="sm" fw={600}>
+                        {`${PRIZE_PREFIX}${withholding.withholdingAmount.toLocaleString()}`}
+                      </Text>
+                    </Group>
+                    <Group justify="space-between">
+                      <Text size="sm" c="dimmed">
+                        {t('prizeClaim.fields.withholding.netLabel')}
+                      </Text>
+                      <Text size="sm" fw={700}>
+                        {`${PRIZE_PREFIX}${withholding.netAmount.toLocaleString()}`}
+                      </Text>
+                    </Group>
+                    <Text size="xs" c="dimmed">
+                      {t('prizeClaim.fields.withholding.note')}
+                    </Text>
+                  </Stack>
+                </Alert>
+              )}
             </Stack>
           </Paper>
 

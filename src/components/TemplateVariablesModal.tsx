@@ -55,6 +55,8 @@ export function TemplateVariablesModal({ opened, onClose }: TemplateVariablesMod
         { name: 'tournamentDate', hasExample: true },
         { name: 'rank', hasExample: true },
         { name: 'amount', hasExample: true },
+        { name: 'withholdingAmount', hasExample: true },
+        { name: 'netAmount', hasExample: true },
       ],
     },
     {

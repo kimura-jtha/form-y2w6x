@@ -313,6 +313,14 @@
             "description": "賞金順位",
             "example": "1位"
           },
+          "withholdingAmount": {
+            "description": "源泉徴収額（通貨付きフォーマット）",
+            "example": "¥10,210"
+          },
+          "netAmount": {
+            "description": "最終支払額（源泉徴収後・千円未満切り捨て）",
+            "example": "¥589,000"
+          },
           "receiptHtml": {
             "description": "領収書コンテンツ（HTML形式）"
           },
@@ -742,6 +750,12 @@
         "no": "日本国内に住民票なし",
         "description": "日本国内に住民票があるかを選択してください（自己申告）。",
         "proNote": "プロ契約は日本国内に住民票がある方のみ選択できます。"
+      },
+      "withholding": {
+        "title": "源泉徴収の内訳",
+        "amountLabel": "源泉徴収額",
+        "netLabel": "最終支払額",
+        "note": "スポンサー契約（現金）の源泉徴収額と、千円未満を切り捨てた最終支払額の目安です。確定額は運営側で再計算されます。"
       }
     },
     "notifications": {

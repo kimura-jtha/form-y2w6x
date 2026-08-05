@@ -56,6 +56,11 @@ export interface PrizeClaimFormValues {
   contractType?: ContractType;
   hasJapaneseResidence?: boolean; // self-declared: has a residence certificate in Japan
 
+  // Withholding tax (Phase 2) — authoritative values are computed & stored by the
+  // backend at submission. Optional so pre-existing forms (no backfill) do not break.
+  withholdingAmount?: number; // 源泉徴収額
+  netAmount?: number; // 最終支払額 (千円未満切り捨て後)
+
   // Bank Information
   bankCode: string;
   bankName: string;
