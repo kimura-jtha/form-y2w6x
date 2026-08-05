@@ -25,6 +25,7 @@ import {
   Paper,
   Popover,
   Radio,
+  SegmentedControl,
   Stack,
   Table,
   Text,
@@ -95,6 +96,10 @@ export function FormManagementPage() {
   ]);
   const [searchEmail, setSearchEmail] = useState('');
   const [searchNameOrId, setSearchNameOrId] = useState('');
+  // Contract type tab (client-side, Phase 1). 'unset' = legacy forms without contractType.
+  const [contractTypeTab, setContractTypeTab] = useState<
+    'all' | 'sponsor' | 'pro' | 'unset'
+  >('all');
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -163,15 +168,25 @@ export function FormManagementPage() {
       .map((t) => `${t.eventNameJa} - ${t.tournamentNameJa} (${formatDate(t.date, false)})`);
   }, [tournaments]);
 
-  const sortedForms = useMemo(() => {
-    if (!sortByCreatedAt) return displayedForms;
+  // Contract type tab filter (client-side). Legacy forms (no contractType) show
+  // under the "unset" tab and never break under sponsor/pro.
+  const contractFilteredForms = useMemo(() => {
+    if (contractTypeTab === 'all') return displayedForms;
+    if (contractTypeTab === 'unset') {
+      return displayedForms.filter((f) => !f.formContent.contractType);
+    }
+    return displayedForms.filter((f) => f.formContent.contractType === contractTypeTab);
+  }, [displayedForms, contractTypeTab]);
 
-    return [...displayedForms].sort((a, b) => {
+  const sortedForms = useMemo(() => {
+    if (!sortByCreatedAt) return contractFilteredForms;
+
+    return [...contractFilteredForms].sort((a, b) => {
       const dateA = new Date(a.createdAt).getTime();
       const dateB = new Date(b.createdAt).getTime();
       return sortByCreatedAt === 'asc' ? dateA - dateB : dateB - dateA;
     });
-  }, [displayedForms, sortByCreatedAt]);
+  }, [contractFilteredForms, sortByCreatedAt]);
 
   const totalPages = Math.ceil(sortedForms.length / PAGE_SIZE);
 
@@ -190,10 +205,10 @@ export function FormManagementPage() {
 
   // --- Effects ---
 
-  // Reset page when sort changes
+  // Reset page when sort or contract-type tab changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [sortByCreatedAt]);
+  }, [sortByCreatedAt, contractTypeTab]);
 
   // Load all data on mount
   useEffect(() => {
@@ -742,6 +757,19 @@ export function FormManagementPage() {
           <Alert color="red.5">{t('admin.forms.filters.noTournamentsFound')}</Alert>
         ) : (
           <>
+            <SegmentedControl
+              mb="md"
+              value={contractTypeTab}
+              onChange={(value) =>
+                setContractTypeTab(value as 'all' | 'sponsor' | 'pro' | 'unset')
+              }
+              data={[
+                { value: 'all', label: t('admin.forms.contractTypeTabs.all') },
+                { value: 'sponsor', label: t('admin.forms.contractTypeTabs.sponsor') },
+                { value: 'pro', label: t('admin.forms.contractTypeTabs.pro') },
+                { value: 'unset', label: t('admin.forms.contractTypeTabs.unset') },
+              ]}
+            />
             <Group justify="space-between" mb="md">
               <Text size="sm" c="dimmed">
                 {sortedForms.length} {t('admin.forms.table.formsFound')}

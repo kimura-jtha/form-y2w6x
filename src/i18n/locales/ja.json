@@ -157,7 +157,13 @@
         "termsAgreed": "契約書同意",
         "tournament": "トーナメント"
       },
-      "title": "フォーム管理"
+      "title": "フォーム管理",
+      "contractTypeTabs": {
+        "all": "すべて",
+        "sponsor": "スポンサー契約",
+        "pro": "プロ契約",
+        "unset": "未設定"
+      }
     },
     "navigation": {
       "forms": "フォーム管理",
@@ -726,6 +732,16 @@
       "tournamentName": {
         "label": "トーナメント名",
         "placeholder": "トーナメントを選択"
+      },
+      "contractType": {
+        "sponsor": "スポンサー契約",
+        "pro": "プロ契約"
+      },
+      "hasJapaneseResidence": {
+        "yes": "日本国内に住民票あり",
+        "no": "日本国内に住民票なし",
+        "description": "日本国内に住民票があるかを選択してください（自己申告）。",
+        "proNote": "プロ契約は日本国内に住民票がある方のみ選択できます。"
       }
     },
     "notifications": {
@@ -770,7 +786,9 @@
       "playersId": "プレイヤーズ＋ID / パスポート番号",
       "prizeType": "賞金タイプ",
       "privacyPolicy": "プライバシーポリシー",
-      "tournament": "トーナメント情報"
+      "tournament": "トーナメント情報",
+      "contractType": "契約種別",
+      "residence": "住民票の有無"
     },
     "title": "賞金請求フォーム",
     "validation": {
@@ -783,7 +801,8 @@
       "kanjiNotAllowed": "漢字は使用できません。カタカナで入力してください",
       "katakanaOnly": "全角カタカナで入力してください",
       "mustAgreeToPrivacyPolicy": "プライバシーポリシーに同意してください",
-      "required": "この項目は必須です"
+      "required": "この項目は必須です",
+      "proRequiresResidence": "プロ契約は日本国内に住民票がある方のみ選択できます。"
     }
   },
   "termsAgreement": {

@@ -15,6 +15,7 @@ import {
   Modal,
   Paper,
   ScrollArea,
+  SegmentedControl,
   Select,
   Stack,
   Switch,
@@ -175,6 +176,25 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
 
   // Get current form values (controlled mode)
   const formValues = form.getValues();
+
+  // Contract type selection (Phase 1). Pro contracts are only available to
+  // players with a Japanese residence, so selecting "pro" forces residence=true
+  // and the "no residence" option is disabled while pro is selected.
+  const handleContractTypeChange = (value: string) => {
+    const contractType = value === 'pro' ? 'pro' : 'sponsor';
+    form.setFieldValue('contractType', contractType);
+    if (contractType === 'pro') {
+      form.setFieldValue('hasJapaneseResidence', true);
+    }
+  };
+
+  const handleResidenceChange = (value: string) => {
+    // Guard: never allow "no residence" while a pro contract is selected.
+    if (value === 'no' && formValues.contractType === 'pro') {
+      return;
+    }
+    form.setFieldValue('hasJapaneseResidence', value === 'yes');
+  };
 
   const prizePrefix = useMemo(() => {
     return formValues.isPoint ? POINT_PRIZE_PREFIX : PRIZE_PREFIX;
@@ -373,6 +393,57 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
 
       <form onSubmit={onSubmit}>
         <Stack gap="xl">
+          {/* Contract Type Selection (Phase 1) */}
+          <Paper shadow="xs" p="md" withBorder>
+            <Stack gap="md">
+              <Box>
+                <Title order={4} mb="xs">
+                  {t('prizeClaim.sections.contractType')}
+                </Title>
+                <SegmentedControl
+                  fullWidth
+                  color="blue"
+                  disabled={isFormDisabled}
+                  value={formValues.contractType ?? 'sponsor'}
+                  onChange={handleContractTypeChange}
+                  data={[
+                    { value: 'sponsor', label: t('prizeClaim.fields.contractType.sponsor') },
+                    { value: 'pro', label: t('prizeClaim.fields.contractType.pro') },
+                  ]}
+                />
+              </Box>
+              <Box>
+                <Title order={4} mb="xs">
+                  {t('prizeClaim.sections.residence')}
+                </Title>
+                <Text size="sm" c="dimmed" mb="xs">
+                  {t('prizeClaim.fields.hasJapaneseResidence.description')}
+                </Text>
+                <SegmentedControl
+                  fullWidth
+                  color="blue"
+                  disabled={isFormDisabled}
+                  value={(formValues.hasJapaneseResidence ?? true) ? 'yes' : 'no'}
+                  onChange={handleResidenceChange}
+                  data={[
+                    { value: 'yes', label: t('prizeClaim.fields.hasJapaneseResidence.yes') },
+                    {
+                      value: 'no',
+                      label: t('prizeClaim.fields.hasJapaneseResidence.no'),
+                      // Pro contracts require a Japanese residence
+                      disabled: formValues.contractType === 'pro',
+                    },
+                  ]}
+                />
+                {formValues.contractType === 'pro' && (
+                  <Text size="xs" c="dimmed" mt="xs">
+                    {t('prizeClaim.fields.hasJapaneseResidence.proNote')}
+                  </Text>
+                )}
+              </Box>
+            </Stack>
+          </Paper>
+
           {/* Point/Cash Switcher */}
           <Paper shadow="xs" p="md" withBorder>
             <Group justify="space-between" align="center">

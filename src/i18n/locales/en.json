@@ -157,7 +157,13 @@
         "termsAgreed": "Contract Agreed",
         "tournament": "Tournament"
       },
-      "title": "Form Management"
+      "title": "Form Management",
+      "contractTypeTabs": {
+        "all": "All",
+        "sponsor": "Sponsor",
+        "pro": "Pro",
+        "unset": "Unset"
+      }
     },
     "navigation": {
       "forms": "Forms Management",
@@ -726,6 +732,16 @@
       "tournamentName": {
         "label": "Tournament Name",
         "placeholder": "Select tournament"
+      },
+      "contractType": {
+        "sponsor": "Sponsor Contract",
+        "pro": "Pro Contract"
+      },
+      "hasJapaneseResidence": {
+        "yes": "Has residence in Japan",
+        "no": "No residence in Japan",
+        "description": "Select whether you have a residence certificate in Japan (self-declared).",
+        "proNote": "Pro contracts are only available to players with a residence in Japan."
       }
     },
     "notifications": {
@@ -770,7 +786,9 @@
       "playersId": "Players+ ID / Passport Number",
       "prizeType": "Prize Type",
       "privacyPolicy": "Privacy Policy",
-      "tournament": "Tournament Information"
+      "tournament": "Tournament Information",
+      "contractType": "Contract Type",
+      "residence": "Japanese Residence"
     },
     "title": "Prize Claim Form",
     "validation": {
@@ -783,7 +801,8 @@
       "kanjiNotAllowed": "Kanji characters are not allowed. Please enter in Katakana",
       "katakanaOnly": "Please enter in full-width Katakana",
       "mustAgreeToPrivacyPolicy": "You must agree to the privacy policy",
-      "required": "This field is required"
+      "required": "This field is required",
+      "proRequiresResidence": "Pro contracts are only available to players with a residence in Japan."
     }
   },
   "termsAgreement": {
