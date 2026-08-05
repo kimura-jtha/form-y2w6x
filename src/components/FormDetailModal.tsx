@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { POINT_PRIZE_PREFIX, PRIZE_PREFIX } from '@/config';
 import type { PrizeClaimFormSubmission } from '@/types';
 import { formatDate } from '@/utils/string';
+import { calculateWithholding } from '@/utils/withholding';
 
 interface FormDetailModalProps {
   opened: boolean;
@@ -17,6 +18,10 @@ export function FormDetailModal({ opened, onClose, form }: FormDetailModalProps)
   if (!form) return null;
 
   const prizePrefix = form.formContent.isPoint ? POINT_PRIZE_PREFIX : PRIZE_PREFIX;
+
+  // Recompute withholding so admin views are correct regardless of stored values
+  // (mirrors the authoritative backend calculation).
+  const withholding = calculateWithholding(form.formContent);
 
   // const getStatusColor = (status: string) => {
   //   switch (status) {
@@ -168,6 +173,18 @@ export function FormDetailModal({ opened, onClose, form }: FormDetailModalProps)
             label={t('prizeClaim.fields.prizeAmount.label')}
             value={`${prizePrefix}${form.formContent.amount.toLocaleString()}`}
           />
+          {withholding.applies && (
+            <>
+              <DetailRow
+                label={t('prizeClaim.fields.withholding.amountLabel')}
+                value={`${PRIZE_PREFIX}${withholding.withholdingAmount.toLocaleString()}`}
+              />
+              <DetailRow
+                label={t('prizeClaim.fields.withholding.netLabel')}
+                value={`${PRIZE_PREFIX}${withholding.netAmount.toLocaleString()}`}
+              />
+            </>
+          )}
         </Stack>
 
         <Divider label={t('admin.forms.detail.bankInfo')} labelPosition="left" />

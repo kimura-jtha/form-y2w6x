@@ -313,6 +313,14 @@
             "description": "Prize rank/position",
             "example": "1st"
           },
+          "withholdingAmount": {
+            "description": "Withholding tax amount (currency-formatted)",
+            "example": "¥10,210"
+          },
+          "netAmount": {
+            "description": "Final payout after withholding (rounded down to the nearest 1,000 yen)",
+            "example": "¥589,000"
+          },
           "receiptHtml": {
             "description": "Receipt content (HTML format)"
           },
@@ -742,6 +750,12 @@
         "no": "No residence in Japan",
         "description": "Select whether you have a residence certificate in Japan (self-declared).",
         "proNote": "Pro contracts are only available to players with a residence in Japan."
+      },
+      "withholding": {
+        "title": "Withholding tax breakdown",
+        "amountLabel": "Withholding tax",
+        "netLabel": "Final payout",
+        "note": "Estimated withholding tax for sponsor (cash) contracts and the final payout rounded down to the nearest 1,000 yen. The definitive amount is recalculated by the operator."
       }
     },
     "notifications": {
