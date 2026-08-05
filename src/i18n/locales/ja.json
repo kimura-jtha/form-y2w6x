@@ -163,6 +163,18 @@
         "sponsor": "スポンサー契約",
         "pro": "プロ契約",
         "unset": "未設定"
+      },
+      "markPaid": {
+        "button": "支払済みにする",
+        "paidBadge": "支払済み",
+        "paidAt": "支払済み ({{at}})",
+        "confirmTitle": "支払済みにする",
+        "confirmMessage": "このフォームを支払済みにしますか？支払済みにすると払出CSVから除外され、二重払い防止のため再度の支払済み登録はできません。",
+        "confirm": "支払済みにする",
+        "success": "成功",
+        "successMessage": "フォームを支払済みにしました",
+        "error": "エラー",
+        "errorMessage": "支払済みへの更新に失敗しました。既に支払済みの可能性があります。もう一度お試しください。"
       }
     },
     "navigation": {

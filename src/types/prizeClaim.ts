@@ -76,6 +76,14 @@ export interface PrizeClaimFormValues {
   // Terms of Service Agreement (optional, added after form submission)
   termsAgreed?: boolean;
 
+  // Paid status (Phase 4) — set by admin via markFormPaid. Used to exclude
+  // already-paid forms from the payout CSV (double-payment guard). Optional so
+  // pre-existing forms (no backfill) do not break.
+  paid?: {
+    at: string;
+    by: string;
+  };
+
   createdAt?: string;
 }
 

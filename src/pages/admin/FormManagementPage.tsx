@@ -2,7 +2,7 @@ import { type MouseEvent, useEffect, useMemo, useState } from 'react';
 
 import { FormDetailModal } from '@/components/FormDetailModal';
 import { POINT_PRIZE_PREFIX, PRIZE_PREFIX } from '@/config';
-import { deleteForm, getForms } from '@/lib/lambda/form';
+import { deleteForm, getForms, markFormPaid } from '@/lib/lambda/form';
 import { clearTournamentCache, fetchAllTournaments } from '@/lib/lambda/tournament';
 import { useAppStore } from '@/stores';
 import type { PrizeClaimFormSubmission, Tournament } from '@/types';
@@ -39,6 +39,7 @@ import {
   IconArrowDown,
   IconArrowsUpDown,
   IconArrowUp,
+  IconCash,
   IconClock,
   IconCopy,
   IconDownload,
@@ -116,6 +117,12 @@ export function FormManagementPage() {
     useDisclosure(false);
   const [formToDelete, setFormToDelete] = useState<PrizeClaimFormSubmission | null>(null);
   const [deletingFormId, setDeletingFormId] = useState<string | null>(null);
+
+  // Mark as paid (double-payment guard)
+  const [markPaidModalOpened, { open: openMarkPaidModal, close: closeMarkPaidModal }] =
+    useDisclosure(false);
+  const [formToMarkPaid, setFormToMarkPaid] = useState<PrizeClaimFormSubmission | null>(null);
+  const [markingPaidFormId, setMarkingPaidFormId] = useState<string | null>(null);
 
   // Export
   const [exportModalOpened, { open: openExportModal, close: closeExportModal }] =
@@ -445,6 +452,9 @@ export function FormManagementPage() {
       // PayPay CSV exports: exclude point-based prizes
       exportForms = exportForms.filter((form) => !form.formContent.isPoint);
 
+      // Payout CSV: exclude already-paid forms (double-payment guard)
+      exportForms = exportForms.filter((form) => !form.formContent.paid);
+
       if (exportType === 'japanese') {
         exportForms = exportForms.filter(
           (form) =>
@@ -530,6 +540,47 @@ export function FormManagementPage() {
       });
     } finally {
       setDeletingFormId(null);
+    }
+  };
+
+  const handleMarkPaid = (formId: string, event: MouseEvent) => {
+    event.stopPropagation();
+    setFormToMarkPaid(allForms.find((form) => form.id === formId) || null);
+    openMarkPaidModal();
+  };
+
+  const confirmMarkPaid = async () => {
+    if (!formToMarkPaid) return;
+
+    try {
+      setMarkingPaidFormId(formToMarkPaid.id);
+      const { paid } = await markFormPaid(formToMarkPaid.id);
+
+      // Reflect the paid marker locally so the UI/CSV exclusion update immediately
+      const applyPaid = (form: PrizeClaimFormSubmission) =>
+        form.id === formToMarkPaid.id
+          ? { ...form, formContent: { ...form.formContent, paid } }
+          : form;
+      setAllForms((prev) => prev.map(applyPaid));
+      setDisplayedForms((prev) => prev.map(applyPaid));
+
+      notifications.show({
+        title: t('admin.forms.markPaid.success'),
+        message: t('admin.forms.markPaid.successMessage'),
+        color: 'green',
+      });
+
+      closeMarkPaidModal();
+      setFormToMarkPaid(null);
+    } catch (error) {
+      console.error('Failed to mark form as paid:', error);
+      notifications.show({
+        title: t('admin.forms.markPaid.error'),
+        message: t('admin.forms.markPaid.errorMessage'),
+        color: 'red',
+      });
+    } finally {
+      setMarkingPaidFormId(null);
     }
   };
 
@@ -799,7 +850,7 @@ export function FormManagementPage() {
                     {sortByCreatedAt === 'asc' && <IconArrowUp size={10} />}
                     {sortByCreatedAt === 'desc' && <IconArrowDown size={10} />}
                   </Table.Th>
-                  <Table.Th w="180px">{t('admin.forms.table.actions')}</Table.Th>
+                  <Table.Th w="240px">{t('admin.forms.table.actions')}</Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
@@ -883,6 +934,29 @@ export function FormManagementPage() {
                             >
                               <IconDownload size={16} />
                             </Button>
+                            {form.formContent.paid ? (
+                              <Badge
+                                color="teal"
+                                variant="light"
+                                leftSection={<IconCash size={12} />}
+                                title={t('admin.forms.markPaid.paidAt', {
+                                  at: formatDate(form.formContent.paid.at, true),
+                                })}
+                              >
+                                {t('admin.forms.markPaid.paidBadge')}
+                              </Badge>
+                            ) : (
+                              <Button
+                                size="xs"
+                                color="teal"
+                                onClick={(e) => handleMarkPaid(form.id, e)}
+                                loading={markingPaidFormId === form.id}
+                                disabled={markingPaidFormId !== null}
+                                title={t('admin.forms.markPaid.button')}
+                              >
+                                <IconCash size={16} />
+                              </Button>
+                            )}
                             <Button
                               size="xs"
                               color="red"
@@ -1015,6 +1089,49 @@ export function FormManagementPage() {
             </Button>
             <Button color="red" onClick={confirmDelete} loading={deletingFormId !== null}>
               {t('admin.forms.delete.confirm')}
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
+
+      {/* Mark as Paid Confirmation Modal */}
+      <Modal
+        opened={markPaidModalOpened}
+        onClose={closeMarkPaidModal}
+        title={t('admin.forms.markPaid.confirmTitle')}
+        centered
+      >
+        <Stack gap="md">
+          <Text>{t('admin.forms.markPaid.confirmMessage')}</Text>
+          {formToMarkPaid && (
+            <Paper p="sm" withBorder>
+              <Stack gap="xs">
+                <Text size="sm">
+                  <strong>{t('admin.forms.table.tournament')}:</strong>{' '}
+                  {formToMarkPaid.formContent.tournamentName}
+                </Text>
+                <Text size="sm">
+                  <strong>{t('admin.forms.table.playerName')}:</strong>{' '}
+                  {formToMarkPaid.formContent.lastNameKanji}{' '}
+                  {formToMarkPaid.formContent.firstNameKanji}
+                </Text>
+                <Text size="sm">
+                  <strong>{t('admin.forms.table.amount')}:</strong>{' '}
+                  {formToMarkPaid.formContent.amount.toLocaleString()}
+                </Text>
+              </Stack>
+            </Paper>
+          )}
+          <Group justify="flex-end" gap="sm">
+            <Button
+              variant="light"
+              onClick={closeMarkPaidModal}
+              disabled={markingPaidFormId !== null}
+            >
+              {t('common.cancel')}
+            </Button>
+            <Button color="teal" onClick={confirmMarkPaid} loading={markingPaidFormId !== null}>
+              {t('admin.forms.markPaid.confirm')}
             </Button>
           </Group>
         </Stack>
