@@ -71,12 +71,44 @@ export async function getConfirmationEmailTemplate(lang = 'ja'): Promise<Templat
   return _getTemplate(`confirmation-email-${lang}`);
 }
 
-export async function getPrivacyPolicyTemplate(lang = 'ja'): Promise<Template> {
-  return _getTemplate(`privacy-policy-${lang}`);
+export type ContractType = 'sponsor' | 'pro';
+
+/**
+ * Resolve a regulatory-document template (privacy-policy / terms-of-service)
+ * honouring the contract-type dimension (Phase 5).
+ *
+ * Key scheme:
+ *   sponsor / undefined -> `{base}-{lang}`            (existing base template)
+ *   pro                 -> `{base}-pro-{lang}`, falling back to `{base}-{lang}`
+ *                          when the pro-specific override does not exist yet.
+ */
+async function _getContractScopedTemplate(
+  base: string,
+  lang: string,
+  contractType: ContractType,
+): Promise<Template> {
+  if (contractType === 'pro') {
+    try {
+      return await _getTemplate(`${base}-pro-${lang}`);
+    } catch {
+      // No pro-specific override yet: fall back to the base template.
+    }
+  }
+  return _getTemplate(`${base}-${lang}`);
 }
 
-export async function getTermsOfServiceTemplate(lang = 'ja'): Promise<Template> {
-  return _getTemplate(`terms-of-service-${lang}`);
+export async function getPrivacyPolicyTemplate(
+  lang = 'ja',
+  contractType: ContractType = 'sponsor',
+): Promise<Template> {
+  return _getContractScopedTemplate('privacy-policy', lang, contractType);
+}
+
+export async function getTermsOfServiceTemplate(
+  lang = 'ja',
+  contractType: ContractType = 'sponsor',
+): Promise<Template> {
+  return _getContractScopedTemplate('terms-of-service', lang, contractType);
 }
 
 export async function getReceiptTemplate(lang = 'ja'): Promise<Template> {
