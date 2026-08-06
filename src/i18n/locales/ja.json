@@ -761,8 +761,7 @@
       },
       "isPoint": {
         "point": "ポイント (+P)",
-        "cash": "現金 (¥)",
-        "proNote": "プロ契約はポイント支払いを選択できません（現金のみ）。"
+        "cash": "現金 (¥)"
       },
       "rank": {
         "label": "順位",
@@ -852,8 +851,7 @@
       "katakanaOnly": "全角カタカナで入力してください",
       "mustAgreeToPrivacyPolicy": "プライバシーポリシーに同意してください",
       "required": "この項目は必須です",
-      "proRequiresResidence": "プロ契約は日本国内に住民票がある方のみ選択できます。",
-      "proNoPoints": "プロ契約ではポイント支払いを選択できません（現金のみ）。"
+      "proRequiresResidence": "プロ契約は日本国内に住民票がある方のみ選択できます。"
     }
   },
   "termsAgreement": {
