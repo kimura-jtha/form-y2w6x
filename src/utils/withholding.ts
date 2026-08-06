@@ -27,6 +27,8 @@ export interface WithholdingResult {
   withholdingAmount: number;
   /** 最終支払額 = amount - withholdingAmount (千円未満切り捨て後) */
   netAmount: number;
+  /** 事務手数料 = (amount - withholdingAmount) - netAmount (0〜999円) */
+  administrativeFee: number;
   /** Whether withholding applies for this input (sponsor + cash + taxable amount). */
   applies: boolean;
 }
@@ -43,13 +45,23 @@ export const calculateWithholding = (
     formContent.contractType === 'sponsor' && formContent.isPoint !== true;
 
   if (!isCashSponsor) {
-    return { withholdingAmount: 0, netAmount: amount, applies: false };
+    return {
+      withholdingAmount: 0,
+      netAmount: amount,
+      administrativeFee: 0,
+      applies: false,
+    };
   }
 
   let rawWithholding: number;
   if (formContent.hasJapaneseResidence) {
     if (amount <= RESIDENT_THRESHOLD) {
-      return { withholdingAmount: 0, netAmount: amount, applies: false };
+      return {
+      withholdingAmount: 0,
+      netAmount: amount,
+      administrativeFee: 0,
+      applies: false,
+    };
     }
     rawWithholding = (amount - RESIDENT_THRESHOLD) * RESIDENT_RATE;
   } else {
@@ -58,6 +70,8 @@ export const calculateWithholding = (
 
   const withholdingAmount = Math.floor(rawWithholding); // 円未満切り捨て
   const netAmount = Math.floor((amount - withholdingAmount) / 1000) * 1000; // 千円未満切り捨て
+  // 事務手数料 = 千円未満切り捨てで落ちた端数 (0〜999円)。
+  const administrativeFee = amount - withholdingAmount - netAmount;
 
-  return { withholdingAmount, netAmount, applies: true };
+  return { withholdingAmount, netAmount, administrativeFee, applies: true };
 };

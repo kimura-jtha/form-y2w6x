@@ -782,6 +782,14 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
                     </Group>
                     <Group justify="space-between">
                       <Text size="sm" c="dimmed">
+                        {t('prizeClaim.fields.withholding.adminFeeLabel')}
+                      </Text>
+                      <Text size="sm" fw={600}>
+                        {`${PRIZE_PREFIX}${withholding.administrativeFee.toLocaleString()}`}
+                      </Text>
+                    </Group>
+                    <Group justify="space-between">
+                      <Text size="sm" c="dimmed">
                         {t('prizeClaim.fields.withholding.netLabel')}
                       </Text>
                       <Text size="sm" fw={700}>
