@@ -180,6 +180,10 @@ export function FormDetailModal({ opened, onClose, form }: FormDetailModalProps)
                 value={`${PRIZE_PREFIX}${withholding.withholdingAmount.toLocaleString()}`}
               />
               <DetailRow
+                label={t('prizeClaim.fields.withholding.adminFeeLabel')}
+                value={`${PRIZE_PREFIX}${withholding.administrativeFee.toLocaleString()}`}
+              />
+              <DetailRow
                 label={t('prizeClaim.fields.withholding.netLabel')}
                 value={`${PRIZE_PREFIX}${withholding.netAmount.toLocaleString()}`}
               />
