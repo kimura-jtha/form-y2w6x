@@ -823,5 +823,9 @@
       "sponsor": "关于赞助合同",
       "pro": "关于职业合同"
     }
+  },
+  "documentTitle": {
+    "player": "奖金领取表",
+    "admin": "管理界面 | 奖金领取表"
   }
 }

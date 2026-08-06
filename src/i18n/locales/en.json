@@ -911,5 +911,9 @@
       "sponsor": "About the Sponsor Contract",
       "pro": "About the Pro Contract"
     }
+  },
+  "documentTitle": {
+    "player": "Prize Claim Form",
+    "admin": "Admin | Prize Claim Form"
   }
 }
