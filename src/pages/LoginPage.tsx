@@ -18,12 +18,15 @@ import { IconAlertCircle } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
 import { ROUTES } from '@/constants';
+import { useDocumentTitle } from '@/hooks';
 import { login } from '@/lib/lambda/auth';
 import { setAccessKey } from '@/utils/auth';
 
 export function LoginPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  useDocumentTitle(t('documentTitle.admin'));
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
