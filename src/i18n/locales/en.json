@@ -61,7 +61,10 @@
           "full": "Full Data (UTF-8)",
           "fullDescription": "Download all columns as displayed in the table (UTF-8 encoding)",
           "terms": "Only Contract Agreed Users",
-          "termsDescription": "Filter to include only users who agreed to contract"
+          "termsDescription": "Filter to include only users who agreed to contract",
+          "includePaid": "Include already-paid",
+          "includePaidDescription": "Include already-paid forms in the output (normally excluded)",
+          "includePaidWarning": "Already-paid forms will also be exported. Beware of double payment."
         },
         "groups": {
           "fullData": "Full Data (UTF-8)",

@@ -61,7 +61,10 @@
           "full": "TODO: translate me!!!",
           "fullDescription": "TODO: translate me!!!",
           "terms": "TODO: translate me!!!",
-          "termsDescription": "TODO: translate me!!!"
+          "termsDescription": "TODO: translate me!!!",
+          "includePaid": "TODO: translate me!!!",
+          "includePaidDescription": "TODO: translate me!!!",
+          "includePaidWarning": "TODO: translate me!!!"
         },
         "groups": {
           "fullData": "TODO: translate me!!!",
