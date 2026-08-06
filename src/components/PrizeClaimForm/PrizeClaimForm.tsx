@@ -198,6 +198,8 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
     form.setFieldValue('contractType', contractType);
     if (contractType === 'pro') {
       form.setFieldValue('hasJapaneseResidence', true);
+      // Pro contracts cannot be paid in points (cash only); force isPoint off.
+      form.setFieldValue('isPoint', false);
     }
   };
 
@@ -485,12 +487,18 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
                     ? t('prizeClaim.fields.isPoint.point')
                     : t('prizeClaim.fields.isPoint.cash')
                 }
-                checked={formValues.isPoint ?? false}
+                // Pro contracts cannot be paid in points: force off and disable.
+                checked={formValues.contractType === 'pro' ? false : (formValues.isPoint ?? false)}
                 color="blue.4"
                 onChange={(event) => form.setFieldValue('isPoint', event.currentTarget.checked)}
-                disabled={isFormDisabled}
+                disabled={isFormDisabled || formValues.contractType === 'pro'}
               />
             </Group>
+            {formValues.contractType === 'pro' && (
+              <Text size="xs" c="dimmed" mt="xs">
+                {t('prizeClaim.fields.isPoint.proNote')}
+              </Text>
+            )}
           </Paper>
 
           {/* Name (Not Japanese) Section */}
