@@ -226,6 +226,20 @@ export async function markFormPaid(
 }
 
 /**
+ * Clear a form's paid marker (reverse of markFormPaid).
+ * The backend enforces write-time exclusivity; clearing a form that is not
+ * paid is rejected. After clearing, the form is included again in the payout
+ * CSV and can be marked paid again.
+ * @param formId - Form ID
+ */
+export async function markFormUnpaid(formId: string): Promise<void> {
+  await fetchLambda({
+    path: `admin/forms/${formId}/mark-unpaid`,
+    method: 'POST',
+  });
+}
+
+/**
  * Get forms
  * @param cursor - Cursor
  * @param limit - Limit

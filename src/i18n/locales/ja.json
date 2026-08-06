@@ -175,6 +175,16 @@
         "successMessage": "フォームを支払済みにしました",
         "error": "エラー",
         "errorMessage": "支払済みへの更新に失敗しました。既に支払済みの可能性があります。もう一度お試しください。"
+      },
+      "markUnpaid": {
+        "button": "消込を取り消す",
+        "confirmTitle": "支払済みを取り消す",
+        "confirmMessage": "支払済みを取り消します。二重払い防止の対象から外れ、払出CSVに再度含まれます。よろしいですか？",
+        "confirm": "取り消す",
+        "success": "成功",
+        "successMessage": "支払済みを取り消しました",
+        "error": "エラー",
+        "errorMessage": "支払済みの取り消しに失敗しました。既に取り消されている可能性があります。もう一度お試しください。"
       }
     },
     "navigation": {
