@@ -61,7 +61,10 @@
           "full": "全データ (UTF-8)",
           "fullDescription": "テーブルに表示されている全カラムをダウンロード（UTF-8エンコーディング）",
           "terms": "契約書同意ユーザーのみ",
-          "termsDescription": "契約書に同意したユーザーのみを含める"
+          "termsDescription": "契約書に同意したユーザーのみを含める",
+          "includePaid": "払込済みも含める",
+          "includePaidDescription": "払込済みのフォームも出力に含める（通常は除外）",
+          "includePaidWarning": "払込済みも出力されます。二重払いにご注意ください。"
         },
         "groups": {
           "fullData": "全データ (UTF-8)",

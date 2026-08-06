@@ -136,6 +136,8 @@ export function FormManagementPage() {
     useDisclosure(false);
   const [exportType, setExportType] = useState<'all' | 'japanese' | 'full'>('all');
   const [exportOnlyTermsAgreed, setExportOnlyTermsAgreed] = useState(false);
+  // Include already-paid forms in PayPay exports (default OFF = keep double-payment guard)
+  const [exportIncludePaid, setExportIncludePaid] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
 
   // Password generator
@@ -459,8 +461,13 @@ export function FormManagementPage() {
       // PayPay CSV exports: exclude point-based prizes
       exportForms = exportForms.filter((form) => !form.formContent.isPoint);
 
-      // Payout CSV: exclude already-paid forms (double-payment guard)
-      exportForms = exportForms.filter((form) => !form.formContent.paid);
+      // Payout CSV: exclude already-paid forms (double-payment guard).
+      // When the include-paid option is ON, keep them (intentional re-export).
+      if (exportIncludePaid) {
+        filterSuffixes.push('include_paid');
+      } else {
+        exportForms = exportForms.filter((form) => !form.formContent.paid);
+      }
 
       if (exportType === 'japanese') {
         exportForms = exportForms.filter(
@@ -1102,6 +1109,18 @@ export function FormManagementPage() {
                     description={t('admin.forms.export.options.termsDescription')}
                     disabled={exportType === 'full'}
                   />
+                  <Checkbox
+                    checked={exportIncludePaid}
+                    onChange={(event) => setExportIncludePaid(event.currentTarget.checked)}
+                    label={t('admin.forms.export.options.includePaid')}
+                    description={t('admin.forms.export.options.includePaidDescription')}
+                    disabled={exportType === 'full'}
+                  />
+                  {exportIncludePaid && exportType !== 'full' && (
+                    <Text size="xs" c="red">
+                      {t('admin.forms.export.options.includePaidWarning')}
+                    </Text>
+                  )}
                 </Stack>
               </Paper>
             </Stack>
