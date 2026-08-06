@@ -67,16 +67,18 @@ export async function getContractEmailTemplate(lang = 'ja'): Promise<Template> {
   return _getTemplate(`contract-email-${lang}`);
 }
 
-export async function getConfirmationEmailTemplate(lang = 'ja'): Promise<Template> {
-  return _getTemplate(`confirmation-email-${lang}`);
-}
-
 export type ContractType = 'sponsor' | 'pro';
 
 /**
- * Bases that carry the contract-type (sponsor/pro) dimension (Phase 5 / FX-1).
+ * Bases that carry the contract-type (sponsor/pro) dimension (Phase 5 / FX-1;
+ * FX-6 adds receipt and confirmation-email).
  */
-export type ContractScopedBase = 'privacy-policy' | 'terms-of-service' | 'contract';
+export type ContractScopedBase =
+  | 'privacy-policy'
+  | 'terms-of-service'
+  | 'contract'
+  | 'receipt'
+  | 'confirmation-email';
 
 /**
  * Build the storage key for a contract-type-scoped document.
@@ -141,8 +143,26 @@ export async function getContractTemplate(
   return _getContractScopedTemplate('contract', lang, contractType);
 }
 
-export async function getReceiptTemplate(lang = 'ja'): Promise<Template> {
-  return _getTemplate(`receipt-${lang}`);
+/**
+ * Resolve the receipt (領収書) document honouring the contract-type dimension,
+ * with sponsor fallback for `pro` (FX-6). Used on the terms-agreement display.
+ */
+export async function getReceiptTemplate(
+  lang = 'ja',
+  contractType: ContractType = 'sponsor',
+): Promise<Template> {
+  return _getContractScopedTemplate('receipt', lang, contractType);
+}
+
+/**
+ * Resolve the confirmation email honouring the contract-type dimension, with
+ * sponsor fallback for `pro` (FX-6).
+ */
+export async function getConfirmationEmailTemplate(
+  lang = 'ja',
+  contractType: ContractType = 'sponsor',
+): Promise<Template> {
+  return _getContractScopedTemplate('confirmation-email', lang, contractType);
 }
 
 // ---------------------------------------------------------------------------
