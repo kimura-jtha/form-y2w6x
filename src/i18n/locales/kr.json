@@ -804,7 +804,9 @@
       "prizeAmount": "상금 금액",
       "rank": "계급",
       "title": "양식 정보",
-      "tournament": "토너먼트"
+      "tournament": "토너먼트",
+      "withholdingAmount": "원천징수액",
+      "netAmount": "최종 지급액"
     },
     "issueReceiptButton": "영수증 발행",
     "loading": "폼 데이터를 불러오는 중...",
@@ -813,6 +815,10 @@
       "message": "아래 동의합니다를 클릭하시면 제공하신 모든 정보가 정확하며 경품 지급에 관한 계약에 동의하시는 것으로 간주됩니다.",
       "title": "계약"
     },
-    "title": "프로 연락처 양식에 대하여"
+    "title": "프로 연락처 양식에 대하여",
+    "titleByContract": {
+      "sponsor": "스폰서 계약에 대하여",
+      "pro": "프로 계약에 대하여"
+    }
   }
 }

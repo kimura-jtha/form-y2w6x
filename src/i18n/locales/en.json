@@ -890,7 +890,9 @@
       "prizeAmount": "Prize Amount",
       "rank": "Rank",
       "title": "Form Information",
-      "tournament": "Tournament"
+      "tournament": "Tournament",
+      "withholdingAmount": "Withholding Tax",
+      "netAmount": "Final Payment Amount"
     },
     "issueReceiptButton": "Issue Receipt",
     "loading": "Loading form data...",
@@ -899,6 +901,10 @@
       "message": "By clicking \"I Agree\" below, you confirm that all the information provided is accurate and you agree to our terms of service for prize disbursement.",
       "title": "Contract"
     },
-    "title": "About Pro Contact Form"
+    "title": "About Pro Contact Form",
+    "titleByContract": {
+      "sponsor": "About the Sponsor Contract",
+      "pro": "About the Pro Contract"
+    }
   }
 }
