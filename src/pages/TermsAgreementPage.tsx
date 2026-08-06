@@ -10,6 +10,7 @@ import {
 import { getReceiptTemplate, getTermsOfServiceTemplate } from '@/lib/lambda/template';
 import type { PrizeClaimFormValues } from '@/types';
 import { formatDate } from '@/utils/string';
+import { calculateWithholding } from '@/utils/withholding';
 import {
   ActionIcon,
   Alert,
@@ -386,6 +387,18 @@ export function TermsAgreementPage() {
     );
   }
 
+  // Contract-type-aware heading (FX-3 #2): sponsor -> スポンサー契約について,
+  // pro -> プロ契約について. Falls back to the legacy fixed title if the
+  // per-contract key is missing.
+  const contractType = formData.contractType === 'pro' ? 'pro' : 'sponsor';
+  const pageTitle = t(`termsAgreement.titleByContract.${contractType}`, {
+    defaultValue: t('termsAgreement.title'),
+  });
+
+  // Withholding breakdown (FX-3 #2): show 賞金額 + 源泉徴収額 + 最終支払額 when
+  // withholding applies (sponsor × cash × taxable). Otherwise only 賞金額.
+  const withholding = calculateWithholding(formData);
+
   return (
     <Container size="md" py="xl">
       {isProcessingReceipt && (
@@ -406,7 +419,7 @@ export function TermsAgreementPage() {
       )}
       <Paper shadow="sm" p="xl" radius="md">
         <Stack gap="lg">
-          <Title order={2}>{t('termsAgreement.title')}</Title>
+          <Title order={2}>{pageTitle}</Title>
 
           <Group justify="start" gap="lg" onClick={toggle} style={{ cursor: 'pointer' }}>
             <Title order={4}>{t('prizeClaim.title')}</Title>
@@ -463,6 +476,28 @@ export function TermsAgreementPage() {
                   </Text>
                   <Text size="sm">{formData.playersId}</Text>
                 </Grid.Col>
+                {withholding.applies && (
+                  <>
+                    <Grid.Col span={6}>
+                      <Text size="xs" c="dimmed">
+                        {t('termsAgreement.formInfo.withholdingAmount')}
+                      </Text>
+                      <Text size="sm">
+                        {prizePrefix}
+                        {withholding.withholdingAmount.toLocaleString()}
+                      </Text>
+                    </Grid.Col>
+                    <Grid.Col span={6}>
+                      <Text size="xs" c="dimmed">
+                        {t('termsAgreement.formInfo.netAmount')}
+                      </Text>
+                      <Text size="sm">
+                        {prizePrefix}
+                        {withholding.netAmount.toLocaleString()}
+                      </Text>
+                    </Grid.Col>
+                  </>
+                )}
               </Grid>
               {formData.bankName && (
                 <>
@@ -639,9 +674,19 @@ const extractFormVariables = (formContent: PrizeClaimFormValues, issuedAt: numbe
   const accountTypeJa = isSavings ? '普通預金' : '当座預金';
   const accountTypeEn = isSavings ? 'Savings' : 'Checking';
   const prizePrefix = formContent.isPoint ? POINT_PRIZE_PREFIX : PRIZE_PREFIX;
+  // Withholding breakdown for the receipt template (FX-3 #3). Mirrors the
+  // backend authoritative calculation; safe (0) when withholding does not apply.
+  const { withholdingAmount, netAmount } = calculateWithholding(formContent);
+  // Contract-type-aware cost label so the receipt reads
+  // 「スポンサー契約費用」/「プロ契約費用」via {{contractCostLabel}} (FX-3 #3).
+  const contractType = formContent.contractType === 'pro' ? 'pro' : 'sponsor';
+  const contractCostLabel = contractType === 'pro' ? 'プロ契約費用' : 'スポンサー契約費用';
   return {
     today: formatDate(issuedAt, false),
     year: new Date().getFullYear().toString(),
+    withholdingAmount: formatCurrency(withholdingAmount, prizePrefix),
+    netAmount: formatCurrency(netAmount, prizePrefix),
+    contractCostLabel,
     lastNameKanji: formContent.lastNameKanji,
     firstNameKanji: formContent.firstNameKanji,
     lastNameKana: formContent.lastNameKana,

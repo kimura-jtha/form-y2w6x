@@ -804,7 +804,9 @@
       "prizeAmount": "奖金金额",
       "rank": "秩",
       "title": "表格信息",
-      "tournament": "比赛"
+      "tournament": "比赛",
+      "withholdingAmount": "预扣税额",
+      "netAmount": "最终支付金额"
     },
     "issueReceiptButton": "发放收据",
     "loading": "正在加载表单数据...",
@@ -813,6 +815,10 @@
       "message": "点击下方的“我同意”按钮，即表示您确认所提供的所有信息均准确无误，并同意我们的奖金发放合同。에 관한 서비스 약관에 동의하시는 것으로 간주됩니다.",
       "title": "合同"
     },
-    "title": "关于 Pro 联系表单"
+    "title": "关于 Pro 联系表单",
+    "titleByContract": {
+      "sponsor": "关于赞助合同",
+      "pro": "关于职业合同"
+    }
   }
 }

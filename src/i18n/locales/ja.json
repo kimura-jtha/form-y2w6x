@@ -890,7 +890,9 @@
       "prizeAmount": "賞金額",
       "rank": "順位",
       "title": "フォーム情報",
-      "tournament": "トーナメント"
+      "tournament": "トーナメント",
+      "withholdingAmount": "源泉徴収額",
+      "netAmount": "最終支払額"
     },
     "issueReceiptButton": "領収書発行",
     "loading": "フォームデータを読み込み中...",
@@ -899,6 +901,10 @@
       "message": "以下の「同意する」をクリックすることで、提供されたすべての情報が正確であることを確認し、賞金支払いに関する契約書に同意したことになります。",
       "title": "契約書"
     },
-    "title": "プロ契約について"
+    "title": "プロ契約について",
+    "titleByContract": {
+      "sponsor": "スポンサー契約について",
+      "pro": "プロ契約について"
+    }
   }
 }
