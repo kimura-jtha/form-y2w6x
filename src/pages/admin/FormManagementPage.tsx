@@ -2,7 +2,7 @@ import { type MouseEvent, useEffect, useMemo, useState } from 'react';
 
 import { FormDetailModal } from '@/components/FormDetailModal';
 import { POINT_PRIZE_PREFIX, PRIZE_PREFIX } from '@/config';
-import { deleteForm, getForms, markFormPaid } from '@/lib/lambda/form';
+import { deleteForm, getForms, markFormPaid, markFormUnpaid } from '@/lib/lambda/form';
 import { clearTournamentCache, fetchAllTournaments } from '@/lib/lambda/tournament';
 import { useAppStore } from '@/stores';
 import type { PrizeClaimFormSubmission, Tournament } from '@/types';
@@ -40,6 +40,7 @@ import {
   IconArrowsUpDown,
   IconArrowUp,
   IconCash,
+  IconCashOff,
   IconClock,
   IconCopy,
   IconDownload,
@@ -123,6 +124,12 @@ export function FormManagementPage() {
     useDisclosure(false);
   const [formToMarkPaid, setFormToMarkPaid] = useState<PrizeClaimFormSubmission | null>(null);
   const [markingPaidFormId, setMarkingPaidFormId] = useState<string | null>(null);
+
+  // Undo mark as paid (with warning)
+  const [markUnpaidModalOpened, { open: openMarkUnpaidModal, close: closeMarkUnpaidModal }] =
+    useDisclosure(false);
+  const [formToMarkUnpaid, setFormToMarkUnpaid] = useState<PrizeClaimFormSubmission | null>(null);
+  const [markingUnpaidFormId, setMarkingUnpaidFormId] = useState<string | null>(null);
 
   // Export
   const [exportModalOpened, { open: openExportModal, close: closeExportModal }] =
@@ -584,6 +591,48 @@ export function FormManagementPage() {
     }
   };
 
+  const handleMarkUnpaid = (formId: string, event: MouseEvent) => {
+    event.stopPropagation();
+    setFormToMarkUnpaid(allForms.find((form) => form.id === formId) || null);
+    openMarkUnpaidModal();
+  };
+
+  const confirmMarkUnpaid = async () => {
+    if (!formToMarkUnpaid) return;
+
+    try {
+      setMarkingUnpaidFormId(formToMarkUnpaid.id);
+      await markFormUnpaid(formToMarkUnpaid.id);
+
+      // Clear the paid marker locally so the UI/CSV inclusion update immediately
+      const applyUnpaid = (form: PrizeClaimFormSubmission) => {
+        if (form.id !== formToMarkUnpaid.id) return form;
+        const { paid: _paid, ...restContent } = form.formContent;
+        return { ...form, formContent: restContent };
+      };
+      setAllForms((prev) => prev.map(applyUnpaid));
+      setDisplayedForms((prev) => prev.map(applyUnpaid));
+
+      notifications.show({
+        title: t('admin.forms.markUnpaid.success'),
+        message: t('admin.forms.markUnpaid.successMessage'),
+        color: 'green',
+      });
+
+      closeMarkUnpaidModal();
+      setFormToMarkUnpaid(null);
+    } catch (error) {
+      console.error('Failed to undo paid mark:', error);
+      notifications.show({
+        title: t('admin.forms.markUnpaid.error'),
+        message: t('admin.forms.markUnpaid.errorMessage'),
+        color: 'red',
+      });
+    } finally {
+      setMarkingUnpaidFormId(null);
+    }
+  };
+
   // Password generator handlers
   const handleGeneratePassword = async () => {
     setIsGenerating(true);
@@ -935,16 +984,29 @@ export function FormManagementPage() {
                               <IconDownload size={16} />
                             </Button>
                             {form.formContent.paid ? (
-                              <Badge
-                                color="teal"
-                                variant="light"
-                                leftSection={<IconCash size={12} />}
-                                title={t('admin.forms.markPaid.paidAt', {
-                                  at: formatDate(form.formContent.paid.at, true),
-                                })}
-                              >
-                                {t('admin.forms.markPaid.paidBadge')}
-                              </Badge>
+                              <>
+                                <Badge
+                                  color="teal"
+                                  variant="light"
+                                  leftSection={<IconCash size={12} />}
+                                  title={t('admin.forms.markPaid.paidAt', {
+                                    at: formatDate(form.formContent.paid.at, true),
+                                  })}
+                                >
+                                  {t('admin.forms.markPaid.paidBadge')}
+                                </Badge>
+                                <Button
+                                  size="xs"
+                                  color="orange"
+                                  variant="light"
+                                  onClick={(e) => handleMarkUnpaid(form.id, e)}
+                                  loading={markingUnpaidFormId === form.id}
+                                  disabled={markingUnpaidFormId !== null}
+                                  title={t('admin.forms.markUnpaid.button')}
+                                >
+                                  <IconCashOff size={16} />
+                                </Button>
+                              </>
                             ) : (
                               <Button
                                 size="xs"
@@ -1132,6 +1194,55 @@ export function FormManagementPage() {
             </Button>
             <Button color="teal" onClick={confirmMarkPaid} loading={markingPaidFormId !== null}>
               {t('admin.forms.markPaid.confirm')}
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
+
+      {/* Undo Mark as Paid Confirmation Modal (with warning) */}
+      <Modal
+        opened={markUnpaidModalOpened}
+        onClose={closeMarkUnpaidModal}
+        title={t('admin.forms.markUnpaid.confirmTitle')}
+        centered
+      >
+        <Stack gap="md">
+          <Alert color="orange" variant="light" icon={<IconInfoCircle size={16} />}>
+            {t('admin.forms.markUnpaid.confirmMessage')}
+          </Alert>
+          {formToMarkUnpaid && (
+            <Paper p="sm" withBorder>
+              <Stack gap="xs">
+                <Text size="sm">
+                  <strong>{t('admin.forms.table.tournament')}:</strong>{' '}
+                  {formToMarkUnpaid.formContent.tournamentName}
+                </Text>
+                <Text size="sm">
+                  <strong>{t('admin.forms.table.playerName')}:</strong>{' '}
+                  {formToMarkUnpaid.formContent.lastNameKanji}{' '}
+                  {formToMarkUnpaid.formContent.firstNameKanji}
+                </Text>
+                <Text size="sm">
+                  <strong>{t('admin.forms.table.amount')}:</strong>{' '}
+                  {formToMarkUnpaid.formContent.amount.toLocaleString()}
+                </Text>
+              </Stack>
+            </Paper>
+          )}
+          <Group justify="flex-end" gap="sm">
+            <Button
+              variant="light"
+              onClick={closeMarkUnpaidModal}
+              disabled={markingUnpaidFormId !== null}
+            >
+              {t('common.cancel')}
+            </Button>
+            <Button
+              color="orange"
+              onClick={confirmMarkUnpaid}
+              loading={markingUnpaidFormId !== null}
+            >
+              {t('admin.forms.markUnpaid.confirm')}
             </Button>
           </Group>
         </Stack>

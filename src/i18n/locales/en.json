@@ -175,6 +175,16 @@
         "successMessage": "Form has been marked as paid",
         "error": "Error",
         "errorMessage": "Failed to mark form as paid. It may already be paid. Please try again."
+      },
+      "markUnpaid": {
+        "button": "Undo paid",
+        "confirmTitle": "Undo paid mark",
+        "confirmMessage": "This will undo the paid mark. The form will no longer be protected by the double-payment guard and will be included again in the payout CSV. Continue?",
+        "confirm": "Undo",
+        "success": "Success",
+        "successMessage": "The paid mark has been removed",
+        "error": "Error",
+        "errorMessage": "Failed to undo the paid mark. It may have already been undone. Please try again."
       }
     },
     "navigation": {
