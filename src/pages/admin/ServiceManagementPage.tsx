@@ -38,17 +38,18 @@ const DOC_ORDER: DocType[] = [
   'contractEmail',
 ];
 
-// Documents that carry the sponsor/pro contract-type dimension (Phase 5 / FX-1).
+// Documents that carry the sponsor/pro contract-type dimension (Phase 5 / FX-1;
+// FX-6 adds receipt and confirmationEmail).
 const SCOPED_BASE: Partial<Record<DocType, ContractScopedBase>> = {
   terms: 'terms-of-service',
   privacy: 'privacy-policy',
   contract: 'contract',
+  receipt: 'receipt',
+  confirmationEmail: 'confirmation-email',
 };
 
 // Single-variant (contract-type agnostic) documents and their storage keys.
 const UNSCOPED_KEY: Partial<Record<DocType, string>> = {
-  receipt: 'receipt-ja',
-  confirmationEmail: 'confirmation-email-ja',
   contractEmail: 'contract-email-ja',
 };
 
@@ -151,6 +152,8 @@ export function ServiceManagementPage() {
     terms: 'sponsor',
     privacy: 'sponsor',
     contract: 'sponsor',
+    receipt: 'sponsor',
+    confirmationEmail: 'sponsor',
   });
 
   const [entries, setEntries] = useState<Record<string, EntryState>>(() =>

@@ -97,13 +97,17 @@ export function TermsAgreementPage() {
 
   useEffect(() => {
     if (alreadyAgreed && formData) {
-      getReceiptTemplate().then((template) => {
+      // FX-6: resolve the receipt for this form's contract type (sponsor/pro),
+      // falling back to the sponsor template when no pro override exists.
+      const contractType = formData.contractType === 'pro' ? 'pro' : 'sponsor';
+      const lang = i18n.language === 'en' ? 'en' : 'ja';
+      getReceiptTemplate(lang, contractType).then((template) => {
         setReceipt(
           renderTemplate(template.content, extractFormVariables(formData, receiptIssuedAt)),
         );
       });
     }
-  }, [formData, alreadyAgreed, receiptIssuedAt]);
+  }, [formData, alreadyAgreed, receiptIssuedAt, i18n.language]);
 
   // Fetch form data when formId is available
   useEffect(() => {
