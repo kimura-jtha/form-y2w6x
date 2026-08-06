@@ -174,25 +174,27 @@
         "savePrivacy": "개인정보 보호정책 저장",
         "saveReceipt": "영수증 템플릿 저장",
         "saveTerms": "계약 저장",
-        "termsLabel": "계약 내용",
-        "termsSubjectLabel": "계약",
+        "termsLabel": "이용약관 내용",
+        "termsSubjectLabel": "이용약관 제목",
         "title": "HTML 편집기"
       },
       "lastUpdated": "최종 업데이트됨",
       "success": "성공",
       "successMessage": {
         "confirmationEmail": "확인 이메일이 성공적으로 업데이트되었습니다.",
-        "terms": "계약이 성공적으로 업데이트되었습니다.",
+        "terms": "이용약관이 성공적으로 업데이트되었습니다.",
         "contractEmail": "계약 이메일이 성공적으로 업데이트되었습니다.",
         "privacy": "개인정보처리방침이 성공적으로 업데이트되었습니다.",
-        "receipt": "영수증 템플릿이 성공적으로 업데이트되었습니다."
+        "receipt": "영수증 템플릿이 성공적으로 업데이트되었습니다.",
+        "contract": "계약서가 성공적으로 업데이트되었습니다."
       },
       "tabs": {
         "confirmationEmail": "확인 이메일 템플릿",
-        "terms": "계약",
+        "terms": "이용약관",
         "contractEmail": "계약 관련 이메일 템플릿",
         "privacy": "개인정보 보호정책",
-        "receipt": "영수증 템플릿"
+        "receipt": "영수증 템플릿",
+        "contract": "계약서"
       },
       "title": "계약 관리",
       "updatedBy": "에 의해",
@@ -365,7 +367,14 @@
           "title": "사용 예시"
         }
       },
-      "version": "버전"
+      "version": "버전",
+      "contractType": {
+        "label": "계약 유형",
+        "sponsor": "스폰서 계약",
+        "pro": "프로 계약",
+        "proFallbackNotice": "프로용이 아직 생성되지 않았습니다. 저장하면 프로용으로 새로 생성됩니다. 생성 전에는 스폰서용 내용이 사용됩니다(폴백).",
+        "emptyProGuard": "프로용 내용이 비어 있어 생성할 수 없습니다. 내용을 입력해 주세요."
+      }
     },
     "tournaments": {
       "amount": "양",

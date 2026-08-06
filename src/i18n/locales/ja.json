@@ -205,25 +205,27 @@
         "savePrivacy": "プライバシーポリシーを保存",
         "saveReceipt": "TODO: translate me!!!",
         "saveTerms": "契約書を保存",
-        "termsLabel": "契約書コンテンツ",
-        "termsSubjectLabel": "契約書サブジェクト",
+        "termsLabel": "利用規約コンテンツ",
+        "termsSubjectLabel": "利用規約サブジェクト",
         "title": "HTMLエディター"
       },
       "lastUpdated": "最終更新",
       "success": "成功",
       "successMessage": {
         "confirmationEmail": "確認メールテンプレートが正常に更新されました",
-        "terms": "契約書が正常に更新されました",
+        "terms": "利用規約が正常に更新されました",
         "contractEmail": "契約書メールテンプレートが正常に更新されました",
         "privacy": "プライバシーポリシーが正常に更新されました",
-        "receipt": "領収書テンプレートが正常に更新されました"
+        "receipt": "領収書テンプレートが正常に更新されました",
+        "contract": "契約書が正常に更新されました"
       },
       "tabs": {
         "confirmationEmail": "確認メールテンプレート",
-        "terms": "契約書",
+        "terms": "利用規約",
         "contractEmail": "契約書メールテンプレート",
         "privacy": "プライバシーポリシー",
-        "receipt": "領収書テンプレート"
+        "receipt": "領収書テンプレート",
+        "contract": "契約書"
       },
       "title": "サービス管理",
       "updatedBy": "更新者",
@@ -404,7 +406,14 @@
           "title": "使用例"
         }
       },
-      "version": "バージョン"
+      "version": "バージョン",
+      "contractType": {
+        "label": "契約種別",
+        "sponsor": "スポンサー契約",
+        "pro": "プロ契約",
+        "proFallbackNotice": "プロ用は未作成です。保存するとプロ用として新規作成されます。未作成の間はスポンサー用の内容が使用されます（フォールバック）。",
+        "emptyProGuard": "プロ用の内容が空のため作成できません。内容を入力してください。"
+      }
     },
     "tournaments": {
       "amount": "金額",
