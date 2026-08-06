@@ -17,12 +17,15 @@ import { ChangePasswordModal } from '@/components/ChangePasswordModal';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { env } from '@/config/env';
 import { ROUTES } from '@/constants';
+import { useDocumentTitle } from '@/hooks';
 import { clearAuth } from '@/utils/auth';
 
 export function AdminLayout() {
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
+
+  useDocumentTitle(t('documentTitle.admin'));
 
   const activeTab = location.pathname;
   const [changePasswordOpened, setChangePasswordOpened] = useState(false);

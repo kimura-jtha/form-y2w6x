@@ -761,7 +761,8 @@
       },
       "isPoint": {
         "point": "Point (+P)",
-        "cash": "Cash (¥)"
+        "cash": "Cash (¥)",
+        "proNote": "Pro contracts cannot be paid in points (cash only)."
       },
       "rank": {
         "label": "Rank",
@@ -851,7 +852,8 @@
       "katakanaOnly": "Please enter in full-width Katakana",
       "mustAgreeToPrivacyPolicy": "You must agree to the privacy policy",
       "required": "This field is required",
-      "proRequiresResidence": "Pro contracts are only available to players with a residence in Japan."
+      "proRequiresResidence": "Pro contracts are only available to players with a residence in Japan.",
+      "proNoPoints": "Pro contracts cannot be paid in points (cash only)."
     }
   },
   "termsAgreement": {
@@ -909,5 +911,9 @@
       "sponsor": "About the Sponsor Contract",
       "pro": "About the Pro Contract"
     }
+  },
+  "documentTitle": {
+    "player": "Prize Claim Form",
+    "admin": "Admin | Prize Claim Form"
   }
 }
