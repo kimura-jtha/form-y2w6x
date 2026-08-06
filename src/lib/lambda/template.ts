@@ -74,13 +74,32 @@ export async function getConfirmationEmailTemplate(lang = 'ja'): Promise<Templat
 export type ContractType = 'sponsor' | 'pro';
 
 /**
- * Resolve a regulatory-document template (privacy-policy / terms-of-service)
- * honouring the contract-type dimension (Phase 5).
+ * Bases that carry the contract-type (sponsor/pro) dimension (Phase 5 / FX-1).
+ */
+export type ContractScopedBase = 'privacy-policy' | 'terms-of-service' | 'contract';
+
+/**
+ * Build the storage key for a contract-type-scoped document.
  *
  * Key scheme:
- *   sponsor / undefined -> `{base}-{lang}`            (existing base template)
- *   pro                 -> `{base}-pro-{lang}`, falling back to `{base}-{lang}`
- *                          when the pro-specific override does not exist yet.
+ *   sponsor / undefined -> `{base}-{lang}`      (existing base template)
+ *   pro                 -> `{base}-pro-{lang}`  (additive override)
+ */
+export function buildContractScopedKey(
+  base: ContractScopedBase,
+  lang: string,
+  contractType: ContractType,
+): string {
+  return contractType === 'pro' ? `${base}-pro-${lang}` : `${base}-${lang}`;
+}
+
+/**
+ * Resolve a contract-type-scoped template (privacy-policy / terms-of-service /
+ * contract) honouring the contract-type dimension (Phase 5).
+ *
+ * For `pro` the pro-specific override is tried first and falls back to the base
+ * (sponsor) template when the override does not exist yet. This is the
+ * *display-side* behaviour so forms never show a blank document.
  */
 async function _getContractScopedTemplate(
   base: string,
@@ -111,8 +130,82 @@ export async function getTermsOfServiceTemplate(
   return _getContractScopedTemplate('terms-of-service', lang, contractType);
 }
 
+/**
+ * Resolve the contract (契約書) document honouring the contract-type dimension,
+ * with sponsor fallback for `pro`. Used for display/parity with the backend.
+ */
+export async function getContractTemplate(
+  lang = 'ja',
+  contractType: ContractType = 'sponsor',
+): Promise<Template> {
+  return _getContractScopedTemplate('contract', lang, contractType);
+}
+
 export async function getReceiptTemplate(lang = 'ja'): Promise<Template> {
   return _getTemplate(`receipt-${lang}`);
+}
+
+// ---------------------------------------------------------------------------
+// Admin helpers (ServiceManagement)
+//
+// Editing must target the EXACT storage key (no sponsor fallback) so that a
+// pro-specific override can be created and edited independently. Saving upserts:
+// it creates the template by business key when it does not exist yet, otherwise
+// it publishes a new version of the existing template.
+// ---------------------------------------------------------------------------
+
+/**
+ * Fetch a template by its exact key for admin editing. Returns `null` when the
+ * template has not been created yet (e.g. a pro override that is still absent),
+ * instead of throwing, so the editor can start blank / create-on-save.
+ */
+export async function getTemplateByKeyForAdmin(key: string): Promise<Template | null> {
+  try {
+    return await _getTemplate(key);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Create a template by its business key (admin only). Backing endpoint added in
+ * Phase 5 (POST /admin/templates).
+ */
+async function _createTemplate(key: string, subject: string, html: string): Promise<void> {
+  await fetchLambda({
+    path: 'admin/templates',
+    method: 'POST',
+    body: {
+      key,
+      updatedBy: getUserName(),
+      content: JSON.stringify({
+        subject,
+        html,
+        text: '',
+      }),
+    },
+  });
+}
+
+/**
+ * Upsert a template by key: create it when it does not exist yet (no `id`),
+ * otherwise publish a new version of the existing template.
+ */
+export async function saveTemplateByKey({
+  key,
+  id,
+  subject,
+  content,
+}: {
+  key: string;
+  id?: string;
+  subject: string;
+  content: string;
+}): Promise<void> {
+  if (id) {
+    return _saveTemplate(id, subject, content);
+  }
+  await _createTemplate(key, subject, content);
 }
 
 async function _saveTemplate(id: string, subject: string, html: string): Promise<void> {

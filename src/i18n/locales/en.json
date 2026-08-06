@@ -215,25 +215,27 @@
         "savePrivacy": "Save Privacy Policy",
         "saveReceipt": "Save Receipt Template",
         "saveTerms": "Save Contract",
-        "termsLabel": "Contract Content",
-        "termsSubjectLabel": "Contract Subject",
+        "termsLabel": "Terms of Service Content",
+        "termsSubjectLabel": "Terms of Service Subject",
         "title": "HTML Editor"
       },
       "lastUpdated": "Last updated",
       "success": "Success",
       "successMessage": {
         "confirmationEmail": "Confirmation email updated successfully",
-        "terms": "Contract updated successfully",
+        "terms": "Terms of Service updated successfully",
         "contractEmail": "Contract email updated successfully",
         "privacy": "Privacy Policy updated successfully",
-        "receipt": "Receipt template updated successfully"
+        "receipt": "Receipt template updated successfully",
+        "contract": "Contract updated successfully"
       },
       "tabs": {
         "confirmationEmail": "Confirmation Email Template",
-        "terms": "Contract",
+        "terms": "Terms of Service",
         "contractEmail": "Contract Email Template",
         "privacy": "Privacy Policy",
-        "receipt": "Receipt Template"
+        "receipt": "Receipt Template",
+        "contract": "Contract"
       },
       "title": "Service Management",
       "updatedBy": "By",
@@ -414,7 +416,14 @@
           "title": "Usage Example"
         }
       },
-      "version": "Version"
+      "version": "Version",
+      "contractType": {
+        "label": "Contract Type",
+        "sponsor": "Sponsor Contract",
+        "pro": "Pro Contract",
+        "proFallbackNotice": "The pro version has not been created yet. Saving will create it. Until then, the sponsor content is used (fallback).",
+        "emptyProGuard": "Cannot create an empty pro version. Please enter some content."
+      }
     },
     "tournaments": {
       "amount": "Amount",
