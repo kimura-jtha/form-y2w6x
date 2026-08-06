@@ -493,6 +493,15 @@ export function TermsAgreementPage() {
                     </Grid.Col>
                     <Grid.Col span={6}>
                       <Text size="xs" c="dimmed">
+                        {t('termsAgreement.formInfo.administrativeFee')}
+                      </Text>
+                      <Text size="sm">
+                        {prizePrefix}
+                        {withholding.administrativeFee.toLocaleString()}
+                      </Text>
+                    </Grid.Col>
+                    <Grid.Col span={6}>
+                      <Text size="xs" c="dimmed">
                         {t('termsAgreement.formInfo.netAmount')}
                       </Text>
                       <Text size="sm">
@@ -680,7 +689,10 @@ const extractFormVariables = (formContent: PrizeClaimFormValues, issuedAt: numbe
   const prizePrefix = formContent.isPoint ? POINT_PRIZE_PREFIX : PRIZE_PREFIX;
   // Withholding breakdown for the receipt template (FX-3 #3). Mirrors the
   // backend authoritative calculation; safe (0) when withholding does not apply.
-  const { withholdingAmount, netAmount } = calculateWithholding(formContent);
+  // FX-13: also supply administrativeFee so the receipt's {{administrativeFee}}
+  // placeholder is replaced (previously left raw because it was not provided here).
+  const { withholdingAmount, netAmount, administrativeFee } =
+    calculateWithholding(formContent);
   // Contract-type-aware cost label so the receipt reads
   // 「スポンサー契約費用」/「プロ契約費用」via {{contractCostLabel}} (FX-3 #3).
   const contractType = formContent.contractType === 'pro' ? 'pro' : 'sponsor';
@@ -689,6 +701,7 @@ const extractFormVariables = (formContent: PrizeClaimFormValues, issuedAt: numbe
     today: formatDate(issuedAt, false),
     year: new Date().getFullYear().toString(),
     withholdingAmount: formatCurrency(withholdingAmount, prizePrefix),
+    administrativeFee: formatCurrency(administrativeFee, prizePrefix),
     netAmount: formatCurrency(netAmount, prizePrefix),
     contractCostLabel,
     lastNameKanji: formContent.lastNameKanji,

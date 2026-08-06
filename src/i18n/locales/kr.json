@@ -809,6 +809,7 @@
       "title": "양식 정보",
       "tournament": "토너먼트",
       "withholdingAmount": "원천징수액",
+      "administrativeFee": "사무 수수료",
       "netAmount": "최종 지급액"
     },
     "issueReceiptButton": "영수증 발행",
