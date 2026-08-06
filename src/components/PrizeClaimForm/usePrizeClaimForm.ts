@@ -168,11 +168,6 @@ export function usePrizeClaimForm(password: string) {
         values.contractType === 'pro' && value === false
           ? t('prizeClaim.validation.proRequiresResidence')
           : null,
-      // Pro contracts cannot be paid in points (cash only).
-      isPoint: (value, values) =>
-        values.contractType === 'pro' && value === true
-          ? t('prizeClaim.validation.proNoPoints')
-          : null,
     },
   });
 
