@@ -809,6 +809,7 @@
       "title": "表格信息",
       "tournament": "比赛",
       "withholdingAmount": "预扣税额",
+      "administrativeFee": "手续费",
       "netAmount": "最终支付金额"
     },
     "issueReceiptButton": "发放收据",

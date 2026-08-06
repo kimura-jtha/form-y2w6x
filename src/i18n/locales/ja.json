@@ -900,6 +900,7 @@
       "title": "フォーム情報",
       "tournament": "トーナメント",
       "withholdingAmount": "源泉徴収額",
+      "administrativeFee": "事務手数料",
       "netAmount": "最終支払額"
     },
     "issueReceiptButton": "領収書発行",

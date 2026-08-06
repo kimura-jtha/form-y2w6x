@@ -900,6 +900,7 @@
       "title": "Form Information",
       "tournament": "Tournament",
       "withholdingAmount": "Withholding Tax",
+      "administrativeFee": "Administrative fee",
       "netAmount": "Final Payment Amount"
     },
     "issueReceiptButton": "Issue Receipt",
