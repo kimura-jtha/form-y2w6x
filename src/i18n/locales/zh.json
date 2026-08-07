@@ -377,6 +377,12 @@
         "pro": "职业合同",
         "proFallbackNotice": "尚未创建职业版本。保存后将新建职业版本。在此之前将使用赞助版本内容（回退）。",
         "emptyProGuard": "内容为空，无法创建职业版本。请输入内容。"
+      },
+      "loadError": {
+        "title": "加载失败",
+        "message": "模板加载失败。请稍后重新加载。",
+        "retry": "重新加载",
+        "saveBlocked": "由于加载失败，无法保存。请先重新加载。"
       }
     },
     "tournaments": {

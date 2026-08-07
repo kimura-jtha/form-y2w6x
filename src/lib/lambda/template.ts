@@ -174,17 +174,55 @@ export async function getConfirmationEmailTemplate(
 // it publishes a new version of the existing template.
 // ---------------------------------------------------------------------------
 
-/**
- * Fetch a template by its exact key for admin editing. Returns `null` when the
- * template has not been created yet (e.g. a pro override that is still absent),
- * instead of throwing, so the editor can start blank / create-on-save.
- */
-export async function getTemplateByKeyForAdmin(key: string): Promise<Template | null> {
-  try {
-    return await _getTemplate(key);
-  } catch {
-    return null;
+/** Extract an HTTP status code from a thrown error, if it carries one. */
+function getErrorStatus(error: unknown): number | undefined {
+  if (error && typeof error === 'object' && 'status' in error) {
+    const status = (error as { status?: unknown }).status;
+    return typeof status === 'number' ? status : undefined;
   }
+  return undefined;
+}
+
+const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * Fetch a template by its exact key for admin editing (FX-14).
+ *
+ * Returns `null` ONLY when the template genuinely does not exist yet (HTTP 404,
+ * e.g. an absent pro override) so the editor can start blank / create-on-save.
+ *
+ * Any other failure (5xx, network, throttling / cold-start) is retried with
+ * exponential backoff and, if it still fails, RE-THROWN — never swallowed into
+ * an empty document. Swallowing was the root cause of the intermittent blank
+ * template on tab / contract-type switch.
+ */
+export async function getTemplateByKeyForAdmin(
+  key: string,
+  { maxAttempts = 3, baseDelayMs = 300 }: { maxAttempts?: number; baseDelayMs?: number } = {},
+): Promise<Template | null> {
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      return await _getTemplate(key);
+    } catch (error) {
+      const status = getErrorStatus(error);
+      if (status === 404) {
+        // Genuinely not created yet: caller starts blank / creates on save.
+        return null;
+      }
+      lastError = error;
+      // Observability: make transient failures visible (key + status) so a blank
+      // can be told apart from a genuine 404.
+      console.error(
+        `getTemplateByKeyForAdmin failed (key=${key}, status=${status ?? 'network'}, attempt=${attempt}/${maxAttempts})`,
+        error,
+      );
+      if (attempt < maxAttempts) {
+        await sleep(baseDelayMs * 2 ** (attempt - 1));
+      }
+    }
+  }
+  throw lastError;
 }
 
 /**
@@ -223,9 +261,13 @@ export async function saveTemplateByKey({
   content: string;
 }): Promise<void> {
   if (id) {
-    return _saveTemplate(id, subject, content);
+    await _saveTemplate(id, subject, content);
+  } else {
+    await _createTemplate(key, subject, content);
   }
-  await _createTemplate(key, subject, content);
+  // Invalidate the module cache for this key so the admin refetch returns the
+  // freshly saved content instead of the stale pre-save value (FX-14 副因).
+  cache.delete(key);
 }
 
 async function _saveTemplate(id: string, subject: string, html: string): Promise<void> {
