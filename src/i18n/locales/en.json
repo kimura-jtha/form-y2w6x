@@ -430,6 +430,12 @@
         "pro": "Pro Contract",
         "proFallbackNotice": "The pro version has not been created yet. Saving will create it. Until then, the sponsor content is used (fallback).",
         "emptyProGuard": "Cannot create an empty pro version. Please enter some content."
+      },
+      "loadError": {
+        "title": "Failed to load",
+        "message": "Failed to load the template. Please wait a moment and reload.",
+        "retry": "Reload",
+        "saveBlocked": "Cannot save because loading failed. Please reload first."
       }
     },
     "tournaments": {
