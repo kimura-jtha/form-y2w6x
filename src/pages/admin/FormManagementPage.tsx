@@ -2,7 +2,7 @@ import { type MouseEvent, useEffect, useMemo, useState } from 'react';
 
 import { FormDetailModal } from '@/components/FormDetailModal';
 import { POINT_PRIZE_PREFIX, PRIZE_PREFIX } from '@/config';
-import { deleteForm, getForms } from '@/lib/lambda/form';
+import { deleteForm, getForms, markFormPaid, markFormUnpaid } from '@/lib/lambda/form';
 import { clearTournamentCache, fetchAllTournaments } from '@/lib/lambda/tournament';
 import { useAppStore } from '@/stores';
 import type { PrizeClaimFormSubmission, Tournament } from '@/types';
@@ -25,6 +25,7 @@ import {
   Paper,
   Popover,
   Radio,
+  SegmentedControl,
   Stack,
   Table,
   Text,
@@ -38,6 +39,8 @@ import {
   IconArrowDown,
   IconArrowsUpDown,
   IconArrowUp,
+  IconCash,
+  IconCashOff,
   IconClock,
   IconCopy,
   IconDownload,
@@ -94,6 +97,11 @@ export function FormManagementPage() {
     null,
   ]);
   const [searchEmail, setSearchEmail] = useState('');
+  const [searchNameOrId, setSearchNameOrId] = useState('');
+  // Contract type tab (client-side, Phase 1). 'unset' = legacy forms without contractType.
+  const [contractTypeTab, setContractTypeTab] = useState<
+    'all' | 'sponsor' | 'pro' | 'unset'
+  >('all');
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -111,11 +119,25 @@ export function FormManagementPage() {
   const [formToDelete, setFormToDelete] = useState<PrizeClaimFormSubmission | null>(null);
   const [deletingFormId, setDeletingFormId] = useState<string | null>(null);
 
+  // Mark as paid (double-payment guard)
+  const [markPaidModalOpened, { open: openMarkPaidModal, close: closeMarkPaidModal }] =
+    useDisclosure(false);
+  const [formToMarkPaid, setFormToMarkPaid] = useState<PrizeClaimFormSubmission | null>(null);
+  const [markingPaidFormId, setMarkingPaidFormId] = useState<string | null>(null);
+
+  // Undo mark as paid (with warning)
+  const [markUnpaidModalOpened, { open: openMarkUnpaidModal, close: closeMarkUnpaidModal }] =
+    useDisclosure(false);
+  const [formToMarkUnpaid, setFormToMarkUnpaid] = useState<PrizeClaimFormSubmission | null>(null);
+  const [markingUnpaidFormId, setMarkingUnpaidFormId] = useState<string | null>(null);
+
   // Export
   const [exportModalOpened, { open: openExportModal, close: closeExportModal }] =
     useDisclosure(false);
   const [exportType, setExportType] = useState<'all' | 'japanese' | 'full'>('all');
   const [exportOnlyTermsAgreed, setExportOnlyTermsAgreed] = useState(false);
+  // Include already-paid forms in PayPay exports (default OFF = keep double-payment guard)
+  const [exportIncludePaid, setExportIncludePaid] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
 
   // Password generator
@@ -135,49 +157,52 @@ export function FormManagementPage() {
     );
   }, [tournaments]);
 
+  // 候補リストは他フィルタに依存せず常に全件から生成する（フィルタ独立化 A-1）
   const eventNameOptions = useMemo(() => {
-    const [dateFrom, dateTo] = selectedDateRange;
-    const ONE_DAY = 24 * 60 * 60 * 1000;
-    const from = (dateFrom ? new Date(dateFrom).getTime() : 0) - ONE_DAY;
-    const to = (dateTo ? new Date(dateTo).getTime() : Infinity) + ONE_DAY;
-
     const uniqueEventNames = new Set<string>();
-    tournaments
-      .filter((t) => {
-        const ts = new Date(t.date).getTime();
-        return ts >= from && ts <= to;
-      })
-      .forEach((t) => uniqueEventNames.add(t.eventNameJa));
-
+    tournaments.forEach((t) => uniqueEventNames.add(t.eventNameJa));
     return [...uniqueEventNames];
-  }, [tournaments, selectedDateRange]);
+  }, [tournaments]);
 
   const tournamentOptions = useMemo(() => {
-    const [dateFrom, dateTo] = selectedDateRange;
-    const ONE_DAY = 24 * 60 * 60 * 1000;
-    const from = (dateFrom ? new Date(dateFrom).getTime() : 0) - ONE_DAY;
-    const to = (dateTo ? new Date(dateTo).getTime() : Infinity) + ONE_DAY;
+    // トーナメント名の「#N」から番号を数値抽出（無ければ末尾送りの Infinity）
+    const tournamentNumber = (tournamentNameJa: string) => {
+      const matched = tournamentNameJa.match(/#(\d+)/);
+      return matched ? Number(matched[1]) : Infinity;
+    };
 
-    return tournaments
-      .filter((t) => {
-        const ts = new Date(t.date).getTime();
-        const dateInRange = ts >= from && ts <= to;
-        const eventNameMatches =
-          !filterEventName || t.eventNameJa.toLowerCase().includes(filterEventName.toLowerCase());
-        return dateInRange && eventNameMatches;
+    return [...tournaments]
+      // (イベント名 昇順, #N 数値昇順) の複合ソート。# 無しは各イベントの末尾。(F-5)
+      .sort((a, b) => {
+        const eventCmp = a.eventNameJa.localeCompare(b.eventNameJa, 'ja');
+        if (eventCmp !== 0) return eventCmp;
+        const numA = tournamentNumber(a.tournamentNameJa);
+        const numB = tournamentNumber(b.tournamentNameJa);
+        if (numA === numB) return 0;
+        return numA - numB;
       })
       .map((t) => `${t.eventNameJa} - ${t.tournamentNameJa} (${formatDate(t.date, false)})`);
-  }, [tournaments, selectedDateRange, filterEventName]);
+  }, [tournaments]);
+
+  // Contract type tab filter (client-side). Legacy forms (no contractType) show
+  // under the "unset" tab and never break under sponsor/pro.
+  const contractFilteredForms = useMemo(() => {
+    if (contractTypeTab === 'all') return displayedForms;
+    if (contractTypeTab === 'unset') {
+      return displayedForms.filter((f) => !f.formContent.contractType);
+    }
+    return displayedForms.filter((f) => f.formContent.contractType === contractTypeTab);
+  }, [displayedForms, contractTypeTab]);
 
   const sortedForms = useMemo(() => {
-    if (!sortByCreatedAt) return displayedForms;
+    if (!sortByCreatedAt) return contractFilteredForms;
 
-    return [...displayedForms].sort((a, b) => {
+    return [...contractFilteredForms].sort((a, b) => {
       const dateA = new Date(a.createdAt).getTime();
       const dateB = new Date(b.createdAt).getTime();
       return sortByCreatedAt === 'asc' ? dateA - dateB : dateB - dateA;
     });
-  }, [displayedForms, sortByCreatedAt]);
+  }, [contractFilteredForms, sortByCreatedAt]);
 
   const totalPages = Math.ceil(sortedForms.length / PAGE_SIZE);
 
@@ -191,14 +216,15 @@ export function FormManagementPage() {
     !!filterTournament ||
     !!selectedDateRange[0] ||
     !!selectedDateRange[1] ||
-    !!searchEmail;
+    !!searchEmail ||
+    !!searchNameOrId;
 
   // --- Effects ---
 
-  // Reset page when sort changes
+  // Reset page when sort or contract-type tab changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [sortByCreatedAt]);
+  }, [sortByCreatedAt, contractTypeTab]);
 
   // Load all data on mount
   useEffect(() => {
@@ -263,6 +289,7 @@ export function FormManagementPage() {
       setFilterTournament('');
       setSelectedDateRange([null, null]);
       setSearchEmail('');
+      setSearchNameOrId('');
       setCurrentPage(1);
       notifications.show({
         title: t('admin.forms.loadAll.success'),
@@ -286,49 +313,61 @@ export function FormManagementPage() {
 
     let result = allForms;
 
-    // Tournament-related filtering
-    if (filterTournament) {
-      const search = filterTournament.toLowerCase();
+    // 各フィルタは独立して AND で適用する（設定されているものだけ絞り込む）。
+    // トーナメント名 / 大会名 / 開催日 はいずれもトーナメントを特定するので、
+    // 該当するトーナメント ID 集合を絞り込んでからフォームに適用する。
+    const [dateFrom, dateTo] = selectedDateRange;
+    const hasTournamentFilter =
+      !!filterTournament || !!filterEventName || !!dateFrom || !!dateTo;
+
+    if (hasTournamentFilter) {
+      const ONE_DAY = 24 * 60 * 60 * 1000;
+      const from = (dateFrom ? new Date(dateFrom).getTime() : 0) - ONE_DAY;
+      const to = (dateTo ? new Date(dateTo).getTime() : Infinity) + ONE_DAY;
+      const tournamentSearch = filterTournament.toLowerCase();
+      const eventNameSearch = filterEventName.toLowerCase();
+
       const matchingTournamentIds = new Set(
         tournaments
           .filter((t) => {
+            const ts = new Date(t.date).getTime();
+            const dateInRange = ts >= from && ts <= to;
+            const eventNameMatches =
+              !filterEventName || t.eventNameJa.toLowerCase().includes(eventNameSearch);
             const label = `${t.eventNameJa} - ${t.tournamentNameJa} (${formatDate(t.date, false)})`;
-            return label.toLowerCase().includes(search);
+            const tournamentMatches =
+              !filterTournament || label.toLowerCase().includes(tournamentSearch);
+            return dateInRange && eventNameMatches && tournamentMatches;
           })
           .map((t) => t.id),
       );
+
       result = result.filter((f) => matchingTournamentIds.has(f.formContent.tournamentId));
-    } else {
-      const hasEventFilter = !!filterEventName;
-      const [dateFrom, dateTo] = selectedDateRange;
-      const hasDateFilter = !!dateFrom || !!dateTo;
-
-      if (hasEventFilter || hasDateFilter) {
-        const ONE_DAY = 24 * 60 * 60 * 1000;
-        const from = (dateFrom ? new Date(dateFrom).getTime() : 0) - ONE_DAY;
-        const to = (dateTo ? new Date(dateTo).getTime() : Infinity) + ONE_DAY;
-
-        const matchingTournamentIds = new Set(
-          tournaments
-            .filter((t) => {
-              const ts = new Date(t.date).getTime();
-              const dateInRange = ts >= from && ts <= to;
-              const eventNameMatches =
-                !filterEventName ||
-                t.eventNameJa.toLowerCase().includes(filterEventName.toLowerCase());
-              return dateInRange && eventNameMatches;
-            })
-            .map((t) => t.id),
-        );
-
-        result = result.filter((f) => matchingTournamentIds.has(f.formContent.tournamentId));
-      }
     }
 
     // Email filtering
     if (searchEmail.trim()) {
       const email = searchEmail.trim().toLowerCase();
       result = result.filter((f) => f.formContent.email.toLowerCase().includes(email));
+    }
+
+    // Name (Kanji/Kana) / Players+ID filtering（クライアント側の部分一致・大小無視）
+    if (searchNameOrId.trim()) {
+      const query = searchNameOrId.trim().toLowerCase();
+      result = result.filter((f) => {
+        const c = f.formContent;
+        const candidates = [
+          c.lastNameKanji,
+          c.firstNameKanji,
+          c.lastNameKana,
+          c.firstNameKana,
+          c.playersId,
+          // 姓名連結（「山田太郎」等フルネーム入力にヒットさせる）
+          `${c.lastNameKanji}${c.firstNameKanji}`,
+          `${c.lastNameKana}${c.firstNameKana}`,
+        ];
+        return candidates.some((v) => (v ?? '').toLowerCase().includes(query));
+      });
     }
 
     setDisplayedForms(result);
@@ -339,6 +378,7 @@ export function FormManagementPage() {
     setFilterTournament('');
     setSelectedDateRange([null, null]);
     setSearchEmail('');
+    setSearchNameOrId('');
     setCurrentPage(1);
     setDisplayedForms(allForms);
   };
@@ -420,6 +460,14 @@ export function FormManagementPage() {
 
       // PayPay CSV exports: exclude point-based prizes
       exportForms = exportForms.filter((form) => !form.formContent.isPoint);
+
+      // Payout CSV: exclude already-paid forms (double-payment guard).
+      // When the include-paid option is ON, keep them (intentional re-export).
+      if (exportIncludePaid) {
+        filterSuffixes.push('include_paid');
+      } else {
+        exportForms = exportForms.filter((form) => !form.formContent.paid);
+      }
 
       if (exportType === 'japanese') {
         exportForms = exportForms.filter(
@@ -506,6 +554,89 @@ export function FormManagementPage() {
       });
     } finally {
       setDeletingFormId(null);
+    }
+  };
+
+  const handleMarkPaid = (formId: string, event: MouseEvent) => {
+    event.stopPropagation();
+    setFormToMarkPaid(allForms.find((form) => form.id === formId) || null);
+    openMarkPaidModal();
+  };
+
+  const confirmMarkPaid = async () => {
+    if (!formToMarkPaid) return;
+
+    try {
+      setMarkingPaidFormId(formToMarkPaid.id);
+      const { paid } = await markFormPaid(formToMarkPaid.id);
+
+      // Reflect the paid marker locally so the UI/CSV exclusion update immediately
+      const applyPaid = (form: PrizeClaimFormSubmission) =>
+        form.id === formToMarkPaid.id
+          ? { ...form, formContent: { ...form.formContent, paid } }
+          : form;
+      setAllForms((prev) => prev.map(applyPaid));
+      setDisplayedForms((prev) => prev.map(applyPaid));
+
+      notifications.show({
+        title: t('admin.forms.markPaid.success'),
+        message: t('admin.forms.markPaid.successMessage'),
+        color: 'green',
+      });
+
+      closeMarkPaidModal();
+      setFormToMarkPaid(null);
+    } catch (error) {
+      console.error('Failed to mark form as paid:', error);
+      notifications.show({
+        title: t('admin.forms.markPaid.error'),
+        message: t('admin.forms.markPaid.errorMessage'),
+        color: 'red',
+      });
+    } finally {
+      setMarkingPaidFormId(null);
+    }
+  };
+
+  const handleMarkUnpaid = (formId: string, event: MouseEvent) => {
+    event.stopPropagation();
+    setFormToMarkUnpaid(allForms.find((form) => form.id === formId) || null);
+    openMarkUnpaidModal();
+  };
+
+  const confirmMarkUnpaid = async () => {
+    if (!formToMarkUnpaid) return;
+
+    try {
+      setMarkingUnpaidFormId(formToMarkUnpaid.id);
+      await markFormUnpaid(formToMarkUnpaid.id);
+
+      // Clear the paid marker locally so the UI/CSV inclusion update immediately
+      const applyUnpaid = (form: PrizeClaimFormSubmission) => {
+        if (form.id !== formToMarkUnpaid.id) return form;
+        const { paid: _paid, ...restContent } = form.formContent;
+        return { ...form, formContent: restContent };
+      };
+      setAllForms((prev) => prev.map(applyUnpaid));
+      setDisplayedForms((prev) => prev.map(applyUnpaid));
+
+      notifications.show({
+        title: t('admin.forms.markUnpaid.success'),
+        message: t('admin.forms.markUnpaid.successMessage'),
+        color: 'green',
+      });
+
+      closeMarkUnpaidModal();
+      setFormToMarkUnpaid(null);
+    } catch (error) {
+      console.error('Failed to undo paid mark:', error);
+      notifications.show({
+        title: t('admin.forms.markUnpaid.error'),
+        message: t('admin.forms.markUnpaid.errorMessage'),
+        color: 'red',
+      });
+    } finally {
+      setMarkingUnpaidFormId(null);
     }
   };
 
@@ -655,8 +786,9 @@ export function FormManagementPage() {
       {/* Filters */}
       <Paper shadow="xs" p="md">
         <Stack gap="sm">
-          <Group align="flex-end" grow>
+          <Group align="flex-end" grow wrap="wrap">
             <Autocomplete
+              miw={220}
               label={t('admin.forms.filters.eventName')}
               placeholder={t('admin.forms.filters.eventNamePlaceholder')}
               value={filterEventName}
@@ -664,6 +796,7 @@ export function FormManagementPage() {
               data={eventNameOptions}
             />
             <Autocomplete
+              miw={220}
               label={t('admin.forms.filters.tournamentName')}
               placeholder={t('admin.forms.filters.tournamentNamePlaceholder')}
               value={filterTournament}
@@ -671,6 +804,7 @@ export function FormManagementPage() {
               data={tournamentOptions}
             />
             <DatePickerInput
+              miw={220}
               type="range"
               label={t('admin.forms.filters.dateRange')}
               placeholder={t('admin.forms.filters.dateRangePlaceholder')}
@@ -689,10 +823,18 @@ export function FormManagementPage() {
               clearable
             />
             <TextInput
+              miw={220}
               label={t('admin.forms.filters.email')}
               placeholder={t('admin.forms.filters.emailPlaceholder')}
               value={searchEmail}
               onChange={(e) => setSearchEmail(e.currentTarget.value)}
+            />
+            <TextInput
+              miw={220}
+              label={t('admin.forms.filters.nameOrId')}
+              placeholder={t('admin.forms.filters.nameOrIdPlaceholder')}
+              value={searchNameOrId}
+              onChange={(e) => setSearchNameOrId(e.currentTarget.value)}
             />
           </Group>
           <Group justify="flex-end">
@@ -722,6 +864,19 @@ export function FormManagementPage() {
           <Alert color="red.5">{t('admin.forms.filters.noTournamentsFound')}</Alert>
         ) : (
           <>
+            <SegmentedControl
+              mb="md"
+              value={contractTypeTab}
+              onChange={(value) =>
+                setContractTypeTab(value as 'all' | 'sponsor' | 'pro' | 'unset')
+              }
+              data={[
+                { value: 'all', label: t('admin.forms.contractTypeTabs.all') },
+                { value: 'sponsor', label: t('admin.forms.contractTypeTabs.sponsor') },
+                { value: 'pro', label: t('admin.forms.contractTypeTabs.pro') },
+                { value: 'unset', label: t('admin.forms.contractTypeTabs.unset') },
+              ]}
+            />
             <Group justify="space-between" mb="md">
               <Text size="sm" c="dimmed">
                 {sortedForms.length} {t('admin.forms.table.formsFound')}
@@ -751,7 +906,7 @@ export function FormManagementPage() {
                     {sortByCreatedAt === 'asc' && <IconArrowUp size={10} />}
                     {sortByCreatedAt === 'desc' && <IconArrowDown size={10} />}
                   </Table.Th>
-                  <Table.Th w="180px">{t('admin.forms.table.actions')}</Table.Th>
+                  <Table.Th w="240px">{t('admin.forms.table.actions')}</Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
@@ -835,6 +990,42 @@ export function FormManagementPage() {
                             >
                               <IconDownload size={16} />
                             </Button>
+                            {form.formContent.paid ? (
+                              <>
+                                <Badge
+                                  color="teal"
+                                  variant="light"
+                                  leftSection={<IconCash size={12} />}
+                                  title={t('admin.forms.markPaid.paidAt', {
+                                    at: formatDate(form.formContent.paid.at, true),
+                                  })}
+                                >
+                                  {t('admin.forms.markPaid.paidBadge')}
+                                </Badge>
+                                <Button
+                                  size="xs"
+                                  color="orange"
+                                  variant="light"
+                                  onClick={(e) => handleMarkUnpaid(form.id, e)}
+                                  loading={markingUnpaidFormId === form.id}
+                                  disabled={markingUnpaidFormId !== null}
+                                  title={t('admin.forms.markUnpaid.button')}
+                                >
+                                  <IconCashOff size={16} />
+                                </Button>
+                              </>
+                            ) : (
+                              <Button
+                                size="xs"
+                                color="teal"
+                                onClick={(e) => handleMarkPaid(form.id, e)}
+                                loading={markingPaidFormId === form.id}
+                                disabled={markingPaidFormId !== null}
+                                title={t('admin.forms.markPaid.button')}
+                              >
+                                <IconCash size={16} />
+                              </Button>
+                            )}
                             <Button
                               size="xs"
                               color="red"
@@ -918,6 +1109,18 @@ export function FormManagementPage() {
                     description={t('admin.forms.export.options.termsDescription')}
                     disabled={exportType === 'full'}
                   />
+                  <Checkbox
+                    checked={exportIncludePaid}
+                    onChange={(event) => setExportIncludePaid(event.currentTarget.checked)}
+                    label={t('admin.forms.export.options.includePaid')}
+                    description={t('admin.forms.export.options.includePaidDescription')}
+                    disabled={exportType === 'full'}
+                  />
+                  {exportIncludePaid && exportType !== 'full' && (
+                    <Text size="xs" c="red">
+                      {t('admin.forms.export.options.includePaidWarning')}
+                    </Text>
+                  )}
                 </Stack>
               </Paper>
             </Stack>
@@ -967,6 +1170,98 @@ export function FormManagementPage() {
             </Button>
             <Button color="red" onClick={confirmDelete} loading={deletingFormId !== null}>
               {t('admin.forms.delete.confirm')}
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
+
+      {/* Mark as Paid Confirmation Modal */}
+      <Modal
+        opened={markPaidModalOpened}
+        onClose={closeMarkPaidModal}
+        title={t('admin.forms.markPaid.confirmTitle')}
+        centered
+      >
+        <Stack gap="md">
+          <Text>{t('admin.forms.markPaid.confirmMessage')}</Text>
+          {formToMarkPaid && (
+            <Paper p="sm" withBorder>
+              <Stack gap="xs">
+                <Text size="sm">
+                  <strong>{t('admin.forms.table.tournament')}:</strong>{' '}
+                  {formToMarkPaid.formContent.tournamentName}
+                </Text>
+                <Text size="sm">
+                  <strong>{t('admin.forms.table.playerName')}:</strong>{' '}
+                  {formToMarkPaid.formContent.lastNameKanji}{' '}
+                  {formToMarkPaid.formContent.firstNameKanji}
+                </Text>
+                <Text size="sm">
+                  <strong>{t('admin.forms.table.amount')}:</strong>{' '}
+                  {formToMarkPaid.formContent.amount.toLocaleString()}
+                </Text>
+              </Stack>
+            </Paper>
+          )}
+          <Group justify="flex-end" gap="sm">
+            <Button
+              variant="light"
+              onClick={closeMarkPaidModal}
+              disabled={markingPaidFormId !== null}
+            >
+              {t('common.cancel')}
+            </Button>
+            <Button color="teal" onClick={confirmMarkPaid} loading={markingPaidFormId !== null}>
+              {t('admin.forms.markPaid.confirm')}
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
+
+      {/* Undo Mark as Paid Confirmation Modal (with warning) */}
+      <Modal
+        opened={markUnpaidModalOpened}
+        onClose={closeMarkUnpaidModal}
+        title={t('admin.forms.markUnpaid.confirmTitle')}
+        centered
+      >
+        <Stack gap="md">
+          <Alert color="orange" variant="light" icon={<IconInfoCircle size={16} />}>
+            {t('admin.forms.markUnpaid.confirmMessage')}
+          </Alert>
+          {formToMarkUnpaid && (
+            <Paper p="sm" withBorder>
+              <Stack gap="xs">
+                <Text size="sm">
+                  <strong>{t('admin.forms.table.tournament')}:</strong>{' '}
+                  {formToMarkUnpaid.formContent.tournamentName}
+                </Text>
+                <Text size="sm">
+                  <strong>{t('admin.forms.table.playerName')}:</strong>{' '}
+                  {formToMarkUnpaid.formContent.lastNameKanji}{' '}
+                  {formToMarkUnpaid.formContent.firstNameKanji}
+                </Text>
+                <Text size="sm">
+                  <strong>{t('admin.forms.table.amount')}:</strong>{' '}
+                  {formToMarkUnpaid.formContent.amount.toLocaleString()}
+                </Text>
+              </Stack>
+            </Paper>
+          )}
+          <Group justify="flex-end" gap="sm">
+            <Button
+              variant="light"
+              onClick={closeMarkUnpaidModal}
+              disabled={markingUnpaidFormId !== null}
+            >
+              {t('common.cancel')}
+            </Button>
+            <Button
+              color="orange"
+              onClick={confirmMarkUnpaid}
+              loading={markingUnpaidFormId !== null}
+            >
+              {t('admin.forms.markUnpaid.confirm')}
             </Button>
           </Group>
         </Stack>

@@ -61,7 +61,10 @@
           "full": "TODO: translate me!!!",
           "fullDescription": "TODO: translate me!!!",
           "terms": "TODO: translate me!!!",
-          "termsDescription": "TODO: translate me!!!"
+          "termsDescription": "TODO: translate me!!!",
+          "includePaid": "TODO: translate me!!!",
+          "includePaidDescription": "TODO: translate me!!!",
+          "includePaidWarning": "TODO: translate me!!!"
         },
         "groups": {
           "fullData": "TODO: translate me!!!",
@@ -96,7 +99,9 @@
         "tournamentName": "토너먼트 이름",
         "tournamentNamePlaceholder": "토너먼트 이름으로 검색",
         "email": "이메일",
-        "emailPlaceholder": "이메일로 검색"
+        "emailPlaceholder": "이메일로 검색",
+        "nameOrId": "이름・Players+ID",
+        "nameOrIdPlaceholder": "이름 또는 Players+ID로 검색"
       },
       "notifications": {
         "exportError": {
@@ -172,25 +177,27 @@
         "savePrivacy": "개인정보 보호정책 저장",
         "saveReceipt": "영수증 템플릿 저장",
         "saveTerms": "계약 저장",
-        "termsLabel": "계약 내용",
-        "termsSubjectLabel": "계약",
+        "termsLabel": "이용약관 내용",
+        "termsSubjectLabel": "이용약관 제목",
         "title": "HTML 편집기"
       },
       "lastUpdated": "최종 업데이트됨",
       "success": "성공",
       "successMessage": {
         "confirmationEmail": "확인 이메일이 성공적으로 업데이트되었습니다.",
-        "terms": "계약이 성공적으로 업데이트되었습니다.",
+        "terms": "이용약관이 성공적으로 업데이트되었습니다.",
         "contractEmail": "계약 이메일이 성공적으로 업데이트되었습니다.",
         "privacy": "개인정보처리방침이 성공적으로 업데이트되었습니다.",
-        "receipt": "영수증 템플릿이 성공적으로 업데이트되었습니다."
+        "receipt": "영수증 템플릿이 성공적으로 업데이트되었습니다.",
+        "contract": "계약서가 성공적으로 업데이트되었습니다."
       },
       "tabs": {
         "confirmationEmail": "확인 이메일 템플릿",
-        "terms": "계약",
+        "terms": "이용약관",
         "contractEmail": "계약 관련 이메일 템플릿",
         "privacy": "개인정보 보호정책",
-        "receipt": "영수증 템플릿"
+        "receipt": "영수증 템플릿",
+        "contract": "계약서"
       },
       "title": "계약 관리",
       "updatedBy": "에 의해",
@@ -363,7 +370,20 @@
           "title": "사용 예시"
         }
       },
-      "version": "버전"
+      "version": "버전",
+      "contractType": {
+        "label": "계약 유형",
+        "sponsor": "스폰서 계약",
+        "pro": "프로 계약",
+        "proFallbackNotice": "프로용이 아직 생성되지 않았습니다. 저장하면 프로용으로 새로 생성됩니다. 생성 전에는 스폰서용 내용이 사용됩니다(폴백).",
+        "emptyProGuard": "프로용 내용이 비어 있어 생성할 수 없습니다. 내용을 입력해 주세요."
+      },
+      "loadError": {
+        "title": "불러오기에 실패했습니다",
+        "message": "템플릿을 불러오지 못했습니다. 잠시 후 다시 불러와 주세요.",
+        "retry": "다시 불러오기",
+        "saveBlocked": "불러오기에 실패하여 저장할 수 없습니다. 먼저 다시 불러와 주세요."
+      }
     },
     "tournaments": {
       "amount": "양",
@@ -793,7 +813,10 @@
       "prizeAmount": "상금 금액",
       "rank": "계급",
       "title": "양식 정보",
-      "tournament": "토너먼트"
+      "tournament": "토너먼트",
+      "withholdingAmount": "원천징수액",
+      "administrativeFee": "사무 수수료",
+      "netAmount": "최종 지급액"
     },
     "issueReceiptButton": "영수증 발행",
     "loading": "폼 데이터를 불러오는 중...",
@@ -802,6 +825,14 @@
       "message": "아래 동의합니다를 클릭하시면 제공하신 모든 정보가 정확하며 경품 지급에 관한 계약에 동의하시는 것으로 간주됩니다.",
       "title": "계약"
     },
-    "title": "프로 연락처 양식에 대하여"
+    "title": "프로 연락처 양식에 대하여",
+    "titleByContract": {
+      "sponsor": "스폰서 계약에 대하여",
+      "pro": "프로 계약에 대하여"
+    }
+  },
+  "documentTitle": {
+    "player": "경품 청구 양식",
+    "admin": "관리 화면 | 경품 청구 양식"
   }
 }

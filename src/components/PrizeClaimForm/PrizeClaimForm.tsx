@@ -2,6 +2,7 @@ import { POINT_PRIZE_PREFIX, PRIZE_PREFIX } from '@/config';
 import { alive } from '@/lib/lambda/health';
 import { getPrivacyPolicyTemplate } from '@/lib/lambda/template';
 import type { AccountType } from '@/types';
+import { calculateWithholding } from '@/utils/withholding';
 import {
   Alert,
   Box,
@@ -15,6 +16,7 @@ import {
   Modal,
   Paper,
   ScrollArea,
+  SegmentedControl,
   Select,
   Stack,
   Switch,
@@ -75,14 +77,6 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
         setIsCheckingHealth(false);
       }
     };
-
-    getPrivacyPolicyTemplate().then((template) => {
-      setPrivacyPolicy(
-        renderTemplate(template.content, {
-          year: new Date().getFullYear().toString(),
-        }),
-      );
-    });
 
     checkHealth();
   }, []);
@@ -176,9 +170,66 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
   // Get current form values (controlled mode)
   const formValues = form.getValues();
 
+  // Load the privacy policy for the selected contract type (Phase 5). Refetches
+  // when the player switches between sponsor/pro so the correct terms display.
+  const privacyContractType = formValues.contractType === 'pro' ? 'pro' : 'sponsor';
+  // Templates exist for ja/en only (multilingual scope is unchanged in Phase 5).
+  const privacyLang = i18n.language === 'en' ? 'en' : 'ja';
+  useEffect(() => {
+    let cancelled = false;
+    getPrivacyPolicyTemplate(privacyLang, privacyContractType).then((template) => {
+      if (cancelled) return;
+      setPrivacyPolicy(
+        renderTemplate(template.content, {
+          year: new Date().getFullYear().toString(),
+        }),
+      );
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [privacyContractType, privacyLang]);
+
+  // Contract type selection (Phase 1). Pro contracts are only available to
+  // players with a Japanese residence, so selecting "pro" forces residence=true
+  // and the "no residence" option is disabled while pro is selected.
+  const handleContractTypeChange = (value: string) => {
+    const contractType = value === 'pro' ? 'pro' : 'sponsor';
+    form.setFieldValue('contractType', contractType);
+    if (contractType === 'pro') {
+      form.setFieldValue('hasJapaneseResidence', true);
+    }
+  };
+
+  const handleResidenceChange = (value: string) => {
+    // Guard: never allow "no residence" while a pro contract is selected.
+    if (value === 'no' && formValues.contractType === 'pro') {
+      return;
+    }
+    form.setFieldValue('hasJapaneseResidence', value === 'yes');
+  };
+
   const prizePrefix = useMemo(() => {
     return formValues.isPoint ? POINT_PRIZE_PREFIX : PRIZE_PREFIX;
   }, [formValues.isPoint]);
+
+  // Withholding-tax preview (display only; the backend recomputes the definitive
+  // values at submission). Mirrors lambda/src/utils/withholding.util.ts.
+  const withholding = useMemo(
+    () =>
+      calculateWithholding({
+        amount: formValues.amount,
+        contractType: formValues.contractType,
+        hasJapaneseResidence: formValues.hasJapaneseResidence,
+        isPoint: formValues.isPoint,
+      }),
+    [
+      formValues.amount,
+      formValues.contractType,
+      formValues.hasJapaneseResidence,
+      formValues.isPoint,
+    ],
+  );
 
   // Check if all required fields are filled
   const isFormComplete = useMemo(() => {
@@ -373,6 +424,57 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
 
       <form onSubmit={onSubmit}>
         <Stack gap="xl">
+          {/* Contract Type Selection (Phase 1) */}
+          <Paper shadow="xs" p="md" withBorder>
+            <Stack gap="md">
+              <Box>
+                <Title order={4} mb="xs">
+                  {t('prizeClaim.sections.contractType')}
+                </Title>
+                <SegmentedControl
+                  fullWidth
+                  color="blue"
+                  disabled={isFormDisabled}
+                  value={formValues.contractType ?? 'sponsor'}
+                  onChange={handleContractTypeChange}
+                  data={[
+                    { value: 'sponsor', label: t('prizeClaim.fields.contractType.sponsor') },
+                    { value: 'pro', label: t('prizeClaim.fields.contractType.pro') },
+                  ]}
+                />
+              </Box>
+              <Box>
+                <Title order={4} mb="xs">
+                  {t('prizeClaim.sections.residence')}
+                </Title>
+                <Text size="sm" c="dimmed" mb="xs">
+                  {t('prizeClaim.fields.hasJapaneseResidence.description')}
+                </Text>
+                <SegmentedControl
+                  fullWidth
+                  color="blue"
+                  disabled={isFormDisabled}
+                  value={(formValues.hasJapaneseResidence ?? true) ? 'yes' : 'no'}
+                  onChange={handleResidenceChange}
+                  data={[
+                    { value: 'yes', label: t('prizeClaim.fields.hasJapaneseResidence.yes') },
+                    {
+                      value: 'no',
+                      label: t('prizeClaim.fields.hasJapaneseResidence.no'),
+                      // Pro contracts require a Japanese residence
+                      disabled: formValues.contractType === 'pro',
+                    },
+                  ]}
+                />
+                {formValues.contractType === 'pro' && (
+                  <Text size="xs" c="dimmed" mt="xs">
+                    {t('prizeClaim.fields.hasJapaneseResidence.proNote')}
+                  </Text>
+                )}
+              </Box>
+            </Stack>
+          </Paper>
+
           {/* Point/Cash Switcher */}
           <Paper shadow="xs" p="md" withBorder>
             <Group justify="space-between" align="center">
@@ -660,6 +762,49 @@ export function PrizeClaimForm({ password }: PrizeClaimFormProps) {
                   />
                 </Grid.Col>
               </Grid>
+
+              {/* Withholding-tax preview (sponsor + cash only) */}
+              {withholding.applies && (
+                <Alert
+                  variant="light"
+                  color="blue"
+                  icon={<IconAlertCircle size={18} />}
+                  title={t('prizeClaim.fields.withholding.title')}
+                >
+                  <Stack gap={4}>
+                    <Group justify="space-between">
+                      <Text size="sm" c="dimmed">
+                        {t('prizeClaim.fields.withholding.amountLabel')}
+                      </Text>
+                      <Text size="sm" fw={600}>
+                        {`${PRIZE_PREFIX}${withholding.withholdingAmount.toLocaleString()}`}
+                      </Text>
+                    </Group>
+                    <Group justify="space-between">
+                      <Text size="sm" c="dimmed">
+                        {t('prizeClaim.fields.withholding.adminFeeLabel')}
+                      </Text>
+                      <Text size="sm" fw={600}>
+                        {`${PRIZE_PREFIX}${withholding.administrativeFee.toLocaleString()}`}
+                      </Text>
+                    </Group>
+                    <Group justify="space-between">
+                      <Text size="sm" c="dimmed">
+                        {t('prizeClaim.fields.withholding.netLabel')}
+                      </Text>
+                      <Text size="sm" fw={700}>
+                        {`${PRIZE_PREFIX}${withholding.netAmount.toLocaleString()}`}
+                      </Text>
+                    </Group>
+                    <Text size="xs" c="dimmed">
+                      {t('prizeClaim.fields.withholding.note')}
+                    </Text>
+                    <Text size="xs" c="dimmed">
+                      {t('prizeClaim.fields.withholding.feeNote')}
+                    </Text>
+                  </Stack>
+                </Alert>
+              )}
             </Stack>
           </Paper>
 

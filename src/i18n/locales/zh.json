@@ -61,7 +61,10 @@
           "full": "TODO: translate me!!!",
           "fullDescription": "TODO: translate me!!!",
           "terms": "TODO: translate me!!!",
-          "termsDescription": "TODO: translate me!!!"
+          "termsDescription": "TODO: translate me!!!",
+          "includePaid": "TODO: translate me!!!",
+          "includePaidDescription": "TODO: translate me!!!",
+          "includePaidWarning": "TODO: translate me!!!"
         },
         "groups": {
           "fullData": "TODO: translate me!!!",
@@ -96,7 +99,9 @@
         "tournamentName": "赛事名称",
         "tournamentNamePlaceholder": "按赛事名称搜索",
         "email": "电子邮件",
-        "emailPlaceholder": "按电子邮件搜索"
+        "emailPlaceholder": "按电子邮件搜索",
+        "nameOrId": "姓名・Players+ID",
+        "nameOrIdPlaceholder": "按姓名或 Players+ID 搜索"
       },
       "notifications": {
         "exportError": {
@@ -172,25 +177,27 @@
         "savePrivacy": "保存隐私政策",
         "saveReceipt": "保存收据模板",
         "saveTerms": "保存合同",
-        "termsLabel": "合同内容",
-        "termsSubjectLabel": "合同主题",
+        "termsLabel": "服务条款内容",
+        "termsSubjectLabel": "服务条款主题",
         "title": "HTML编辑器"
       },
       "lastUpdated": "最后更新时间",
       "success": "成功",
       "successMessage": {
         "confirmationEmail": "确认邮件已成功更新",
-        "terms": "合同已成功更新",
+        "terms": "服务条款已成功更新",
         "contractEmail": "合同邮件已成功更新",
         "privacy": "隐私政策已成功更新",
-        "receipt": "收据模板已成功更新"
+        "receipt": "收据模板已成功更新",
+        "contract": "合同已成功更新"
       },
       "tabs": {
         "confirmationEmail": "确认邮件模板",
-        "terms": "合同",
+        "terms": "服务条款",
         "contractEmail": "合同邮件模板",
         "privacy": "隐私政策",
-        "receipt": "收据模板"
+        "receipt": "收据模板",
+        "contract": "合同"
       },
       "title": "服务管理",
       "updatedBy": "经过",
@@ -363,7 +370,20 @@
           "title": "使用示例"
         }
       },
-      "version": "版本"
+      "version": "版本",
+      "contractType": {
+        "label": "合同类型",
+        "sponsor": "赞助合同",
+        "pro": "职业合同",
+        "proFallbackNotice": "尚未创建职业版本。保存后将新建职业版本。在此之前将使用赞助版本内容（回退）。",
+        "emptyProGuard": "内容为空，无法创建职业版本。请输入内容。"
+      },
+      "loadError": {
+        "title": "加载失败",
+        "message": "模板加载失败。请稍后重新加载。",
+        "retry": "重新加载",
+        "saveBlocked": "由于加载失败，无法保存。请先重新加载。"
+      }
     },
     "tournaments": {
       "amount": "数量",
@@ -793,7 +813,10 @@
       "prizeAmount": "奖金金额",
       "rank": "秩",
       "title": "表格信息",
-      "tournament": "比赛"
+      "tournament": "比赛",
+      "withholdingAmount": "预扣税额",
+      "administrativeFee": "手续费",
+      "netAmount": "最终支付金额"
     },
     "issueReceiptButton": "发放收据",
     "loading": "正在加载表单数据...",
@@ -802,6 +825,14 @@
       "message": "点击下方的“我同意”按钮，即表示您确认所提供的所有信息均准确无误，并同意我们的奖金发放合同。에 관한 서비스 약관에 동의하시는 것으로 간주됩니다.",
       "title": "合同"
     },
-    "title": "关于 Pro 联系表单"
+    "title": "关于 Pro 联系表单",
+    "titleByContract": {
+      "sponsor": "关于赞助合同",
+      "pro": "关于职业合同"
+    }
+  },
+  "documentTitle": {
+    "player": "奖金领取表",
+    "admin": "管理界面 | 奖金领取表"
   }
 }

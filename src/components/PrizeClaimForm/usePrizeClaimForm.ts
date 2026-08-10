@@ -11,6 +11,7 @@ import type { Bank, Branch, PrizeClaimFormValues, PrizeRank, Tournament } from '
 import { initialPrizeClaimFormValues } from '@/types';
 import { validatePasswordV3 } from '@/utils/auth';
 import { containsKanji, toHalfWidthKatakana } from '@/utils/kana';
+import { sessionStorage } from '@/utils/storage';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -22,6 +23,11 @@ const POSTAL_CODE_PATTERN = /^\d{7}$/;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const KATAKANA_PATTERN = /^[\u3000-\u303F\u30A0-\u30FF]+$/;
 const ACCOUNT_NUMBER_PATTERN = /^\d{6,7}$/;
+
+// Draft key: input is saved here so it survives a browser reload / pull-to-refresh.
+// sessionStorage (not localStorage) keeps the PII-heavy draft only for the tab's
+// lifetime, so it is auto-discarded when the player closes the tab.
+const FORM_DRAFT_KEY = '__prize_claim_form_draft__';
 
 export function usePrizeClaimForm(password: string) {
   const { t } = useTranslation();
@@ -43,10 +49,20 @@ export function usePrizeClaimForm(password: string) {
   const initializedRef = useRef(false);
   // Track last auto-searched postal code to prevent duplicate API calls
   const lastSearchedPostalCodeRef = useRef('');
+  // Draft persistence guards
+  const isDraftHydratedRef = useRef(false); // becomes true once the saved draft is restored
+  const persistDraftRef = useRef(true); // temporarily disabled while clearing/submitting
   const isJapanese = useRef(i18n.language === 'ja');
   const form = useForm<PrizeClaimFormValues>({
     mode: 'controlled',
     initialValues: initialPrizeClaimFormValues,
+    onValuesChange: (values) => {
+      // Persist the draft so the player's input survives a browser reload /
+      // pull-to-refresh. Skip until the stored draft is restored, and while a
+      // clear/submit is intentionally resetting the form.
+      if (!isDraftHydratedRef.current || !persistDraftRef.current) return;
+      sessionStorage.set(FORM_DRAFT_KEY, values);
+    },
     validate: {
       lastNameKanji: (value, values) =>
         !values.isPoint && !value.trim() ? t('prizeClaim.validation.required') : null,
@@ -143,6 +159,15 @@ export function usePrizeClaimForm(password: string) {
       },
       privacyAgreed: (value) =>
         !value ? t('prizeClaim.validation.mustAgreeToPrivacyPolicy') : null,
+      contractType: (value) =>
+        value !== 'sponsor' && value !== 'pro'
+          ? t('prizeClaim.validation.required')
+          : null,
+      // Pro contracts are only available to players with a Japanese residence.
+      hasJapaneseResidence: (value, values) =>
+        values.contractType === 'pro' && value === false
+          ? t('prizeClaim.validation.proRequiresResidence')
+          : null,
     },
   });
 
@@ -151,6 +176,28 @@ export function usePrizeClaimForm(password: string) {
   // Mark as initialized
   useEffect(() => {
     initializedRef.current = true;
+  }, []);
+
+  // Restore a saved draft so input is not lost on a browser reload / pull-to-refresh
+  useEffect(() => {
+    const draft = sessionStorage.get<PrizeClaimFormValues>(FORM_DRAFT_KEY);
+    if (draft) {
+      form.setValues(draft);
+      // Keep the restored address: block the postal-code auto-search from re-firing.
+      lastSearchedPostalCodeRef.current = draft.postalCode ?? '';
+      // Branch options only load on bank selection, so refetch them to keep the
+      // restored branch's label.
+      if (draft.bankCode) {
+        fetchBranches(draft.bankCode)
+          .then(setBranches)
+          .catch(() => {
+            // Ignore: the branch code is still preserved in the form values.
+          });
+      }
+    }
+    isDraftHydratedRef.current = true;
+    // Restore runs once on mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Load banks on mount
@@ -451,9 +498,13 @@ export function usePrizeClaimForm(password: string) {
             message: t('prizeClaim.notifications.submitSuccess.message'),
             color: 'green',
           });
+          // Discard the draft: skip persisting the empty state that reset() emits.
+          persistDraftRef.current = false;
           form.reset();
           setBranches([]);
           lastSearchedPostalCodeRef.current = '';
+          sessionStorage.remove(FORM_DRAFT_KEY);
+          persistDraftRef.current = true;
         } else {
           notifications.show({
             autoClose: false,
@@ -479,9 +530,13 @@ export function usePrizeClaimForm(password: string) {
 
   // Handle form clear
   const handleClear = useCallback(() => {
+    // Discard the draft: skip persisting the empty state that reset() emits.
+    persistDraftRef.current = false;
     form.reset();
     setBranches([]);
     lastSearchedPostalCodeRef.current = '';
+    sessionStorage.remove(FORM_DRAFT_KEY);
+    persistDraftRef.current = true;
   }, [form]);
 
   return {

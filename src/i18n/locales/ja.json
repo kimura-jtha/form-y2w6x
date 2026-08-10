@@ -61,7 +61,10 @@
           "full": "全データ (UTF-8)",
           "fullDescription": "テーブルに表示されている全カラムをダウンロード（UTF-8エンコーディング）",
           "terms": "契約書同意ユーザーのみ",
-          "termsDescription": "契約書に同意したユーザーのみを含める"
+          "termsDescription": "契約書に同意したユーザーのみを含める",
+          "includePaid": "払込済みも含める",
+          "includePaidDescription": "払込済みのフォームも出力に含める（通常は除外）",
+          "includePaidWarning": "払込済みも出力されます。二重払いにご注意ください。"
         },
         "groups": {
           "fullData": "全データ (UTF-8)",
@@ -96,7 +99,9 @@
         "email": "メールアドレス",
         "emailPlaceholder": "メールアドレスで検索",
         "tournamentName": "トーナメント名",
-        "tournamentNamePlaceholder": "トーナメント名で検索"
+        "tournamentNamePlaceholder": "トーナメント名で検索",
+        "nameOrId": "氏名・Players+ID",
+        "nameOrIdPlaceholder": "氏名・Players+IDで検索"
       },
       "notifications": {
         "exportError": {
@@ -155,7 +160,35 @@
         "termsAgreed": "契約書同意",
         "tournament": "トーナメント"
       },
-      "title": "フォーム管理"
+      "title": "フォーム管理",
+      "contractTypeTabs": {
+        "all": "すべて",
+        "sponsor": "スポンサー契約",
+        "pro": "プロ契約",
+        "unset": "未設定"
+      },
+      "markPaid": {
+        "button": "支払済みにする",
+        "paidBadge": "支払済み",
+        "paidAt": "支払済み ({{at}})",
+        "confirmTitle": "支払済みにする",
+        "confirmMessage": "このフォームを支払済みにしますか？支払済みにすると払出CSVから除外され、二重払い防止のため再度の支払済み登録はできません。",
+        "confirm": "支払済みにする",
+        "success": "成功",
+        "successMessage": "フォームを支払済みにしました",
+        "error": "エラー",
+        "errorMessage": "支払済みへの更新に失敗しました。既に支払済みの可能性があります。もう一度お試しください。"
+      },
+      "markUnpaid": {
+        "button": "消込を取り消す",
+        "confirmTitle": "支払済みを取り消す",
+        "confirmMessage": "支払済みを取り消します。二重払い防止の対象から外れ、払出CSVに再度含まれます。よろしいですか？",
+        "confirm": "取り消す",
+        "success": "成功",
+        "successMessage": "支払済みを取り消しました",
+        "error": "エラー",
+        "errorMessage": "支払済みの取り消しに失敗しました。既に取り消されている可能性があります。もう一度お試しください。"
+      }
     },
     "navigation": {
       "forms": "フォーム管理",
@@ -185,25 +218,27 @@
         "savePrivacy": "プライバシーポリシーを保存",
         "saveReceipt": "TODO: translate me!!!",
         "saveTerms": "契約書を保存",
-        "termsLabel": "契約書コンテンツ",
-        "termsSubjectLabel": "契約書サブジェクト",
+        "termsLabel": "利用規約コンテンツ",
+        "termsSubjectLabel": "利用規約サブジェクト",
         "title": "HTMLエディター"
       },
       "lastUpdated": "最終更新",
       "success": "成功",
       "successMessage": {
         "confirmationEmail": "確認メールテンプレートが正常に更新されました",
-        "terms": "契約書が正常に更新されました",
+        "terms": "利用規約が正常に更新されました",
         "contractEmail": "契約書メールテンプレートが正常に更新されました",
         "privacy": "プライバシーポリシーが正常に更新されました",
-        "receipt": "領収書テンプレートが正常に更新されました"
+        "receipt": "領収書テンプレートが正常に更新されました",
+        "contract": "契約書が正常に更新されました"
       },
       "tabs": {
         "confirmationEmail": "確認メールテンプレート",
-        "terms": "契約書",
+        "terms": "利用規約",
         "contractEmail": "契約書メールテンプレート",
         "privacy": "プライバシーポリシー",
-        "receipt": "領収書テンプレート"
+        "receipt": "領収書テンプレート",
+        "contract": "契約書"
       },
       "title": "サービス管理",
       "updatedBy": "更新者",
@@ -305,6 +340,18 @@
             "description": "賞金順位",
             "example": "1位"
           },
+          "withholdingAmount": {
+            "description": "源泉徴収額（通貨付きフォーマット）",
+            "example": "¥10,210"
+          },
+          "administrativeFee": {
+            "description": "事務手数料（源泉徴収後の千円未満切り捨て分・通貨付きフォーマット）",
+            "example": "¥790"
+          },
+          "netAmount": {
+            "description": "最終支払額（源泉徴収後・千円未満切り捨て）",
+            "example": "¥589,000"
+          },
           "receiptHtml": {
             "description": "領収書コンテンツ（HTML形式）"
           },
@@ -376,7 +423,20 @@
           "title": "使用例"
         }
       },
-      "version": "バージョン"
+      "version": "バージョン",
+      "contractType": {
+        "label": "契約種別",
+        "sponsor": "スポンサー契約",
+        "pro": "プロ契約",
+        "proFallbackNotice": "プロ用は未作成です。保存するとプロ用として新規作成されます。未作成の間はスポンサー用の内容が使用されます（フォールバック）。",
+        "emptyProGuard": "プロ用の内容が空のため作成できません。内容を入力してください。"
+      },
+      "loadError": {
+        "title": "読み込みに失敗しました",
+        "message": "テンプレートの読み込みに失敗しました。時間をおいて再読み込みしてください。",
+        "retry": "再読み込み",
+        "saveBlocked": "読み込みに失敗したため保存できません。再読み込みしてください。"
+      }
     },
     "tournaments": {
       "amount": "金額",
@@ -724,6 +784,24 @@
       "tournamentName": {
         "label": "トーナメント名",
         "placeholder": "トーナメントを選択"
+      },
+      "contractType": {
+        "sponsor": "スポンサー契約",
+        "pro": "プロ契約"
+      },
+      "hasJapaneseResidence": {
+        "yes": "日本国内に住民票あり",
+        "no": "日本国内に住民票なし",
+        "description": "日本国内に住民票があるかを選択してください。",
+        "proNote": "プロ契約は日本国内に住民票がある方のみ選択できます。"
+      },
+      "withholding": {
+        "title": "源泉徴収の内訳",
+        "amountLabel": "源泉徴収額",
+        "adminFeeLabel": "事務手数料",
+        "netLabel": "最終支払額",
+        "note": "スポンサー契約（現金）の源泉徴収額と、千円未満を切り捨てた最終支払額の目安です。確定額は運営側で再計算されます。",
+        "feeNote": "※源泉徴収後の金額より、千円未満の金額を事務手数料として切り捨てさせていただきます。"
       }
     },
     "notifications": {
@@ -768,7 +846,9 @@
       "playersId": "プレイヤーズ＋ID / パスポート番号",
       "prizeType": "賞金タイプ",
       "privacyPolicy": "プライバシーポリシー",
-      "tournament": "トーナメント情報"
+      "tournament": "トーナメント情報",
+      "contractType": "契約種別",
+      "residence": "住民票の有無"
     },
     "title": "賞金請求フォーム",
     "validation": {
@@ -781,7 +861,8 @@
       "kanjiNotAllowed": "漢字は使用できません。カタカナで入力してください",
       "katakanaOnly": "全角カタカナで入力してください",
       "mustAgreeToPrivacyPolicy": "プライバシーポリシーに同意してください",
-      "required": "この項目は必須です"
+      "required": "この項目は必須です",
+      "proRequiresResidence": "プロ契約は日本国内に住民票がある方のみ選択できます。"
     }
   },
   "termsAgreement": {
@@ -823,7 +904,10 @@
       "prizeAmount": "賞金額",
       "rank": "順位",
       "title": "フォーム情報",
-      "tournament": "トーナメント"
+      "tournament": "トーナメント",
+      "withholdingAmount": "源泉徴収額",
+      "administrativeFee": "事務手数料",
+      "netAmount": "最終支払額"
     },
     "issueReceiptButton": "領収書発行",
     "loading": "フォームデータを読み込み中...",
@@ -832,6 +916,14 @@
       "message": "以下の「同意する」をクリックすることで、提供されたすべての情報が正確であることを確認し、賞金支払いに関する契約書に同意したことになります。",
       "title": "契約書"
     },
-    "title": "プロ契約について"
+    "title": "プロ契約について",
+    "titleByContract": {
+      "sponsor": "スポンサー契約について",
+      "pro": "プロ契約について"
+    }
+  },
+  "documentTitle": {
+    "player": "賞金請求フォーム",
+    "admin": "管理画面 | 賞金請求フォーム"
   }
 }

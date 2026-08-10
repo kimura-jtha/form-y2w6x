@@ -10,6 +10,7 @@ import {
 import { getReceiptTemplate, getTermsOfServiceTemplate } from '@/lib/lambda/template';
 import type { PrizeClaimFormValues } from '@/types';
 import { formatDate } from '@/utils/string';
+import { calculateWithholding } from '@/utils/withholding';
 import {
   ActionIcon,
   Alert,
@@ -36,7 +37,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export function TermsAgreementPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [opened, { toggle }] = useDisclosure(true);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -56,50 +57,57 @@ export function TermsAgreementPage() {
 
   const prizePrefix = formData?.isPoint ? POINT_PRIZE_PREFIX : PRIZE_PREFIX;
 
-  // Extract form ID from URL hash
+  // Extract form id / hash from URL.
+  // Prefer the query string (?id=..&hash=..). Fall back to the URL fragment
+  // (#id=..&hash=..) for backward compatibility with already-sent emails.
   useEffect(() => {
-    const urlHash = window.location.hash;
-    {
-      // Get form id from URL
-      const match = urlHash.match(/id=([^&]+)/);
-      if (match) {
-        setFormId(match[1]);
-      } else {
-        setError(t('termsAgreement.error.formIdNotFound'));
-        setIsLoading(false);
-      }
+    const search = new URLSearchParams(window.location.search);
+    const fragment = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+    const id = search.get('id') ?? fragment.get('id');
+    const urlFormHash = search.get('hash') ?? fragment.get('hash');
+
+    if (id) {
+      setFormId(id);
+    } else {
+      setError(t('termsAgreement.error.formIdNotFound'));
+      setIsLoading(false);
     }
-    {
-      // Get hash from URL
-      const match = urlHash.match(/hash=([^&]+)/);
-      if (match) {
-        setHash(match[1]);
-      } else {
-        setError(t('termsAgreement.error.hashNotFound'));
-        setIsLoading(false);
-      }
+
+    if (urlFormHash) {
+      setHash(urlFormHash);
+    } else {
+      setError(t('termsAgreement.error.hashNotFound'));
+      setIsLoading(false);
     }
   }, [t]);
 
   useEffect(() => {
     if (formData) {
-      getTermsOfServiceTemplate().then((template) => {
+      // Phase 5: resolve the terms for this form's contract type (sponsor/pro).
+      const contractType = formData.contractType === 'pro' ? 'pro' : 'sponsor';
+      // Templates exist for ja/en only (multilingual scope is unchanged).
+      const lang = i18n.language === 'en' ? 'en' : 'ja';
+      getTermsOfServiceTemplate(lang, contractType).then((template) => {
         setTermsOfService(
           renderTemplate(template.content, extractFormVariables(formData, termsOfServiceIssuedAt)),
         );
       });
     }
-  }, [termsOfServiceIssuedAt, formData]);
+  }, [termsOfServiceIssuedAt, formData, i18n.language]);
 
   useEffect(() => {
     if (alreadyAgreed && formData) {
-      getReceiptTemplate().then((template) => {
+      // FX-6: resolve the receipt for this form's contract type (sponsor/pro),
+      // falling back to the sponsor template when no pro override exists.
+      const contractType = formData.contractType === 'pro' ? 'pro' : 'sponsor';
+      const lang = i18n.language === 'en' ? 'en' : 'ja';
+      getReceiptTemplate(lang, contractType).then((template) => {
         setReceipt(
           renderTemplate(template.content, extractFormVariables(formData, receiptIssuedAt)),
         );
       });
     }
-  }, [formData, alreadyAgreed, receiptIssuedAt]);
+  }, [formData, alreadyAgreed, receiptIssuedAt, i18n.language]);
 
   // Fetch form data when formId is available
   useEffect(() => {
@@ -383,6 +391,18 @@ export function TermsAgreementPage() {
     );
   }
 
+  // Contract-type-aware heading (FX-3 #2): sponsor -> スポンサー契約について,
+  // pro -> プロ契約について. Falls back to the legacy fixed title if the
+  // per-contract key is missing.
+  const contractType = formData.contractType === 'pro' ? 'pro' : 'sponsor';
+  const pageTitle = t(`termsAgreement.titleByContract.${contractType}`, {
+    defaultValue: t('termsAgreement.title'),
+  });
+
+  // Withholding breakdown (FX-3 #2): show 賞金額 + 源泉徴収額 + 最終支払額 when
+  // withholding applies (sponsor × cash × taxable). Otherwise only 賞金額.
+  const withholding = calculateWithholding(formData);
+
   return (
     <Container size="md" py="xl">
       {isProcessingReceipt && (
@@ -403,7 +423,7 @@ export function TermsAgreementPage() {
       )}
       <Paper shadow="sm" p="xl" radius="md">
         <Stack gap="lg">
-          <Title order={2}>{t('termsAgreement.title')}</Title>
+          <Title order={2}>{pageTitle}</Title>
 
           <Group justify="start" gap="lg" onClick={toggle} style={{ cursor: 'pointer' }}>
             <Title order={4}>{t('prizeClaim.title')}</Title>
@@ -460,6 +480,37 @@ export function TermsAgreementPage() {
                   </Text>
                   <Text size="sm">{formData.playersId}</Text>
                 </Grid.Col>
+                {withholding.applies && (
+                  <>
+                    <Grid.Col span={6}>
+                      <Text size="xs" c="dimmed">
+                        {t('termsAgreement.formInfo.withholdingAmount')}
+                      </Text>
+                      <Text size="sm">
+                        {prizePrefix}
+                        {withholding.withholdingAmount.toLocaleString()}
+                      </Text>
+                    </Grid.Col>
+                    <Grid.Col span={6}>
+                      <Text size="xs" c="dimmed">
+                        {t('termsAgreement.formInfo.administrativeFee')}
+                      </Text>
+                      <Text size="sm">
+                        {prizePrefix}
+                        {withholding.administrativeFee.toLocaleString()}
+                      </Text>
+                    </Grid.Col>
+                    <Grid.Col span={6}>
+                      <Text size="xs" c="dimmed">
+                        {t('termsAgreement.formInfo.netAmount')}
+                      </Text>
+                      <Text size="sm">
+                        {prizePrefix}
+                        {withholding.netAmount.toLocaleString()}
+                      </Text>
+                    </Grid.Col>
+                  </>
+                )}
               </Grid>
               {formData.bankName && (
                 <>
@@ -636,9 +687,23 @@ const extractFormVariables = (formContent: PrizeClaimFormValues, issuedAt: numbe
   const accountTypeJa = isSavings ? '普通預金' : '当座預金';
   const accountTypeEn = isSavings ? 'Savings' : 'Checking';
   const prizePrefix = formContent.isPoint ? POINT_PRIZE_PREFIX : PRIZE_PREFIX;
+  // Withholding breakdown for the receipt template (FX-3 #3). Mirrors the
+  // backend authoritative calculation; safe (0) when withholding does not apply.
+  // FX-13: also supply administrativeFee so the receipt's {{administrativeFee}}
+  // placeholder is replaced (previously left raw because it was not provided here).
+  const { withholdingAmount, netAmount, administrativeFee } =
+    calculateWithholding(formContent);
+  // Contract-type-aware cost label so the receipt reads
+  // 「スポンサー契約費用」/「プロ契約費用」via {{contractCostLabel}} (FX-3 #3).
+  const contractType = formContent.contractType === 'pro' ? 'pro' : 'sponsor';
+  const contractCostLabel = contractType === 'pro' ? 'プロ契約費用' : 'スポンサー契約費用';
   return {
     today: formatDate(issuedAt, false),
     year: new Date().getFullYear().toString(),
+    withholdingAmount: formatCurrency(withholdingAmount, prizePrefix),
+    administrativeFee: formatCurrency(administrativeFee, prizePrefix),
+    netAmount: formatCurrency(netAmount, prizePrefix),
+    contractCostLabel,
     lastNameKanji: formContent.lastNameKanji,
     firstNameKanji: formContent.firstNameKanji,
     lastNameKana: formContent.lastNameKana,

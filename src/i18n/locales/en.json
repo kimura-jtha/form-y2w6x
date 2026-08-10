@@ -61,7 +61,10 @@
           "full": "Full Data (UTF-8)",
           "fullDescription": "Download all columns as displayed in the table (UTF-8 encoding)",
           "terms": "Only Contract Agreed Users",
-          "termsDescription": "Filter to include only users who agreed to contract"
+          "termsDescription": "Filter to include only users who agreed to contract",
+          "includePaid": "Include already-paid",
+          "includePaidDescription": "Include already-paid forms in the output (normally excluded)",
+          "includePaidWarning": "Already-paid forms will also be exported. Beware of double payment."
         },
         "groups": {
           "fullData": "Full Data (UTF-8)",
@@ -96,7 +99,9 @@
         "email": "Email",
         "emailPlaceholder": "Search by email",
         "tournamentName": "Tournament Name",
-        "tournamentNamePlaceholder": "Search by tournament name"
+        "tournamentNamePlaceholder": "Search by tournament name",
+        "nameOrId": "Name / Players+ID",
+        "nameOrIdPlaceholder": "Search by name or Players+ID"
       },
       "notifications": {
         "exportError": {
@@ -155,7 +160,35 @@
         "termsAgreed": "Contract Agreed",
         "tournament": "Tournament"
       },
-      "title": "Form Management"
+      "title": "Form Management",
+      "contractTypeTabs": {
+        "all": "All",
+        "sponsor": "Sponsor",
+        "pro": "Pro",
+        "unset": "Unset"
+      },
+      "markPaid": {
+        "button": "Mark as paid",
+        "paidBadge": "Paid",
+        "paidAt": "Paid ({{at}})",
+        "confirmTitle": "Mark as paid",
+        "confirmMessage": "Mark this form as paid? Paid forms are excluded from the payout CSV and cannot be marked paid again (double-payment guard).",
+        "confirm": "Mark as paid",
+        "success": "Success",
+        "successMessage": "Form has been marked as paid",
+        "error": "Error",
+        "errorMessage": "Failed to mark form as paid. It may already be paid. Please try again."
+      },
+      "markUnpaid": {
+        "button": "Undo paid",
+        "confirmTitle": "Undo paid mark",
+        "confirmMessage": "This will undo the paid mark. The form will no longer be protected by the double-payment guard and will be included again in the payout CSV. Continue?",
+        "confirm": "Undo",
+        "success": "Success",
+        "successMessage": "The paid mark has been removed",
+        "error": "Error",
+        "errorMessage": "Failed to undo the paid mark. It may have already been undone. Please try again."
+      }
     },
     "navigation": {
       "forms": "Forms Management",
@@ -185,25 +218,27 @@
         "savePrivacy": "Save Privacy Policy",
         "saveReceipt": "Save Receipt Template",
         "saveTerms": "Save Contract",
-        "termsLabel": "Contract Content",
-        "termsSubjectLabel": "Contract Subject",
+        "termsLabel": "Terms of Service Content",
+        "termsSubjectLabel": "Terms of Service Subject",
         "title": "HTML Editor"
       },
       "lastUpdated": "Last updated",
       "success": "Success",
       "successMessage": {
         "confirmationEmail": "Confirmation email updated successfully",
-        "terms": "Contract updated successfully",
+        "terms": "Terms of Service updated successfully",
         "contractEmail": "Contract email updated successfully",
         "privacy": "Privacy Policy updated successfully",
-        "receipt": "Receipt template updated successfully"
+        "receipt": "Receipt template updated successfully",
+        "contract": "Contract updated successfully"
       },
       "tabs": {
         "confirmationEmail": "Confirmation Email Template",
-        "terms": "Contract",
+        "terms": "Terms of Service",
         "contractEmail": "Contract Email Template",
         "privacy": "Privacy Policy",
-        "receipt": "Receipt Template"
+        "receipt": "Receipt Template",
+        "contract": "Contract"
       },
       "title": "Service Management",
       "updatedBy": "By",
@@ -305,6 +340,18 @@
             "description": "Prize rank/position",
             "example": "1st"
           },
+          "withholdingAmount": {
+            "description": "Withholding tax amount (currency-formatted)",
+            "example": "¥10,210"
+          },
+          "administrativeFee": {
+            "description": "Administrative fee (amount under 1,000 yen rounded down after withholding, currency-formatted)",
+            "example": "¥790"
+          },
+          "netAmount": {
+            "description": "Final payout after withholding (rounded down to the nearest 1,000 yen)",
+            "example": "¥589,000"
+          },
           "receiptHtml": {
             "description": "Receipt content (HTML format)"
           },
@@ -376,7 +423,20 @@
           "title": "Usage Example"
         }
       },
-      "version": "Version"
+      "version": "Version",
+      "contractType": {
+        "label": "Contract Type",
+        "sponsor": "Sponsor Contract",
+        "pro": "Pro Contract",
+        "proFallbackNotice": "The pro version has not been created yet. Saving will create it. Until then, the sponsor content is used (fallback).",
+        "emptyProGuard": "Cannot create an empty pro version. Please enter some content."
+      },
+      "loadError": {
+        "title": "Failed to load",
+        "message": "Failed to load the template. Please wait a moment and reload.",
+        "retry": "Reload",
+        "saveBlocked": "Cannot save because loading failed. Please reload first."
+      }
     },
     "tournaments": {
       "amount": "Amount",
@@ -724,6 +784,24 @@
       "tournamentName": {
         "label": "Tournament Name",
         "placeholder": "Select tournament"
+      },
+      "contractType": {
+        "sponsor": "Sponsor Contract",
+        "pro": "Pro Contract"
+      },
+      "hasJapaneseResidence": {
+        "yes": "Has residence in Japan",
+        "no": "No residence in Japan",
+        "description": "Select whether you have a residence certificate in Japan.",
+        "proNote": "Pro contracts are only available to players with a residence in Japan."
+      },
+      "withholding": {
+        "title": "Withholding tax breakdown",
+        "amountLabel": "Withholding tax",
+        "adminFeeLabel": "Administrative fee",
+        "netLabel": "Final payout",
+        "note": "Estimated withholding tax for sponsor (cash) contracts and the final payout rounded down to the nearest 1,000 yen. The definitive amount is recalculated by the operator.",
+        "feeNote": "* Amounts under 1,000 yen will be rounded down from the post-withholding amount as an administrative fee."
       }
     },
     "notifications": {
@@ -768,7 +846,9 @@
       "playersId": "Players+ ID / Passport Number",
       "prizeType": "Prize Type",
       "privacyPolicy": "Privacy Policy",
-      "tournament": "Tournament Information"
+      "tournament": "Tournament Information",
+      "contractType": "Contract Type",
+      "residence": "Japanese Residence"
     },
     "title": "Prize Claim Form",
     "validation": {
@@ -781,7 +861,8 @@
       "kanjiNotAllowed": "Kanji characters are not allowed. Please enter in Katakana",
       "katakanaOnly": "Please enter in full-width Katakana",
       "mustAgreeToPrivacyPolicy": "You must agree to the privacy policy",
-      "required": "This field is required"
+      "required": "This field is required",
+      "proRequiresResidence": "Pro contracts are only available to players with a residence in Japan."
     }
   },
   "termsAgreement": {
@@ -823,7 +904,10 @@
       "prizeAmount": "Prize Amount",
       "rank": "Rank",
       "title": "Form Information",
-      "tournament": "Tournament"
+      "tournament": "Tournament",
+      "withholdingAmount": "Withholding Tax",
+      "administrativeFee": "Administrative fee",
+      "netAmount": "Final Payment Amount"
     },
     "issueReceiptButton": "Issue Receipt",
     "loading": "Loading form data...",
@@ -832,6 +916,14 @@
       "message": "By clicking \"I Agree\" below, you confirm that all the information provided is accurate and you agree to our terms of service for prize disbursement.",
       "title": "Contract"
     },
-    "title": "About Pro Contact Form"
+    "title": "About Pro Contact Form",
+    "titleByContract": {
+      "sponsor": "About the Sponsor Contract",
+      "pro": "About the Pro Contract"
+    }
+  },
+  "documentTitle": {
+    "player": "Prize Claim Form",
+    "admin": "Admin | Prize Claim Form"
   }
 }

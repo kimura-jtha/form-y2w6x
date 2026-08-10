@@ -44,7 +44,15 @@ export function fetchLambda<T>({
       window.location.href = ROUTES.AUTH.LOGIN;
     }
     if (!response.ok) {
-      throw new Error(await response.text());
+      // Preserve the HTTP status on the thrown error so callers can distinguish
+      // a genuine 404 (not created yet) from a transient 5xx / network failure
+      // and avoid treating a transient failure as "empty" (FX-14).
+      const text = await response.text();
+      const error: Error & { status?: number } = new Error(
+        text || `Request failed with status ${response.status}`,
+      );
+      error.status = response.status;
+      throw error;
     }
     if (response.status === 204) {
       return { success: true } as T;

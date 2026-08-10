@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import StarterKit from '@tiptap/starter-kit';
 
@@ -33,6 +33,21 @@ export function RichTextEditor({
       onChange(updatedEditor.getHTML());
     },
   });
+
+  // Keep the editor in sync when the `content` prop changes from the outside
+  // (switching template tab / contract type, or a post-save refetch). Tiptap's
+  // `useEditor` only applies `content` when the editor is created, so without
+  // this the editor would keep showing stale/empty content whenever the prop
+  // changes without the component being remounted. `emitUpdate: false` avoids
+  // feeding the change back through `onChange`, and the equality guard prevents
+  // clobbering the caret while the user is typing (the prop then already equals
+  // the editor's own HTML).
+  useEffect(() => {
+    if (!editor) return;
+    if (content !== editor.getHTML()) {
+      editor.commands.setContent(content, { emitUpdate: false });
+    }
+  }, [content, editor]);
 
   return (
     <Stack gap="md">
