@@ -69,13 +69,6 @@
     "hira": "ようご",
     "roma": "yougo"
   },
-  "023": {
-    "code": "023",
-    "name": "中央通",
-    "kana": "チユウオウドオリ",
-    "hira": "ちゆうおうどおり",
-    "roma": "chiyuuoudoori"
-  },
   "024": {
     "code": "024",
     "name": "横河原",
@@ -145,13 +138,6 @@
     "kana": "ミヤニシ",
     "hira": "みやにし",
     "roma": "miyanishi"
-  },
-  "044": {
-    "code": "044",
-    "name": "川内",
-    "kana": "カワウチ",
-    "hira": "かわうち",
-    "roma": "kawauchi"
   },
   "045": {
     "code": "045",

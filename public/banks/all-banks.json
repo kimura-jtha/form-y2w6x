@@ -4080,13 +4080,6 @@
     "hira": "こまちのうきよう",
     "roma": "komachinoukiyou"
   },
-  "3917": {
-    "code": "3917",
-    "name": "うご農協",
-    "kana": "ウゴノウキヨウ",
-    "hira": "うごのうきよう",
-    "roma": "ugonoukiyou"
-  },
   "3929": {
     "code": "3929",
     "name": "大潟村農協",
@@ -6075,13 +6068,6 @@
     "hira": "ひろしまのうきよう",
     "roma": "hiroshimanoukiyou"
   },
-  "8019": {
-    "code": "8019",
-    "name": "広島ゆたか農協",
-    "kana": "ヒロシマユタカノウキヨウ",
-    "hira": "ひろしまゆたかのうきよう",
-    "roma": "hiroshimayutakanoukiyou"
-  },
   "8029": {
     "code": "8029",
     "name": "尾道市農協",
@@ -6306,26 +6292,12 @@
     "hira": "ちくぜんあさくらのうきよう",
     "roma": "chikuzenasakuranoukiyou"
   },
-  "8653": {
-    "code": "8653",
-    "name": "にじ農協",
-    "kana": "ニジノウキヨウ",
-    "hira": "にじのうきよう",
-    "roma": "nijinoukiyou"
-  },
-  "8656": {
-    "code": "8656",
-    "name": "みい農協",
-    "kana": "ミイノウキヨウ",
-    "hira": "みいのうきよう",
-    "roma": "miinoukiyou"
-  },
   "8660": {
     "code": "8660",
-    "name": "久留米市農協",
-    "kana": "クルメシノウキヨウ",
-    "hira": "くるめしのうきよう",
-    "roma": "kurumeshinoukiyou"
+    "name": "福岡久留米市農協",
+    "kana": "フクオカクルメシノウキヨウ",
+    "hira": "ふくおかくるめしのうきよう",
+    "roma": "fukuokakurumeshinoukiyou"
   },
   "8664": {
     "code": "8664",
@@ -6698,13 +6670,6 @@
     "hira": "ほつかいどうしんぎよれん",
     "roma": "hotsukaidoushingiyoren"
   },
-  "9456": {
-    "code": "9456",
-    "name": "福島県信漁連",
-    "kana": "フクシマケンシンギヨレン",
-    "hira": "ふくしまけんしんぎよれん",
-    "roma": "fukushimakenshingiyoren"
-  },
   "9461": {
     "code": "9461",
     "name": "東日本信漁連",
@@ -7050,10 +7015,10 @@
   },
   "0143": {
     "code": "0143",
-    "name": "八十二",
-    "kana": "ハチジユウニ",
-    "hira": "はちじゆうに",
-    "roma": "hachijiyuuni"
+    "name": "八十二長野",
+    "kana": "ハチジユウニナガノ",
+    "hira": "はちじゆうにながの",
+    "roma": "hachijiyuuninagano"
   },
   "0144": {
     "code": "0144",
@@ -7327,6 +7292,13 @@
     "kana": "キタキユウシユウ",
     "hira": "きたきゆうしゆう",
     "roma": "kitakiyuushiyuu"
+  },
+  "0200": {
+    "code": "0200",
+    "name": "ワイズ・ペイメンツ・ジャパン",
+    "kana": "ワイズ",
+    "hira": "わいず",
+    "roma": "waizu"
   },
   "0288": {
     "code": "0288",
@@ -7776,26 +7748,12 @@
     "hira": "たいこう",
     "roma": "taikou"
   },
-  "0533": {
-    "code": "0533",
-    "name": "長野",
-    "kana": "ナガノ",
-    "hira": "ながの",
-    "roma": "nagano"
-  },
   "0534": {
     "code": "0534",
     "name": "富山第一",
     "kana": "トヤマダイイチ",
     "hira": "とやまだいいち",
     "roma": "toyamadaiichi"
-  },
-  "0537": {
-    "code": "0537",
-    "name": "福邦",
-    "kana": "フクホウ",
-    "hira": "ふくほう",
-    "roma": "fukuhou"
   },
   "0538": {
     "code": "0538",
