@@ -48,13 +48,6 @@
     "hira": "きようと",
     "roma": "kiyouto"
   },
-  "023": {
-    "code": "023",
-    "name": "大石橋",
-    "kana": "オオイシバシ",
-    "hira": "おおいしばし",
-    "roma": "ooishibashi"
-  },
   "025": {
     "code": "025",
     "name": "宇治",
@@ -89,13 +82,6 @@
     "kana": "アベノ",
     "hira": "あべの",
     "roma": "abeno"
-  },
-  "043": {
-    "code": "043",
-    "name": "東大阪",
-    "kana": "ヒガシオオサカ",
-    "hira": "ひがしおおさか",
-    "roma": "higashioosaka"
   },
   "044": {
     "code": "044",
