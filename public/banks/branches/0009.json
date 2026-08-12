@@ -1532,6 +1532,13 @@
     "hira": "とらんくうえすと",
     "roma": "torankuuesuto"
   },
+  "454": {
+    "code": "454",
+    "name": "ミント",
+    "kana": "ミント",
+    "hira": "みんと",
+    "roma": "minto"
+  },
   "455": {
     "code": "455",
     "name": "飾磨",
@@ -2365,6 +2372,13 @@
     "hira": "あやせ",
     "roma": "ayase"
   },
+  "692": {
+    "code": "692",
+    "name": "オリーブＨＥＮＮＡ",
+    "kana": "オリ－ブヘナ",
+    "hira": "おり－ぶへな",
+    "roma": "ori-buhena"
+  },
   "693": {
     "code": "693",
     "name": "巣鴨",
@@ -2497,6 +2511,13 @@
     "kana": "イツシヤ",
     "hira": "いつしや",
     "roma": "itsushiya"
+  },
+  "715": {
+    "code": "715",
+    "name": "つくし",
+    "kana": "ツクシ",
+    "hira": "つくし",
+    "roma": "tsukushi"
   },
   "717": {
     "code": "717",
@@ -2882,6 +2903,13 @@
     "kana": "ムサシコヤマ",
     "hira": "むさしこやま",
     "roma": "musashikoyama"
+  },
+  "800": {
+    "code": "800",
+    "name": "オリーブＩＣＥ",
+    "kana": "オリ－ブアイス",
+    "hira": "おり－ぶあいす",
+    "roma": "ori-buaisu"
   },
   "804": {
     "code": "804",
@@ -3786,6 +3814,13 @@
     "hira": "おおさかこうむぶ",
     "roma": "oosakakoumubu"
   },
+  "055": {
+    "code": "055",
+    "name": "ＰａｙＰａｙカード",
+    "kana": "ペイペイカ－ド",
+    "hira": "ぺいぺいか－ど",
+    "roma": "peipeika-do"
+  },
   "056": {
     "code": "056",
     "name": "桶川",
@@ -3877,12 +3912,33 @@
     "hira": "にしおぎくぼ",
     "roma": "nishiogikubo"
   },
+  "083": {
+    "code": "083",
+    "name": "オリーブＪＡＤＥ",
+    "kana": "オリ－ブジエイド",
+    "hira": "おり－ぶじえいど",
+    "roma": "ori-bujieido"
+  },
+  "087": {
+    "code": "087",
+    "name": "ＰａｙＰａｙカード第二",
+    "kana": "ペイペイカ－ドダイニ",
+    "hira": "ぺいぺいか－どだいに",
+    "roma": "peipeika-dodaini"
+  },
   "089": {
     "code": "089",
     "name": "高円寺",
     "kana": "コウエンジ",
     "hira": "こうえんじ",
     "roma": "kouenji"
+  },
+  "091": {
+    "code": "091",
+    "name": "クローバー",
+    "kana": "クロ－バ－",
+    "hira": "くろ－ば－",
+    "roma": "kuro-ba-"
   },
   "094": {
     "code": "094",
