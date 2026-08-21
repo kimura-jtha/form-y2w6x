@@ -804,6 +804,7 @@
       "formNotFound": "양식 데이터를 찾을 수 없습니다.",
       "hashNotFound": "URL에서 해시를 찾을 수 없습니다.",
       "loadFailed": "폼 데이터를 불러오는 데 실패했습니다.",
+      "templateEmpty": "서류 템플릿이 등록되어 있지 않습니다. 관리자에게 문의해 주세요.",
       "title": "오류"
     },
     "formInfo": {

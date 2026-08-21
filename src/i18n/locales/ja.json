@@ -895,6 +895,7 @@
       "formNotFound": "フォームデータが見つかりません",
       "hashNotFound": "URLにハッシュが見つかりません",
       "loadFailed": "フォームデータの読み込みに失敗しました",
+      "templateEmpty": "書類のテンプレートが未登録です。管理者にお問い合わせください。",
       "title": "エラー"
     },
     "formInfo": {
