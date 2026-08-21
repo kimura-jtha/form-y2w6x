@@ -895,6 +895,7 @@
       "formNotFound": "Form data not found",
       "hashNotFound": "Hash not found in URL",
       "loadFailed": "Failed to load form data",
+      "templateEmpty": "The document template has not been set up. Please contact the administrator.",
       "title": "Error"
     },
     "formInfo": {

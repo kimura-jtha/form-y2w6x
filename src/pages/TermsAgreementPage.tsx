@@ -7,7 +7,7 @@ import {
   saveReceiptUrl,
   saveTermsOfServiceUrl,
 } from '@/lib/lambda/form';
-import { getReceiptTemplate, getTermsOfServiceTemplate } from '@/lib/lambda/template';
+import { getContractTemplate, getReceiptTemplate } from '@/lib/lambda/template';
 import type { PrizeClaimFormValues } from '@/types';
 import { formatDate } from '@/utils/string';
 import { calculateWithholding } from '@/utils/withholding';
@@ -83,11 +83,20 @@ export function TermsAgreementPage() {
 
   useEffect(() => {
     if (formData) {
-      // Phase 5: resolve the terms for this form's contract type (sponsor/pro).
+      // Phase 5: resolve the document for this form's contract type (sponsor/pro).
       const contractType = formData.contractType === 'pro' ? 'pro' : 'sponsor';
       // Templates exist for ja/en only (multilingual scope is unchanged).
       const lang = i18n.language === 'en' ? 'en' : 'ja';
-      getTermsOfServiceTemplate(lang, contractType).then((template) => {
+      // This page renders, and uploads as a PDF, the 契約書 the player agrees to
+      // — every label here says 契約書 (documentTypes.terms / downloadTermsButton
+      // / admin の「契約書ダウンロード」). Since FX-1 split the admin editor into
+      // 「利用規約」(terms-of-service-*) and 「契約書」(contract-*), the contract
+      // body lives in the contract-* templates and terms-of-service-* holds the
+      // (separate, and currently empty) terms of use. Reading terms-of-service-*
+      // here produced a blank contract PDF. Resolve the contract template, which
+      // is the same source the backend uses for the contract email
+      // (email.service.ts getContractContent, fixed in Phase 5).
+      getContractTemplate(lang, contractType).then((template) => {
         setTermsOfService(
           renderTemplate(template.content, extractFormVariables(formData, termsOfServiceIssuedAt)),
         );
@@ -139,7 +148,14 @@ export function TermsAgreementPage() {
   }, [formId, hash, t]);
 
   const handleAgree = async () => {
-    if (!formId || !hash || !termsOfService) return;
+    if (!formId || !hash) return;
+    // An empty Tiptap document (`<p></p>`) is a non-empty string, so a plain
+    // truthiness check let a blank template through and uploaded a blank PDF to
+    // S3 as the signed contract. Refuse instead of storing an empty document.
+    if (!hasRenderableContent(termsOfService)) {
+      setError(t('termsAgreement.error.templateEmpty'));
+      return;
+    }
 
     try {
       setIsSubmitting(true);
@@ -238,7 +254,11 @@ export function TermsAgreementPage() {
       return;
     }
 
-    if (!content) return;
+    // Same blank-template guard as handleAgree: never upload an empty document.
+    if (!hasRenderableContent(content)) {
+      setError(t('termsAgreement.error.templateEmpty'));
+      return;
+    }
 
     try {
       setIsProcessingReceipt(true);
@@ -663,6 +683,28 @@ export function TermsAgreementPage() {
     </Container>
   );
 }
+
+/**
+ * Whether rendered template HTML would actually put something on the page.
+ *
+ * A Tiptap document that has been cleared serialises to `<p></p>` — a truthy
+ * string that renders to nothing — so string truthiness cannot tell "has
+ * content" from "is blank". Guarding on truthiness alone let an emptied
+ * template through and stored a blank PDF in S3 as the signed contract.
+ *
+ * @param html - Rendered template HTML
+ * @returns true when the HTML yields visible text or embedded media
+ */
+const hasRenderableContent = (html: string): boolean => {
+  if (!html) return false;
+  // Media and rules are visible without contributing any text.
+  if (/<(img|hr|table|svg)\b/i.test(html)) return true;
+  const text = html
+    .replaceAll(/<[^>]*>/g, '')
+    .replaceAll(/&nbsp;|&#160;/gi, ' ')
+    .replaceAll(/\s/g, '');
+  return text.length > 0;
+};
 
 /**
  * Render template by replacing {{variableName}} placeholders with actual values
