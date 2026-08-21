@@ -804,6 +804,7 @@
       "formNotFound": "未找到表单数据",
       "hashNotFound": "URL 中未找到哈希值",
       "loadFailed": "表单数据加载失败",
+      "templateEmpty": "文件模板尚未设置。请联系管理员。",
       "title": "错误"
     },
     "formInfo": {
